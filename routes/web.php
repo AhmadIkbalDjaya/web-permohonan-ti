@@ -15,10 +15,14 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Public/Home/Index');
-});
+    return Inertia::render('public/home/Index');
+})->name('home');
 
-Route::get("proposal", fn () => Inertia::render('Public/Proposal/Index'))->name("proposal");
-Route::get("hasil", fn () => Inertia::render('Public/Result/Index'))->name("result");
-Route::get("kompren", fn () => Inertia::render('Public/Comprehensive/Index'))->name("comprenhensive");
-Route::get("ppl", fn () => Inertia::render('Public/Ppl/Index'))->name("ppl");
+Route::get("proposal", fn() => Inertia::render('public/proposal/Index'))->name("proposal");
+Route::get("hasil", fn() => Inertia::render('public/result/Index'))->name("result");
+Route::get("kompren", fn() => Inertia::render('public/comprehensive/Index'))->name("comprenhensive");
+Route::get("ppl", fn() => Inertia::render('public/ppl/Index'))->name("ppl");
+
+Route::prefix('admin')->group(function () {
+    Route::get("", fn() => Inertia::render("admin/dashboard/Index"))->name('admin.home');
+});
