@@ -18,6 +18,10 @@ import { FiMenu, FiSearch } from "react-icons/fi";
 import { TiHome } from "react-icons/ti";
 import { DrawerOpen } from "../../../context/DrawerOpen";
 import DrawerListItem from "./DrawerListItem";
+import { MdArticle } from "react-icons/md";
+import { RiArticleFill } from "react-icons/ri";
+import { FaTools } from "react-icons/fa";
+import { FaFilePen } from "react-icons/fa6";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -202,14 +206,37 @@ export default function BaseLayout(props) {
                     <List
                         sx={{
                             margin: open ? "0 15px" : "0",
-                            marginTop: "15px",
                         }}
                     >
                         <DrawerListItem
                             open={open}
-                            toPage={"/"}
+                            toPage={"/admin"}
                             icon={<TiHome size={24} color="white" />}
                             text={"Dashboard"}
+                        />
+                        <DrawerListItem
+                            open={open}
+                            toPage={"/admin/proposal"}
+                            icon={<MdArticle size={24} color="white" />}
+                            text={"Proposal"}
+                        />
+                        <DrawerListItem
+                            open={open}
+                            toPage={"/admin/hasil"}
+                            icon={<RiArticleFill size={24} color="white" />}
+                            text={"Hasil"}
+                        />
+                        <DrawerListItem
+                            open={open}
+                            toPage={"/admin/kompren"}
+                            icon={<FaFilePen size={24} color="white" />}
+                            text={"Kompren"}
+                        />
+                        <DrawerListItem
+                            open={open}
+                            toPage={"/admin/ppl"}
+                            icon={<FaTools size={24} color="white" />}
+                            text={"PPL"}
                         />
                     </List>
                 </Drawer>

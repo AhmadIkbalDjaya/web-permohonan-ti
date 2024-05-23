@@ -9,22 +9,28 @@ import {
 } from "@mui/material";
 
 export default function DrawerListItem({ open, toPage, icon, text }) {
+    const currentRoute = window.location.pathname;
     return (
         <ListItem
             disablePadding
             sx={{
                 display: "block",
+                my: "15px",
             }}
         >
             <Link
-                to={toPage}
+                href={toPage}
                 style={{
                     color: "white",
                     textDecoration: "none",
                 }}
             >
                 <ListItemButton
-                    selected={true}
+                    selected={
+                        toPage != "/admin"
+                            ? currentRoute.startsWith(toPage)
+                            : currentRoute == "/admin"
+                    }
                     sx={{
                         justifyContent: open ? "initial" : "center",
                         px: open ? "10px" : 2.5,
@@ -35,6 +41,9 @@ export default function DrawerListItem({ open, toPage, icon, text }) {
                         },
                         "&:hover": {
                             background: "#C21010",
+                            "&:hover": {
+                                background: "#C21010",
+                            },
                         },
                     }}
                 >

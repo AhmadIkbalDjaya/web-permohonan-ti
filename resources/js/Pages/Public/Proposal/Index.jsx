@@ -1,10 +1,9 @@
 import React from "react";
-import { Head, useForm, Link } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import LinearProgress from "@mui/material/LinearProgress";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 export default function Proposal({ file_requirements }) {
     const { data, setData, post, progress } = useForm({
@@ -52,7 +51,7 @@ export default function Proposal({ file_requirements }) {
                     />
                     <Box>
                         <Grid container>
-                            <Grid xs={6}>
+                            <Grid item xs={6}>
                                 <TextField
                                     label="Tempat Lahir"
                                     fullWidth
@@ -64,7 +63,7 @@ export default function Proposal({ file_requirements }) {
                                     sx={{ mb: 2, width: "99.5%" }}
                                 />
                             </Grid>
-                            <Grid xs={6}>
+                            <Grid item xs={6}>
                                 <TextField
                                     //   label="Tempat Lahir"
                                     fullWidth
@@ -79,7 +78,7 @@ export default function Proposal({ file_requirements }) {
                             </Grid>
                         </Grid>
                         <Grid container>
-                            <Grid xs={8}>
+                            <Grid item xs={8}>
                                 <TextField
                                     label="Jurusan"
                                     fullWidth
@@ -92,7 +91,7 @@ export default function Proposal({ file_requirements }) {
                                     sx={{ mb: 2, width: "99.5%" }}
                                 />
                             </Grid>
-                            <Grid xs={4}>
+                            <Grid item xs={4}>
                                 <TextField
                                     label="semester"
                                     fullWidth
@@ -123,7 +122,7 @@ export default function Proposal({ file_requirements }) {
                             sx={{ mb: 2 }}
                         />
                         <Grid container>
-                            <Grid xs={6}>
+                            <Grid item xs={6}>
                                 <TextField
                                     label="Pembimbing 1"
                                     fullWidth
@@ -135,7 +134,7 @@ export default function Proposal({ file_requirements }) {
                                     sx={{ mb: 2, width: "99.5%" }}
                                 />
                             </Grid>
-                            <Grid xs={6}>
+                            <Grid item xs={6}>
                                 <TextField
                                     label="pembimbing 2"
                                     fullWidth
