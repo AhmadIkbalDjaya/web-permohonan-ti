@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\public\ComprehensiveController;
+use App\Http\Controllers\public\HomeController;
+use App\Http\Controllers\public\PplController;
+use App\Http\Controllers\public\ProposalController;
+use App\Http\Controllers\public\ResultController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -14,15 +20,13 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('public/home/Index');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get("proposal", fn() => Inertia::render('public/proposal/Index'))->name("proposal");
-Route::get("hasil", fn() => Inertia::render('public/result/Index'))->name("result");
-Route::get("kompren", fn() => Inertia::render('public/comprehensive/Index'))->name("comprenhensive");
-Route::get("ppl", fn() => Inertia::render('public/ppl/Index'))->name("ppl");
+Route::get("proposal", [ProposalController::class, "index"])->name("proposal");
+Route::get("hasil", fn() => [ResultController::class, "index"])->name("result");
+Route::get("kompren", fn() => [ComprehensiveController::class, "index"])->name("comprenhensive");
+Route::get("ppl", fn() => [PplController::class, "index"])->name("ppl");
 
 Route::prefix('admin')->group(function () {
-    Route::get("", fn() => Inertia::render("admin/dashboard/Index"))->name('admin.home');
+    Route::get("", [AdminController::class, "dashboard"])->name('admin.home');
 });
