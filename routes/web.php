@@ -33,7 +33,10 @@ Route::get("ppl", [PplController::class, "index"])->name("ppl");
 
 Route::prefix('admin')->group(function () {
     Route::get("", [AdminController::class, "dashboard"])->name('admin.home');
-    Route::get("proposal", [AdminProposalController::class, "index"])->name('admin.proposal.index');
+    Route::controller(AdminProposalController::class)->group(function () {
+        Route::get("proposal", "index")->name('admin.proposal.index');
+        Route::get("proposal/create", "create")->name('admin.proposal.create');
+    });
     Route::get("hasil", [AdminResultController::class, "index"])->name('admin.result.index');
     Route::get("kompren", [AdminComprehensiveController::class, "index"])->name('admin.comprehensive.index');
     Route::get("ppl", [AdminPplController::class, "index"])->name('admin.ppl.index');

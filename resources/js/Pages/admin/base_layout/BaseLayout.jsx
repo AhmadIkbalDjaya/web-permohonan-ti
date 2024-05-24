@@ -7,6 +7,7 @@ import {
     IconButton,
     InputBase,
     List,
+    ThemeProvider,
     Toolbar,
     Typography,
     styled,
@@ -22,6 +23,8 @@ import { MdArticle } from "react-icons/md";
 import { RiArticleFill } from "react-icons/ri";
 import { FaTools } from "react-icons/fa";
 import { FaFilePen } from "react-icons/fa6";
+import { themeColor } from "../../../theme/ColorTheme";
+import { themeTextField } from "../../../theme/TextFieldTheme";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -94,157 +97,163 @@ export default function BaseLayout(props) {
     const { children } = props;
     return (
         <>
-            <Head title="Dashboard" />
-            <Box sx={{ display: "flex" }}>
-                <CssBaseline />
-                <AppBar
-                    position="fixed"
-                    sx={{
-                        backgroundColor: "white",
-                        paddingY: "5px",
-                        zIndex: (theme) => theme.zIndex.drawer + 1,
-                    }}
-                >
-                    <Container maxWidth="xl">
-                        <Toolbar
-                            disableGutters
-                            sx={{
-                                justifyContent: "space-between",
-                                minHeight: {
-                                    sm: "0",
-                                },
-                            }}
-                        >
-                            <Box display={"flex"} alignItems={"center"}>
-                                <IconButton
-                                    color="#454F5B"
-                                    edge="start"
-                                    onClick={() => setOpen(!open)}
-                                >
-                                    <FiMenu />
-                                </IconButton>
-                                <Typography
-                                    color={"#ab003c"}
-                                    fontSize={"18px"}
-                                    fontWeight={"bold"}
-                                >
-                                    Teknik Informatika
-                                </Typography>
-                            </Box>
-                            <Box
-                                sx={{
-                                    flexGrow: 1,
-                                    marginLeft: {
-                                        sm: "75px",
-                                    },
-                                }}
-                                display={{ xs: "none", sm: "block" }}
-                            >
-                                <Box
-                                    display={"flex"}
-                                    alignItems={"center"}
-                                    gap={1}
-                                    sx={{
-                                        width: "250px",
-                                        backgroundColor: "#DFE3E8",
-                                        padding: "0 10px",
-                                        boxSizing: "border-box",
-                                        borderRadius: "3px",
-                                    }}
-                                >
-                                    <FiSearch color="#637381" />
-                                    <InputBase
-                                        placeholder="Cari Sesuatu ..."
-                                        sx={{
-                                            color: "#637381",
-                                            fontWeight: "bold",
-                                            placeholder: {
-                                                color: "#637381",
-                                                fontWeight: "bold",
-                                            },
-                                        }}
-                                    />
-                                </Box>
-                            </Box>
-                            <Box display={"flex"} gap={1}>
-                                <Avatar />
-                                <Box display={{ xs: "none", md: "block" }}>
-                                    <Typography
-                                        color={"#212B36"}
-                                        sx={{
-                                            fontSize: "14px",
-                                            fontWeight: "bold",
-                                        }}
-                                    >
-                                        Ikbal Djaya
-                                    </Typography>
-                                    <Typography
-                                        variant="subtitle2"
-                                        color={"#637381"}
-                                        sx={{
-                                            fontSize: "10px",
-                                            fontWeight: "bold",
-                                        }}
-                                    >
-                                        Administrator
-                                    </Typography>
-                                </Box>
-                            </Box>
-                        </Toolbar>
-                    </Container>
-                </AppBar>
-                <Drawer
-                    variant="permanent"
-                    open={open}
-                    PaperProps={{
-                        style: {
-                            background: "#B20600",
-                        },
-                    }}
-                >
-                    <DrawerHeader />
-                    <List
+            <ThemeProvider theme={themeColor}>
+                <Box sx={{ display: "flex" }}>
+                    <CssBaseline />
+                    <AppBar
+                        position="fixed"
                         sx={{
-                            margin: open ? "0 15px" : "0",
+                            backgroundColor: "white",
+                            paddingY: "5px",
+                            zIndex: (theme) => theme.zIndex.drawer + 1,
                         }}
                     >
-                        <DrawerListItem
-                            open={open}
-                            toPage={"/admin"}
-                            icon={<TiHome size={24} color="white" />}
-                            text={"Dashboard"}
-                        />
-                        <DrawerListItem
-                            open={open}
-                            toPage={"/admin/proposal"}
-                            icon={<MdArticle size={24} color="white" />}
-                            text={"Proposal"}
-                        />
-                        <DrawerListItem
-                            open={open}
-                            toPage={"/admin/hasil"}
-                            icon={<RiArticleFill size={24} color="white" />}
-                            text={"Hasil"}
-                        />
-                        <DrawerListItem
-                            open={open}
-                            toPage={"/admin/kompren"}
-                            icon={<FaFilePen size={24} color="white" />}
-                            text={"Kompren"}
-                        />
-                        <DrawerListItem
-                            open={open}
-                            toPage={"/admin/ppl"}
-                            icon={<FaTools size={24} color="white" />}
-                            text={"PPL"}
-                        />
-                    </List>
-                </Drawer>
-                <Box component={"main"} sx={{ flexGrow: 1, p: 3 }}>
-                    <DrawerHeader />
-                    {children}
+                        <Container maxWidth="xl">
+                            <Toolbar
+                                disableGutters
+                                sx={{
+                                    justifyContent: "space-between",
+                                    minHeight: {
+                                        sm: "0",
+                                    },
+                                }}
+                            >
+                                <Box display={"flex"} alignItems={"center"}>
+                                    <IconButton
+                                        color="#454F5B"
+                                        edge="start"
+                                        onClick={() => setOpen(!open)}
+                                    >
+                                        <FiMenu />
+                                    </IconButton>
+                                    <Typography
+                                        color={"#ab003c"}
+                                        fontSize={"18px"}
+                                        fontWeight={"bold"}
+                                    >
+                                        Teknik Informatika
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        flexGrow: 1,
+                                        marginLeft: {
+                                            sm: "75px",
+                                        },
+                                    }}
+                                    display={{ xs: "none", sm: "block" }}
+                                >
+                                    <Box
+                                        display={"flex"}
+                                        alignItems={"center"}
+                                        gap={1}
+                                        sx={{
+                                            width: "250px",
+                                            backgroundColor: "#DFE3E8",
+                                            padding: "0 10px",
+                                            boxSizing: "border-box",
+                                            borderRadius: "3px",
+                                        }}
+                                    >
+                                        <FiSearch color="#637381" />
+                                        <InputBase
+                                            placeholder="Cari Sesuatu ..."
+                                            sx={{
+                                                color: "#637381",
+                                                fontWeight: "bold",
+                                                placeholder: {
+                                                    color: "#637381",
+                                                    fontWeight: "bold",
+                                                },
+                                            }}
+                                        />
+                                    </Box>
+                                </Box>
+                                <Box display={"flex"} gap={1}>
+                                    <Avatar />
+                                    <Box
+                                        display={{
+                                            xs: "none",
+                                            md: "block",
+                                        }}
+                                    >
+                                        <Typography
+                                            color={"#212B36"}
+                                            sx={{
+                                                fontSize: "14px",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            Ikbal Djaya
+                                        </Typography>
+                                        <Typography
+                                            variant="subtitle2"
+                                            color={"#637381"}
+                                            sx={{
+                                                fontSize: "10px",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            Administrator
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </Toolbar>
+                        </Container>
+                    </AppBar>
+                    <Drawer
+                        variant="permanent"
+                        open={open}
+                        PaperProps={{
+                            style: {
+                                background: "#B20600",
+                            },
+                        }}
+                    >
+                        <DrawerHeader />
+                        <List
+                            sx={{
+                                margin: open ? "0 15px" : "0",
+                            }}
+                        >
+                            <DrawerListItem
+                                open={open}
+                                toPage={"/admin"}
+                                icon={<TiHome size={24} color="white" />}
+                                text={"Dashboard"}
+                            />
+                            <DrawerListItem
+                                open={open}
+                                toPage={"/admin/proposal"}
+                                icon={<MdArticle size={24} color="white" />}
+                                text={"Proposal"}
+                            />
+                            <DrawerListItem
+                                open={open}
+                                toPage={"/admin/hasil"}
+                                icon={<RiArticleFill size={24} color="white" />}
+                                text={"Hasil"}
+                            />
+                            <DrawerListItem
+                                open={open}
+                                toPage={"/admin/kompren"}
+                                icon={<FaFilePen size={24} color="white" />}
+                                text={"Kompren"}
+                            />
+                            <DrawerListItem
+                                open={open}
+                                toPage={"/admin/ppl"}
+                                icon={<FaTools size={24} color="white" />}
+                                text={"PPL"}
+                            />
+                        </List>
+                    </Drawer>
+                    <Box component={"main"} sx={{ flexGrow: 1, p: 3 }}>
+                        <DrawerHeader />
+                        {children}
+                    </Box>
                 </Box>
-            </Box>
+            </ThemeProvider>
         </>
     );
 }

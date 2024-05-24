@@ -45,7 +45,7 @@ export default function Proposal() {
                 </AppBreadcrumbs>
                 <Box display={"flex"} alignItems={"center"} gap={1} mt={1}>
                     <Typography variant="h5" fontWeight={"600"}>
-                        Pengajuan Proposal
+                        Permohonan Proposal
                     </Typography>
                     <Typography
                         variant="caption"
@@ -60,7 +60,7 @@ export default function Proposal() {
                     </Typography>
                 </Box>
                 <Box display={"flex"} justifyContent={"space-between"} my={1}>
-                    <AppLink href="">
+                    <AppLink href="/admin/proposal/create">
                         <Button
                             variant="contained"
                             startIcon={<FaPlus />}
