@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import { Head } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
@@ -15,11 +15,20 @@ import {
     TextField,
     ThemeProvider,
     MenuItem,
+    ButtonGroup,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
 import { themeTextField } from "../../../theme/TextFieldTheme";
+import ReactSignatureCanvas from "react-signature-canvas";
 
 export default function CreateProposal({ file_requirements }) {
+    const [signature, setSignatur] = useState();
+    const clearSignatur = () => {
+        signature.clear();
+    };
+    const saveSignature = () => {
+        console.log(save);
+    };
     return (
         <>
             <Head title="Tambah Permohonan Proposal" />
@@ -297,48 +306,117 @@ export default function CreateProposal({ file_requirements }) {
                             xs: "100%",
                             md: 5,
                         }}
-                        sx={{
-                            background: "white",
-                            border: ".5px solid",
-                            borderColor: "slate-300",
-                            borderRadius: "4px",
+                        display={"flex"}
+                        flexDirection={"column"}
+                        gap={2}
+                    >
+                        <Box
+                            sx={{
+                                background: "white",
+                                border: ".5px solid",
+                                borderColor: "slate-300",
+                                borderRadius: "4px",
+                            }}
+                        >
+                            <Typography
+                                variant="body2"
+                                color="initial"
+                                sx={{ p: "15px", fontWeight: "600" }}
+                                borderBottom={"1px solid"}
+                                borderColor={"slate-300"}
+                            >
+                                Berkas
+                            </Typography>
+                            <ThemeProvider theme={themeTextField}>
+                                <Grid container spacing={2} padding={"15px"}>
+                                    {file_requirements.map(
+                                        (file_requirement, index) => {
+                                            return (
+                                                <Grid item xs={12} key={index}>
+                                                    <AppInputLabel
+                                                        label={file_requirement.name.replaceAll(
+                                                            "_",
+                                                            " "
+                                                        )}
+                                                        required={
+                                                            file_requirement.is_required
+                                                        }
+                                                    />
+                                                    <TextField
+                                                        id="name"
+                                                        type="file"
+                                                        label=""
+                                                        placeholder="Masukkan Nama Mahasiswa"
+                                                        fullWidth
+                                                    />
+                                                </Grid>
+                                            );
+                                        }
+                                    )}
+                                </Grid>
+                            </ThemeProvider>
+                        </Box>
+                        <Box
+                            sx={{
+                                background: "white",
+                                border: ".5px solid",
+                                borderColor: "slate-300",
+                                borderRadius: "4px",
+                            }}
+                        >
+                            <Typography
+                                variant="body2"
+                                color="initial"
+                                sx={{ p: "15px", fontWeight: "600" }}
+                                borderBottom={"1px solid"}
+                                borderColor={"slate-300"}
+                            >
+                                Tanda Tangan Pemohon
+                            </Typography>
+                            <Box display={"flex"} justifyContent={"center"}>
+                                <ReactSignatureCanvas
+                                    ref={(ref) => {
+                                        setSignatur(ref);
+                                    }}
+                                    penColor="black"
+                                    backgroundColor="#F4F6F8"
+                                    canvasProps={{
+                                        width: 300,
+                                        height: 200,
+                                        className: "sigCanvas",
+                                    }}
+                                />
+                            </Box>
+                            <Box>
+                                <ButtonGroup
+                                    variant="contained"
+                                    color="slate-300"
+                                    aria-label=""
+                                    fullWidth
+                                >
+                                    <Button onClick={clearSignatur}>
+                                        Bersihkan
+                                    </Button>
+                                    <Button>Simpan</Button>
+                                </ButtonGroup>
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Box
+                        flex={"100%"}
+                        display={{
+                            sx: "inherit",
+                            md: "none",
                         }}
                     >
-                        <Typography
-                            variant="body2"
-                            color="initial"
-                            sx={{ p: "15px", fontWeight: "600" }}
-                            borderBottom={"1px solid"}
-                            borderColor={"slate-300"}
+                        <Button
+                            variant="contained"
+                            startIcon={<FaPlus />}
+                            fullWidth
+                            color="primary"
                         >
-                            Berkas
-                        </Typography>
-                        <ThemeProvider theme={themeTextField}>
-                            <Grid container spacing={2} padding={"15px"}>
-                                {file_requirements.map((file_requirement) => {
-                                    return (
-                                        <Grid item xs={12}>
-                                            <AppInputLabel
-                                                label={file_requirement.name.replaceAll(
-                                                    "_",
-                                                    " "
-                                                )}
-                                                required={
-                                                    file_requirement.is_required
-                                                }
-                                            />
-                                            <TextField
-                                                id="name"
-                                                type="file"
-                                                label=""
-                                                placeholder="Masukkan Nama Mahasiswa"
-                                                fullWidth
-                                            />
-                                        </Grid>
-                                    );
-                                })}
-                            </Grid>
-                        </ThemeProvider>
+                            Simpan
+                        </Button>
                     </Box>
                 </Box>
             </BaseLayout>
