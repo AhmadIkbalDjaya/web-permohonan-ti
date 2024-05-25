@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
-import { Head } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
 import AppInputLabel from "../components/elements/input/AppInputLabel";
@@ -8,18 +8,18 @@ import Typography from "@mui/material/Typography";
 import {
     Box,
     Button,
-    FormLabel,
     Grid,
-    InputLabel,
     Select,
     TextField,
     ThemeProvider,
     MenuItem,
     ButtonGroup,
+    FormHelperText,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
 import { themeTextField } from "../../../theme/TextFieldTheme";
 import ReactSignatureCanvas from "react-signature-canvas";
+import { semesterListItems } from "../components/elements/input/SemesterListItems";
 
 export default function CreateProposal({ file_requirements }) {
     const [signature, setSignatur] = useState();
@@ -29,6 +29,32 @@ export default function CreateProposal({ file_requirements }) {
     const saveSignature = () => {
         console.log(save);
     };
+
+    const { errors } = usePage().props;
+    const [formValues, setFormValues] = useState({
+        name: "",
+        nim: "",
+        pob: "",
+        dob: "",
+        semester: "",
+        phone: "",
+        essay_title: "",
+        // mentors: ["", ""],
+    });
+
+    function handleChangeForm(e, index = null) {
+        const name = e.target.name;
+        const value = e.target.value;
+        
+            setFormValues((values) => ({
+                ...values,
+                [name]: value,
+            }));
+    }
+    function handleSubmitForm(e) {
+        console.log(formValues);
+        router.post("/admin/proposal", formValues);
+    }
     return (
         <>
             <Head title="Tambah Permohonan Proposal" />
@@ -55,6 +81,7 @@ export default function CreateProposal({ file_requirements }) {
                         </Typography>
                     </Box>
                     <Button
+                        onClick={handleSubmitForm}
                         variant="contained"
                         color="primary"
                         size="small"
@@ -74,7 +101,7 @@ export default function CreateProposal({ file_requirements }) {
                 <Box
                     display={"flex"}
                     alignItems={"flex-start"}
-                    gap={2}
+                    gap={3}
                     sx={{
                         flexWrap: {
                             xs: "wrap",
@@ -112,10 +139,15 @@ export default function CreateProposal({ file_requirements }) {
                                     />
                                     <TextField
                                         id="name"
-                                        type="string"
                                         label=""
+                                        name="name"
+                                        type="string"
+                                        value={formValues.name}
+                                        onChange={handleChangeForm}
                                         placeholder="Masukkan Nama Mahasiswa"
                                         fullWidth
+                                        error={errors.name ? true : false}
+                                        helperText={errors.name ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -125,10 +157,15 @@ export default function CreateProposal({ file_requirements }) {
                                     />
                                     <TextField
                                         id="nim"
-                                        type="number"
+                                        name="nim"
                                         label=""
+                                        type="number"
+                                        value={formValues.nim}
+                                        onChange={handleChangeForm}
                                         placeholder="Masukkan NIM"
                                         fullWidth
+                                        error={errors.nim ? true : false}
+                                        helperText={errors.nim ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -138,10 +175,15 @@ export default function CreateProposal({ file_requirements }) {
                                     />
                                     <TextField
                                         id="pob"
+                                        name="pob"
                                         type="string"
                                         label=""
+                                        value={formValues.pob}
+                                        onChange={handleChangeForm}
                                         placeholder="Masukkan Tempat Lahir"
                                         fullWidth
+                                        error={errors.pob ? true : false}
+                                        helperText={errors.pob ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -150,11 +192,16 @@ export default function CreateProposal({ file_requirements }) {
                                         required={true}
                                     />
                                     <TextField
-                                        id="pob"
+                                        id="dob"
+                                        name="dob"
                                         type="date"
                                         label=""
-                                        placeholder="Masukkan Tempat Lahir"
+                                        value={formValues.dob}
+                                        onChange={handleChangeForm}
+                                        placeholder="Masukkan Tanggal Lahir"
                                         fullWidth
+                                        error={errors.dob ? true : false}
+                                        helperText={errors.dob ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -163,36 +210,42 @@ export default function CreateProposal({ file_requirements }) {
                                         required={true}
                                     />
                                     <Select
-                                        value={""}
+                                        id="semester"
+                                        name="semester"
+                                        value={formValues.semester}
+                                        onChange={handleChangeForm}
+                                        fullWidth
                                         displayEmpty
-                                        renderValue={(selected) => {
-                                            if (selected) {
+                                        error={errors.semester ? true : false}
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Semester Saat Ini
+                                            </Typography>
+                                        </MenuItem>
+                                        {semesterListItems.map(
+                                            (semester, i) => {
                                                 return (
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="initial"
-                                                        fontWeight={"600"}
-                                                        display={"flex"}
+                                                    <MenuItem
+                                                        key={i}
+                                                        value={semester.value}
                                                     >
-                                                        {selected}
-                                                    </Typography>
+                                                        {semester.body}
+                                                    </MenuItem>
                                                 );
                                             }
-                                            return (
-                                                <Typography
-                                                    variant="body2"
-                                                    color="#ababab"
-                                                    fontWeight={"600"}
-                                                    display={"flex"}
-                                                >
-                                                    Semester Saat Ini
-                                                </Typography>
-                                            );
-                                        }}
-                                        fullWidth
-                                    >
-                                        <MenuItem value={1}>Satu</MenuItem>
+                                        )}
                                     </Select>
+                                    {errors.semester && (
+                                        <FormHelperText>
+                                            {errors.semester}
+                                        </FormHelperText>
+                                    )}
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel
@@ -200,11 +253,16 @@ export default function CreateProposal({ file_requirements }) {
                                         required={true}
                                     />
                                     <TextField
-                                        id="pob"
+                                        id="phone"
+                                        name="phone"
                                         type="number"
+                                        value={formValues.phone}
+                                        onChange={handleChangeForm}
                                         label=""
-                                        placeholder="Masukkan Nomor Telpon"
+                                        placeholder="Masukkan Nomor Telepon"
                                         fullWidth
+                                        error={errors.phone ? true : false}
+                                        helperText={errors.phone ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -213,13 +271,20 @@ export default function CreateProposal({ file_requirements }) {
                                         required={true}
                                     />
                                     <TextField
-                                        id="pob"
+                                        id="essay_title"
+                                        name="essay_title"
                                         type="string"
+                                        value={formValues.essay_title}
+                                        onChange={handleChangeForm}
                                         label=""
                                         placeholder="Masukkan Judul Skripsi"
                                         fullWidth
                                         multiline
                                         rows={2}
+                                        error={
+                                            errors.essay_title ? true : false
+                                        }
+                                        helperText={errors.essay_title ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -228,11 +293,15 @@ export default function CreateProposal({ file_requirements }) {
                                         required={true}
                                     />
                                     <TextField
-                                        id="pob"
+                                        id="mentors"
+                                        name="mentors"
                                         type="string"
-                                        label=""
                                         placeholder="Nama Pembimbing 1"
                                         fullWidth
+                                        // value={formValues.mentors[0]}
+                                        // onChange={handleChangeForm}
+                                        // error={errors.mentors ? true : false}
+                                        // helperText={errors.mentors ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -241,11 +310,15 @@ export default function CreateProposal({ file_requirements }) {
                                         required={true}
                                     />
                                     <TextField
-                                        id="pob"
+                                        id="mentors"
+                                        name="mentors"
                                         type="string"
-                                        label=""
                                         placeholder="Nama Pembimbing 2"
                                         fullWidth
+                                        // value={formValues.mentors[1]}
+                                        // onChange={handleChangeForm}
+                                        // error={errors.mentors ? true : false}
+                                        // helperText={errors.mentors ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>

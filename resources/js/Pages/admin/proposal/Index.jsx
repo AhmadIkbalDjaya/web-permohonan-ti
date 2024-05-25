@@ -28,7 +28,7 @@ import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { themePagination } from "../../../theme/PaginationTheme";
 
-export default function Proposal() {
+export default function Proposal({ proposals }) {
     const tableHeadStyle = {
         fontWeight: "bold",
         padding: "10px 10px",

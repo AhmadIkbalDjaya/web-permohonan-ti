@@ -36,6 +36,7 @@ Route::prefix('admin')->group(function () {
     Route::controller(AdminProposalController::class)->group(function () {
         Route::get("proposal", "index")->name('admin.proposal.index');
         Route::get("proposal/create", "create")->name('admin.proposal.create');
+        Route::post("proposal", 'store')->name('admin.proposal.store');
     });
     Route::get("hasil", [AdminResultController::class, "index"])->name('admin.result.index');
     Route::get("kompren", [AdminComprehensiveController::class, "index"])->name('admin.comprehensive.index');
