@@ -40,7 +40,7 @@ class ProposalController extends Controller
             "pob" => "required",
             "dob" => "required|date",
             "semester" => "required|integer|min:0",
-            "phone" => "required",
+            "phone" => "required|phone:ID",
             "essay_title" => "required",
             // "applicant_sign" => "required",
             "mentors" => "array|min:2",
@@ -53,19 +53,20 @@ class ProposalController extends Controller
         ];
         // dd(count($request->testers));
         $file_requirements = FileRequirement::where("request_type", "proposals")->get();
-        // foreach ($file_requirements as $file_requirement) {
-        //     $rules[$file_requirement->name] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
-        // }
+        foreach ($file_requirements as $file_requirement) {
+            $rules[$file_requirement->name] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
+        }
         $validated = $request->validate($rules);
+        // dd($validated);
         // $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("proposal/applicant_signs", "public");
         $validated["applicant_sign"] = "temp";
-        // foreach ($file_requirements as $index => $file_requirement) {
-        //     if ($request->file($file_requirement->name)) {
-        //         $validated[$file_requirement->name] = $request->file($file_requirement)->storePublicly("proposal/files", "public");
-        //     } else {
-        //         $validated[$file_requirement->name] = "null";
-        //     }
-        // }
+        foreach ($file_requirements as $index => $file_requirement) {
+            if ($request->file($file_requirement->name)) {
+                $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("proposal/file", "public");
+            } else {
+                $validated[$file_requirement->name] = null;
+            }
+        }
         DB::transaction(function () use ($validated, $file_requirements) {
             $student = Student::create([
                 "name" => $validated["name"],
@@ -86,13 +87,13 @@ class ProposalController extends Controller
                 "applicant_sign" => $validated["applicant_sign"],
                 "schedule_id" => $schedule->id,
             ]);
-            // foreach ($file_requirements as $index => $file_requirement) {
-            //     File::create([
-            //         "file" => $validated[$file_requirement->name],
-            //         "name" => $file_requirement->name,
-            //         "proposal_id" => $proposal->id,
-            //     ]);
-            // }
+            foreach ($file_requirements as $index => $file_requirement) {
+                File::create([
+                    "file" => $validated[$file_requirement->name],
+                    "name" => $file_requirement->name,
+                    "proposal_id" => $proposal->id,
+                ]);
+            }
             foreach ($validated["mentors"] as $index => $mentor) {
                 Mentor::create([
                     "name" => $mentor,

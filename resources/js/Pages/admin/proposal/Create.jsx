@@ -44,12 +44,12 @@ export default function CreateProposal({ file_requirements }) {
         date: "",
         time: "",
         location: "",
+        files: {},
     });
 
     function handleChangeForm(e, index = null) {
         const name = e.target.name;
         const value = e.target.value;
-        // if ((name == "mentors" || name == "testers") && index != null) {
         if (["mentors", "testers"].includes(name) && index != null) {
             setFormValues((values) => {
                 const updateArray = [...values[name]];
@@ -59,6 +59,14 @@ export default function CreateProposal({ file_requirements }) {
                     [name]: updateArray,
                 };
             });
+        } else if (e.target.type == "file") {
+            setFormValues((values) => ({
+                ...values,
+                files: {
+                    ...values.files,
+                    [name]: e.target.files[0],
+                },
+            }));
         } else {
             setFormValues((values) => ({
                 ...values,
@@ -67,7 +75,28 @@ export default function CreateProposal({ file_requirements }) {
         }
     }
     function handleSubmitForm(e) {
-        router.post("/admin/proposal", formValues);
+        console.log(formValues);
+        console.log(errors);
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(formValues)) {
+            if (key == "files") {
+                for (const [key, file] of Object.entries(value)) {
+                    formData.append(key, file);
+                }
+            } else if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    formData.append(`${key}[${index}]`, item);
+                });
+            } else {
+                formData.append(key, value);
+            }
+        }
+        // router.post("/admin/proposal", formValues);
+        router.post("/admin/proposal", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
     }
     return (
         <>
@@ -461,9 +490,29 @@ export default function CreateProposal({ file_requirements }) {
                                                     />
                                                     <TextField
                                                         id="name"
+                                                        name={
+                                                            file_requirement.name
+                                                        }
                                                         type="file"
                                                         placeholder="Masukkan Nama Mahasiswa"
                                                         fullWidth
+                                                        onChange={
+                                                            handleChangeForm
+                                                        }
+                                                        error={
+                                                            errors[
+                                                                file_requirement
+                                                                    .name
+                                                            ]
+                                                                ? true
+                                                                : false
+                                                        }
+                                                        helperText={
+                                                            errors[
+                                                                file_requirement
+                                                                    .name
+                                                            ] ?? ""
+                                                        }
                                                     />
                                                 </Grid>
                                             );
@@ -529,6 +578,7 @@ export default function CreateProposal({ file_requirements }) {
                             startIcon={<FaPlus />}
                             fullWidth
                             color="primary"
+                            onClick={handleSubmitForm}
                         >
                             Simpan
                         </Button>
