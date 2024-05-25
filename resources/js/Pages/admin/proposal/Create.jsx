@@ -39,20 +39,34 @@ export default function CreateProposal({ file_requirements }) {
         semester: "",
         phone: "",
         essay_title: "",
-        // mentors: ["", ""],
+        mentors: ["", ""],
+        testers: ["", ""],
+        date: "",
+        time: "",
+        location: "",
     });
 
     function handleChangeForm(e, index = null) {
         const name = e.target.name;
         const value = e.target.value;
-        
+        // if ((name == "mentors" || name == "testers") && index != null) {
+        if (["mentors", "testers"].includes(name) && index != null) {
+            setFormValues((values) => {
+                const updateArray = [...values[name]];
+                updateArray[index] = value;
+                return {
+                    ...values,
+                    [name]: updateArray,
+                };
+            });
+        } else {
             setFormValues((values) => ({
                 ...values,
                 [name]: value,
             }));
+        }
     }
     function handleSubmitForm(e) {
-        console.log(formValues);
         router.post("/admin/proposal", formValues);
     }
     return (
@@ -139,7 +153,6 @@ export default function CreateProposal({ file_requirements }) {
                                     />
                                     <TextField
                                         id="name"
-                                        label=""
                                         name="name"
                                         type="string"
                                         value={formValues.name}
@@ -158,7 +171,6 @@ export default function CreateProposal({ file_requirements }) {
                                     <TextField
                                         id="nim"
                                         name="nim"
-                                        label=""
                                         type="number"
                                         value={formValues.nim}
                                         onChange={handleChangeForm}
@@ -177,7 +189,6 @@ export default function CreateProposal({ file_requirements }) {
                                         id="pob"
                                         name="pob"
                                         type="string"
-                                        label=""
                                         value={formValues.pob}
                                         onChange={handleChangeForm}
                                         placeholder="Masukkan Tempat Lahir"
@@ -195,7 +206,6 @@ export default function CreateProposal({ file_requirements }) {
                                         id="dob"
                                         name="dob"
                                         type="date"
-                                        label=""
                                         value={formValues.dob}
                                         onChange={handleChangeForm}
                                         placeholder="Masukkan Tanggal Lahir"
@@ -258,7 +268,6 @@ export default function CreateProposal({ file_requirements }) {
                                         type="number"
                                         value={formValues.phone}
                                         onChange={handleChangeForm}
-                                        label=""
                                         placeholder="Masukkan Nomor Telepon"
                                         fullWidth
                                         error={errors.phone ? true : false}
@@ -276,7 +285,6 @@ export default function CreateProposal({ file_requirements }) {
                                         type="string"
                                         value={formValues.essay_title}
                                         onChange={handleChangeForm}
-                                        label=""
                                         placeholder="Masukkan Judul Skripsi"
                                         fullWidth
                                         multiline
@@ -293,15 +301,19 @@ export default function CreateProposal({ file_requirements }) {
                                         required={true}
                                     />
                                     <TextField
-                                        id="mentors"
+                                        id="mentors1"
                                         name="mentors"
                                         type="string"
                                         placeholder="Nama Pembimbing 1"
                                         fullWidth
-                                        // value={formValues.mentors[0]}
-                                        // onChange={handleChangeForm}
-                                        // error={errors.mentors ? true : false}
-                                        // helperText={errors.mentors ?? ""}
+                                        value={formValues.mentors[0]}
+                                        onChange={(e) => {
+                                            handleChangeForm(e, 0);
+                                        }}
+                                        error={
+                                            errors["mentors.0"] ? true : false
+                                        }
+                                        helperText={errors["mentors.0"] ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -310,65 +322,97 @@ export default function CreateProposal({ file_requirements }) {
                                         required={true}
                                     />
                                     <TextField
-                                        id="mentors"
+                                        id="mentors2"
                                         name="mentors"
                                         type="string"
                                         placeholder="Nama Pembimbing 2"
                                         fullWidth
-                                        // value={formValues.mentors[1]}
-                                        // onChange={handleChangeForm}
-                                        // error={errors.mentors ? true : false}
-                                        // helperText={errors.mentors ?? ""}
+                                        value={formValues.mentors[1]}
+                                        onChange={(e) => {
+                                            handleChangeForm(e, 1);
+                                        }}
+                                        error={
+                                            errors["mentors.1"] ? true : false
+                                        }
+                                        helperText={errors["mentors.1"] ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel label="Penguji 1" />
                                     <TextField
-                                        id="pob"
+                                        id="testers1"
+                                        name="testers"
                                         type="string"
-                                        label=""
                                         placeholder="Nama Penguji 1"
                                         fullWidth
+                                        value={formValues.testers[0]}
+                                        onChange={(e) => {
+                                            handleChangeForm(e, 0);
+                                        }}
+                                        error={
+                                            errors["testers.0"] ? true : false
+                                        }
+                                        helperText={errors["testers.0"] ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel label="Penguji 2" />
                                     <TextField
-                                        id="pob"
+                                        id="testers2"
+                                        name="testers"
                                         type="string"
-                                        label=""
                                         placeholder="Nama Penguji 2"
                                         fullWidth
+                                        value={formValues.testers[1]}
+                                        onChange={(e) => {
+                                            handleChangeForm(e, 1);
+                                        }}
+                                        error={
+                                            errors["testers.1"] ? true : false
+                                        }
+                                        helperText={errors["testers.1"] ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel label="Tanggal" />
                                     <TextField
-                                        id="pob"
+                                        id="date"
+                                        name="date"
                                         type="date"
-                                        label=""
                                         fullWidth
+                                        value={formValues.date}
+                                        onChange={handleChangeForm}
+                                        error={errors.date ? true : false}
+                                        helperText={errors.date ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel label="Jam" />
                                     <TextField
-                                        id="pob"
+                                        id="time"
+                                        name="time"
                                         type="time"
-                                        label=""
                                         fullWidth
+                                        value={formValues.time}
+                                        onChange={handleChangeForm}
+                                        error={errors.time ? true : false}
+                                        helperText={errors.time ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <AppInputLabel label="Lokasi Seminar" />
                                     <TextField
-                                        id="pob"
+                                        id="location"
+                                        name="location"
                                         type="string"
-                                        label=""
                                         placeholder="Masukkan Lokasi Seminar"
                                         fullWidth
                                         multiline
                                         rows={2}
+                                        value={formValues.location}
+                                        onChange={handleChangeForm}
+                                        error={errors.location ? true : false}
+                                        helperText={errors.location ?? ""}
                                     />
                                 </Grid>
                             </Grid>
@@ -418,7 +462,6 @@ export default function CreateProposal({ file_requirements }) {
                                                     <TextField
                                                         id="name"
                                                         type="file"
-                                                        label=""
                                                         placeholder="Masukkan Nama Mahasiswa"
                                                         fullWidth
                                                     />
@@ -464,7 +507,6 @@ export default function CreateProposal({ file_requirements }) {
                                 <ButtonGroup
                                     variant="contained"
                                     color="slate-300"
-                                    aria-label=""
                                     fullWidth
                                 >
                                     <Button onClick={clearSignatur}>

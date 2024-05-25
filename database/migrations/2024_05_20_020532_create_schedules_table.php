@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->time('time');
-            $table->string('location');
+            $table->date('date')->nullable();
+            $table->time('time')->nullable();
+            $table->string('location')->nullable();
             $table->timestamps();
         });
     }

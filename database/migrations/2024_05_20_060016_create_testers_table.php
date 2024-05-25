@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('testers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->integer('order')->unsigned();
             $table->string('description')->nullable();
             $table->foreignIdFor(Proposal::class)->nullable()->constraint()->references("id")->on("proposals");

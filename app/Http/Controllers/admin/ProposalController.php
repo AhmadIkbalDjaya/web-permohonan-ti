@@ -33,6 +33,7 @@ class ProposalController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request);
         $rules = [
             "name" => "required",
             "nim" => "required|numeric",
@@ -42,14 +43,15 @@ class ProposalController extends Controller
             "phone" => "required",
             "essay_title" => "required",
             // "applicant_sign" => "required",
-            // "mentors" => "array|min:2",
-            // "mentors.*" => "required|string",
-            // "testers" => "nuallable|array",
-            // "testers.*" => "string",
-            // "date" => "nullable|date",
-            // "time" => "nullalble|time",
-            // "location" => "nullable|string",
+            "mentors" => "array|min:2",
+            "mentors.*" => "required|string",
+            "testers" => "nullable|array",
+            "testers.*" => "nullable|string",
+            "date" => "nullable|date",
+            "time" => "nullable|date_format:H:i",
+            "location" => "nullable|string",
         ];
+        // dd(count($request->testers));
         $file_requirements = FileRequirement::where("request_type", "proposals")->get();
         // foreach ($file_requirements as $file_requirement) {
         //     $rules[$file_requirement->name] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
@@ -73,10 +75,16 @@ class ProposalController extends Controller
                 "semester" => $validated["semester"],
                 "phone" => $validated["phone"],
             ]);
+            $schedule = Schedule::create([
+                "date" => $validated["date"],
+                "time" => $validated["time"],
+                "location" => $validated["location"],
+            ]);
             $proposal = Proposal::create([
                 "student_id" => $student->id,
                 "essay_title" => $validated["essay_title"],
                 "applicant_sign" => $validated["applicant_sign"],
+                "schedule_id" => $schedule->id,
             ]);
             // foreach ($file_requirements as $index => $file_requirement) {
             //     File::create([
@@ -85,21 +93,20 @@ class ProposalController extends Controller
             //         "proposal_id" => $proposal->id,
             //     ]);
             // }
-            // foreach ($validated["mentors"] as $index => $mentor) {
-            //     Mentor::create([
-            //         "name" => $mentor,
-            //         "order" => $index,
-            //         "proposal_id" => $proposal->id,
-            //     ]);
-            // }
-            // foreach ($validated["testers"] as $index => $tester) {
-            //     Tester::create([
-            //         "name" => $tester,
-            //         "order" => $index,
-            //         "proposal_id" => $proposal->id,
-            //     ]);
-            // }
-            // Schedule::create([]);
+            foreach ($validated["mentors"] as $index => $mentor) {
+                Mentor::create([
+                    "name" => $mentor,
+                    "order" => $index,
+                    "proposal_id" => $proposal->id,
+                ]);
+            }
+            foreach ($validated["testers"] as $index => $tester) {
+                Tester::create([
+                    "name" => $tester,
+                    "order" => $index,
+                    "proposal_id" => $proposal->id,
+                ]);
+            }
         });
         return to_route("admin.proposal.index");
     }
