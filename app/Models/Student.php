@@ -12,15 +12,15 @@ class Student extends Model
 
     public function proposal()
     {
-        return $this->belongsTo(Proposal::class);
+        return $this->hasOne(Proposal::class);
     }
     public function result()
     {
-        return $this->belongsTo(Result::class);
+        return $this->hasOne(Result::class);
     }
     public function comprehensive()
     {
-        return $this->belongsTo(Comprehensive::class);
+        return $this->hasOne(Comprehensive::class);
     }
     public function ppls() {
         return $this->belongsToMany(PPL::class, "ppl_students", "ppl_id", "student_id");

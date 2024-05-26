@@ -12,7 +12,7 @@ class Proposal extends Model
 
     public function student()
     {
-        return $this->hasOne(Student::class);
+        return $this->belongsTo(Student::class);
     }
 
     public function schedule()

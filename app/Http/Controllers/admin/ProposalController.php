@@ -16,11 +16,32 @@ use Inertia\Inertia;
 
 class ProposalController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $proposals = Proposal::latest()->get();
+        $page = $request->input("page", 1);
+        $perpage = $request->input("perpage", 10);
+        $search = $request->input("search", "");
+
+        $query = Proposal::select("id", "essay_title", "created_at", "student_id")
+            ->with(["student" => fn($query) => $query->select("id", "name", "nim")]);
+        if ($search) {
+            $query->where('essay_title', "LIKE", "%$search%")
+                ->orWhereHas("student", function ($query) use ($search) {
+                    $query->where("name", "LIKE", "%$search%")
+                        ->orWhere("nim", "LIKE", "%$search%");
+                });
+        }
+        $proposals = $query->latest()->paginate($perpage, ["*"], 'page', $page);
+        $meta = [
+            "page" => $proposals->currentPage(),
+            "perpage" => $proposals->perPage(),
+            "total_page" => $proposals->lastPage(),
+            "total_item" => $proposals->total(),
+            "search" => $search,
+        ];
         return Inertia::render("admin/proposal/Index", [
-            "proposal" => $proposals,
+            "proposals" => $proposals,
+            "meta" => $meta,
         ]);
     }
     public function create()

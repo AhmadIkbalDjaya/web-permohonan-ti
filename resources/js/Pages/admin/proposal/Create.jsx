@@ -512,16 +512,6 @@ export default function CreateProposal({ file_requirements }) {
                                                     accept={".pdf"}
                                                     onChange={handleChangeForm}
                                                 />
-                                                {/* {formValues.files[
-                                                    file_requirement.name
-                                                ]
-                                                    ? console.log(
-                                                          formValues.files[
-                                                              file_requirement
-                                                                  .name
-                                                          ]
-                                                      )
-                                                    : "no"} */}
                                                 {formValues.files[
                                                     file_requirement.name
                                                 ] ? (
