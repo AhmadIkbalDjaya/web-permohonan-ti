@@ -22,15 +22,30 @@ import { FaPlus } from "react-icons/fa";
 import { themeTextField } from "../../../theme/TextFieldTheme";
 import ReactSignatureCanvas from "react-signature-canvas";
 import { semesterListItems } from "../components/elements/input/SemesterListItems";
-import { IoMdCloudUpload } from "react-icons/io";
+import dataURLtoBlob from "blueimp-canvas-to-blob";
 
 export default function CreateProposal({ file_requirements }) {
     const [signature, setSignatur] = useState();
+    const [emptySignature, setEmptySignature] = useState(false);
     const clearSignatur = () => {
         signature.clear();
     };
     const saveSignature = () => {
-        console.log(save);
+        if (signature.isEmpty()) {
+            setEmptySignature(true);
+        } else {
+            setEmptySignature(false);
+            const result = signature
+                .getTrimmedCanvas()
+                .toDataURL("applicant_sign");
+            const image = dataURLtoBlob(result);
+            setFormValues((values) => {
+                return {
+                    ...values,
+                    applicant_sign: image,
+                };
+            });
+        }
     };
 
     const { errors } = usePage().props;
@@ -569,15 +584,38 @@ export default function CreateProposal({ file_requirements }) {
                                 borderRadius: "4px",
                             }}
                         >
-                            <Typography
-                                variant="body2"
-                                color="initial"
-                                sx={{ p: "15px", fontWeight: "600" }}
+                            <Box
+                                sx={{ p: "15px" }}
                                 borderBottom={"1px solid"}
                                 borderColor={"slate-300"}
                             >
-                                Tanda Tangan Pemohon
-                            </Typography>
+                                <Box display={"flex"} height={"fit"}>
+                                    <Typography
+                                        variant="body2"
+                                        color="initial"
+                                        fontWeight={600}
+                                    >
+                                        Tanda Tangan Pemohon
+                                    </Typography>
+                                    <Typography color="red">
+                                        &nbsp; *
+                                    </Typography>
+                                </Box>
+                                {errors.applicant_sign ? (
+                                    <InputErrorMessage px={0}>
+                                        {errors.applicant_sign}
+                                    </InputErrorMessage>
+                                ) : (
+                                    ""
+                                )}
+                                {emptySignature ? (
+                                    <InputErrorMessage px={0}>
+                                        Anda Belum Tanda Tangan
+                                    </InputErrorMessage>
+                                ) : (
+                                    ""
+                                )}
+                            </Box>
                             <Box display={"flex"} justifyContent={"center"}>
                                 <ReactSignatureCanvas
                                     ref={(ref) => {
@@ -601,7 +639,9 @@ export default function CreateProposal({ file_requirements }) {
                                     <Button onClick={clearSignatur}>
                                         Bersihkan
                                     </Button>
-                                    <Button>Simpan</Button>
+                                    <Button onClick={saveSignature}>
+                                        Simpan
+                                    </Button>
                                 </ButtonGroup>
                             </Box>
                         </Box>

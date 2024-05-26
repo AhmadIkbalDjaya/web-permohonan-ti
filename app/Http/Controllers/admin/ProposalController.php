@@ -33,7 +33,6 @@ class ProposalController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request);
         $rules = [
             "name" => "required",
             "nim" => "required|numeric",
@@ -42,7 +41,7 @@ class ProposalController extends Controller
             "semester" => "required|integer|min:0",
             "phone" => "required|phone:ID",
             "essay_title" => "required",
-            // "applicant_sign" => "required",
+            "applicant_sign" => "required|image",
             "mentors" => "array|min:2",
             "mentors.*" => "required|string",
             "testers" => "nullable|array",
@@ -51,15 +50,12 @@ class ProposalController extends Controller
             "time" => "nullable|date_format:H:i",
             "location" => "nullable|string",
         ];
-        // dd(count($request->testers));
         $file_requirements = FileRequirement::where("request_type", "proposals")->get();
         foreach ($file_requirements as $file_requirement) {
             $rules[$file_requirement->name] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
         }
         $validated = $request->validate($rules);
-        // dd($validated);
-        // $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("proposal/applicant_signs", "public");
-        $validated["applicant_sign"] = "temp";
+        $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("proposal/applicant_signs", "public");
         foreach ($file_requirements as $index => $file_requirement) {
             if ($request->file($file_requirement->name)) {
                 $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("proposal/file", "public");
