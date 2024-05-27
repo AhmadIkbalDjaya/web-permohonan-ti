@@ -11,7 +11,7 @@ class Result extends Model
     protected $guarded = ["id"];
     public function student()
     {
-        return $this->hasOne(Student::class);
+        return $this->belongsTo(Student::class);
     }
 
     public function schedule()

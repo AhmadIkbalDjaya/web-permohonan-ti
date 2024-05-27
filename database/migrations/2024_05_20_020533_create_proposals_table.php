@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Student::class)->constrained()->references("id")->on("students");
             $table->string('essay_title');
             $table->string('applicant_sign');
-            $table->foreignIdFor(Schedule::class)->nullable()->constrained()->references("id")->on("schedules");
+            $table->foreignIdFor(Schedule::class)->constrained()->references("id")->on("schedules");
             $table->timestamps();
         });
     }

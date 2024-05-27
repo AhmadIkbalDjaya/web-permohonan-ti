@@ -10,7 +10,7 @@ class Comprehensive extends Model
     use HasFactory;
     protected $guarded = ["id"];
     public function student() {
-        return $this->hasOne(Student::class);
+        return $this->belongsTo(Student::class);
     }
     public function testers(){
         return $this->hasMany(Tester::class);
