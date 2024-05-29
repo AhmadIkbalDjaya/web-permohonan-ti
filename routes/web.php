@@ -49,6 +49,13 @@ Route::prefix('admin')->group(function () {
         Route::put("{result}", "update")->name('admin.result.update');
         Route::delete("{result}", "destroy")->name('admin.result.delete');
     });
-    Route::get("kompren", [AdminComprehensiveController::class, "index"])->name('admin.comprehensive.index');
+    Route::prefix("kompren")->controller(AdminComprehensiveController::class)->group(function () {
+        Route::get("", "index")->name('admin.comprehensive.index');
+        Route::get("create", "create")->name('admin.comprehensive.create');
+        Route::post("", 'store')->name('admin.comprehensive.store');
+        Route::get("{comprehensive}/edit", "edit")->name('admin.comprehensive.edit');
+        Route::put("{comprehensive}", "update")->name('admin.comprehensive.update');
+        Route::delete("{comprehensive}", "destroy")->name('admin.comprehensive.delete');
+    });
     Route::get("ppl", [AdminPplController::class, "index"])->name('admin.ppl.index');
 });
