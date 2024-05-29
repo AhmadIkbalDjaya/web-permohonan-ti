@@ -46,6 +46,9 @@ export default function Proposal({ proposals, meta }) {
     };
     const handleChangeSearch = (e) => {
         search.current = e.target.value;
+        if (meta.search == "" && search.current != "") {
+            page.current = 1;
+        }
         getData();
     };
     const handleChangePage = (e, value) => {
@@ -248,7 +251,22 @@ export default function Proposal({ proposals, meta }) {
                                             alignItems={"center"}
                                         >
                                             <HiOutlineEye size={22} />
-                                            <TbEdit size={22} />
+                                            <AppLink
+                                                color={"black"}
+                                                href={route(
+                                                    "admin.proposal.edit",
+                                                    {
+                                                        proposal: proposal.id,
+                                                    }
+                                                )}
+                                            >
+                                                <TbEdit
+                                                    size={22}
+                                                    // onClick={() => {
+
+                                                    // }}
+                                                />
+                                            </AppLink>
                                             <RiDeleteBin6Line size={22} />
                                         </Box>
                                     </TableCell>
