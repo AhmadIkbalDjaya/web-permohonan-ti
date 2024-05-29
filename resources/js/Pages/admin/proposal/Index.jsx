@@ -267,7 +267,20 @@ export default function Proposal({ proposals, meta }) {
                                                     // }}
                                                 />
                                             </AppLink>
-                                            <RiDeleteBin6Line size={22} />
+                                            <RiDeleteBin6Line
+                                                size={22}
+                                                onClick={() => {
+                                                    router.delete(
+                                                        route(
+                                                            "admin.proposal.delete",
+                                                            {
+                                                                proposal:
+                                                                    proposal.id,
+                                                            }
+                                                        )
+                                                    );
+                                                }}
+                                            />
                                         </Box>
                                     </TableCell>
                                 </TableRow>

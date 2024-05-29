@@ -39,6 +39,7 @@ Route::prefix('admin')->group(function () {
         Route::post("proposal", 'store')->name('admin.proposal.store');
         Route::get("proposal/{proposal}/edit", "edit")->name('admin.proposal.edit');
         Route::put("proposal/{proposal}", "update")->name('admin.proposal.update');
+        Route::delete("proposal/{proposal}", "destroy")->name('admin.proposal.delete');
     });
     Route::get("hasil", [AdminResultController::class, "index"])->name('admin.result.index');
     Route::get("kompren", [AdminComprehensiveController::class, "index"])->name('admin.comprehensive.index');

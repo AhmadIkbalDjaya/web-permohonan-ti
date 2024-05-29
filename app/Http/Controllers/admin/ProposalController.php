@@ -232,7 +232,7 @@ class ProposalController extends Controller
                             $file->update([
                                 "file" => $validated[$file_requirement->name],
                             ]);
-                        } 
+                        }
                         // wrong place
                         // else {
                         //     File::create([
@@ -251,20 +251,20 @@ class ProposalController extends Controller
     public function destroy(Proposal $proposal)
     {
         DB::transaction(function () use ($proposal) {
-            $proposal->student->delete();
-            $proposal->schedule > delete();
-            if (Storage::exists($proposal->applicant_sign)) {
-                Storage::delete($proposal->applicant_sign);
-            }
-            $proposal->mentors->delete();
-            $proposal->testers->delete();
+            $proposal->mentors()->delete();
+            $proposal->testers()->delete();
             foreach ($proposal->files as $index => $file) {
                 if (Storage::exists($file->file)) {
                     Storage::delete($file->file);
                 }
             }
-            $proposal->files->delete();
+            if (Storage::exists($proposal->applicant_sign)) {
+                Storage::delete($proposal->applicant_sign);
+            }
+            $proposal->files()->delete();
             $proposal->delete();
+            $proposal->student()->delete();
+            $proposal->schedule()->delete();
         });
         return to_route("admin.proposal.index");
     }
