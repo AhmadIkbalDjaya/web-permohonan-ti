@@ -33,15 +33,22 @@ Route::get("ppl", [PplController::class, "index"])->name("ppl");
 
 Route::prefix('admin')->group(function () {
     Route::get("", [AdminController::class, "dashboard"])->name('admin.home');
-    Route::controller(AdminProposalController::class)->group(function () {
-        Route::get("proposal", "index")->name('admin.proposal.index');
-        Route::get("proposal/create", "create")->name('admin.proposal.create');
-        Route::post("proposal", 'store')->name('admin.proposal.store');
-        Route::get("proposal/{proposal}/edit", "edit")->name('admin.proposal.edit');
-        Route::put("proposal/{proposal}", "update")->name('admin.proposal.update');
-        Route::delete("proposal/{proposal}", "destroy")->name('admin.proposal.delete');
+    Route::prefix("proposal")->controller(AdminProposalController::class)->group(function () {
+        Route::get("", "index")->name('admin.proposal.index');
+        Route::get("create", "create")->name('admin.proposal.create');
+        Route::post("", 'store')->name('admin.proposal.store');
+        Route::get("{proposal}/edit", "edit")->name('admin.proposal.edit');
+        Route::put("{proposal}", "update")->name('admin.proposal.update');
+        Route::delete("{proposal}", "destroy")->name('admin.proposal.delete');
     });
-    Route::get("hasil", [AdminResultController::class, "index"])->name('admin.result.index');
+    Route::prefix("hasil")->controller(AdminResultController::class)->group(function () {
+        Route::get("", "index")->name('admin.result.index');
+        Route::get("create", "create")->name('admin.result.create');
+        Route::post("", 'store')->name('admin.result.store');
+        Route::get("{result}/edit", "edit")->name('admin.result.edit');
+        Route::put("{result}", "update")->name('admin.result.update');
+        Route::delete("{result}", "destroy")->name('admin.result.delete');
+    });
     Route::get("kompren", [AdminComprehensiveController::class, "index"])->name('admin.comprehensive.index');
     Route::get("ppl", [AdminPplController::class, "index"])->name('admin.ppl.index');
 });

@@ -184,7 +184,6 @@ class ProposalController extends Controller
 
         foreach ($file_requirements as $file_requirement) {
             if ($request->file($file_requirement->name)) {
-                // $proposal->files->
                 foreach ($proposal->files as $index => $file) {
                     if ($file->name == $file_requirement->name) {
                         if (Storage::exists($file->file)) {
@@ -197,7 +196,6 @@ class ProposalController extends Controller
                 unset($validated[$file_requirement->name]);
             }
         }
-        // dd($validated);
         DB::transaction(function () use ($proposal, $updateProposal, $validated, $file_requirements) {
             $proposal->update($updateProposal);
             $proposal->student->update([
@@ -225,7 +223,6 @@ class ProposalController extends Controller
             }
             // tambahkan logic simpan path file di db jika belum ada sebelumnya
             foreach ($file_requirements as $index => $file_requirement) {
-                // if ($validated[$file_requirement->name]) {
                 if (array_key_exists($file_requirement->name, $validated)) {
                     foreach ($proposal->files as $index => $file) {
                         if ($file->name == $file_requirement->name) {
