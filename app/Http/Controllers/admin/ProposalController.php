@@ -167,7 +167,7 @@ class ProposalController extends Controller
         ];
         $file_requirements = FileRequirement::where("request_type", "proposals")->get();
         foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->name] = "mimes:pdf";
+            $rules[$file_requirement->name] = "nullable|mimes:pdf";
         }
 
         $validated = $request->validate($rules);
@@ -176,6 +176,9 @@ class ProposalController extends Controller
             "essay_title" => $validated["essay_title"],
         ];
         if ($request->file("applicant_sign")) {
+            if (Storage::exists($proposal->applicant_sign)) {
+                Storage::delete($proposal->applicant_sign);
+            }
             $updateProposal["applicant_sign"] = $request->file("applicant_sign")->storePublicly("proposal/applicant_signs", "public");
         }
 
@@ -194,7 +197,7 @@ class ProposalController extends Controller
                 unset($validated[$file_requirement->name]);
             }
         }
-
+        // dd($validated);
         DB::transaction(function () use ($proposal, $updateProposal, $validated, $file_requirements) {
             $proposal->update($updateProposal);
             $proposal->student->update([
@@ -220,20 +223,24 @@ class ProposalController extends Controller
                     "name" => $validated["testers"][$index],
                 ]);
             }
+            // tambahkan logic simpan path file di db jika belum ada sebelumnya
             foreach ($file_requirements as $index => $file_requirement) {
-                if ($validated[$file_requirement->name]) {
+                // if ($validated[$file_requirement->name]) {
+                if (array_key_exists($file_requirement->name, $validated)) {
                     foreach ($proposal->files as $index => $file) {
                         if ($file->name == $file_requirement->name) {
                             $file->update([
                                 "file" => $validated[$file_requirement->name],
                             ]);
-                        } else {
-                            File::create([
-                                "file" => $validated[$file_requirement->name],
-                                "name" => $file_requirement->name,
-                                "proposal_id" => $proposal->id,
-                            ]);
-                        }
+                        } 
+                        // wrong place
+                        // else {
+                        //     File::create([
+                        //         "file" => $validated[$file_requirement->name],
+                        //         "name" => $file_requirement->name,
+                        //         "proposal_id" => $proposal->id,
+                        //     ]);
+                        // }
                     }
                 }
             }

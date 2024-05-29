@@ -1,4 +1,4 @@
-import { Head, usePage } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import React, { useState } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
@@ -24,6 +24,8 @@ import InputFileUpload, {
     themeFileUploadButton,
 } from "../components/elements/input/InputFileUpload";
 import { FaFilePdf } from "react-icons/fa";
+import InputErrorMessage from "../components/elements/input/InputErrorMessage";
+import dataURLtoBlob from "blueimp-canvas-to-blob";
 
 export default function EditProposal({
     proposal,
@@ -33,6 +35,7 @@ export default function EditProposal({
     files,
 }) {
     const { errors } = usePage().props;
+    testers = testers.map((tester) => tester || "");
     const [formValues, setFormValues] = useState({
         name: proposal.student.name,
         nim: proposal.student.nim,
@@ -43,10 +46,11 @@ export default function EditProposal({
         essay_title: proposal.essay_title,
         mentors: mentors,
         testers: testers,
-        date: proposal.schedule.date,
-        time: proposal.schedule.time,
-        location: proposal.schedule.location,
+        date: proposal.schedule.date || "",
+        time: proposal.schedule.time ? proposal.schedule.time.slice(0, 5) : "",
+        location: proposal.schedule.location || "",
         files: {},
+        _method: "PUT",
     });
 
     function handleChangeForm(e, index = null) {
@@ -75,6 +79,33 @@ export default function EditProposal({
                 [name]: value,
             }));
         }
+    }
+    function handleSubmitForm(e) {
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(formValues)) {
+            if (key == "files") {
+                for (const [key, file] of Object.entries(value)) {
+                    formData.append(key, file);
+                }
+            } else if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    formData.append(`${key}[${index}]`, item);
+                });
+            } else {
+                formData.append(key, value);
+            }
+        }
+        // console.log(formValues);
+        // router.post("/admin/proposal", formValues);
+        router.post(
+            route("admin.proposal.update", { proposal: proposal.id }),
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
     }
     const [signature, setSignatur] = useState();
     const [emptySignature, setEmptySignature] = useState(false);
@@ -124,7 +155,7 @@ export default function EditProposal({
                         </Typography>
                     </Box>
                     <Button
-                        // onClick={handleSubmitForm}
+                        onClick={handleSubmitForm}
                         variant="contained"
                         color="primary"
                         size="small"
@@ -501,37 +532,41 @@ export default function EditProposal({
                                                             }
                                                         />
                                                     </Box>
-                                                    {files.map((file) => {
-                                                        return file.name ==
-                                                            file_requirement.name ? (
-                                                            <Box flexGrow={1}>
-                                                                <ThemeProvider
-                                                                    flex={1}
-                                                                    theme={
-                                                                        themeFileUploadButton
-                                                                    }
+                                                    {files.map(
+                                                        (file, index) => {
+                                                            return file.name ==
+                                                                file_requirement.name ? (
+                                                                <Box
+                                                                    key={index}
+                                                                    flexGrow={1}
                                                                 >
-                                                                    <Button
-                                                                        variant="contained"
-                                                                        color="gray-100"
-                                                                        startIcon={
-                                                                            <FaFilePdf />
+                                                                    <ThemeProvider
+                                                                        theme={
+                                                                            themeFileUploadButton
                                                                         }
-                                                                        sx={{
-                                                                            height: "33px",
-                                                                            textTransform:
-                                                                                "capitalize",
-                                                                        }}
-                                                                        fullWidth
                                                                     >
-                                                                        Lihat
-                                                                    </Button>
-                                                                </ThemeProvider>
-                                                            </Box>
-                                                        ) : (
-                                                            ""
-                                                        );
-                                                    })}
+                                                                        <Button
+                                                                            variant="contained"
+                                                                            color="gray-100"
+                                                                            startIcon={
+                                                                                <FaFilePdf />
+                                                                            }
+                                                                            sx={{
+                                                                                height: "33px",
+                                                                                textTransform:
+                                                                                    "capitalize",
+                                                                            }}
+                                                                            fullWidth
+                                                                        >
+                                                                            Lihat
+                                                                        </Button>
+                                                                    </ThemeProvider>
+                                                                </Box>
+                                                            ) : (
+                                                                ""
+                                                            );
+                                                        }
+                                                    )}
                                                 </Box>
                                                 {formValues.files[
                                                     file_requirement.name
@@ -669,7 +704,7 @@ export default function EditProposal({
                             startIcon={<MdModeEdit />}
                             fullWidth
                             color="primary"
-                            // onClick={handleSubmitForm}
+                            onClick={handleSubmitForm}
                         >
                             Simpan
                         </Button>
