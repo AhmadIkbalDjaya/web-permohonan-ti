@@ -7,6 +7,7 @@ use App\Models\Comprehensive;
 use App\Models\FileRequirement;
 use App\Models\Student;
 use App\Models\File;
+use App\Models\Tester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -15,7 +16,10 @@ class ComprehensiveController extends Controller
 {
     public function index()
     {
-        return Inertia::render("public/comprehensive/Index");
+        $file_requirements = FileRequirement::where("request_type", "comprehensives")->get();
+        return Inertia::render("public/comprehensive/Index", [
+            "file_requirements" => $file_requirements,
+        ]);
     }
 
     public function store(Request $request)
@@ -26,13 +30,9 @@ class ComprehensiveController extends Controller
             "pob" => "required",
             "dob" => "required|date",
             "semester" => "required|integer|min:0",
-            "phone" => "required|regex:^(\+62|62|0)8[1-9][0-9]{6,9}$",
+            "phone" => "required|phone:ID",
             "essay_title" => "required",
-            "applicant_sign" => "required",
-            // "mentors" => "array|min:2",
-            // "mentors.*" => "required|string",
-            // "testers" => "array|min:2",
-            // "testers.*" => "required|string",
+            "applicant_sign" => "required|image",
         ];
         $file_requirements = FileRequirement::where("request_type", "comprehensives")->get();
         foreach ($file_requirements as $file_requirement) {
@@ -44,11 +44,11 @@ class ComprehensiveController extends Controller
             if ($request->file($file_requirement->name)) {
                 $validated[$file_requirement->name] = $request->file($file_requirement)->storePublicly("result/files", "public");
             } else {
-                $validated[$file_requirement->name] = "null";
+                unset($validated[$file_requirement->name]);
             }
         }
         DB::transaction(function () use ($validated, $file_requirements) {
-            $student = Student::create([
+            $newStudent = Student::create([
                 "name" => $validated["name"],
                 "nim" => $validated["nim"],
                 "pob" => $validated["pob"],
@@ -56,19 +56,28 @@ class ComprehensiveController extends Controller
                 "semester" => $validated["semester"],
                 "phone" => $validated["phone"],
             ]);
-            $comprehensive = Comprehensive::create([
-                "student_id" => $student->id,
+            $newComprehensive = Comprehensive::create([
+                "student_id" => $newStudent->id,
                 "essay_title" => $validated["essay_title"],
                 "applicant_sign" => $validated["applicant_sign"],
             ]);
+            $testerSectors = ["JARKOM", "RPL", "Agama"];
+            foreach ($testerSectors as $index => $sector) {
+                Tester::create([
+                    "name" => $validated["testers"][$index] || null,
+                    "description" => $sector,
+                    "order" => $index,
+                    "comprehensive_id" => $newComprehensive->id,
+                ]);
+            }
             foreach ($file_requirements as $index => $file_requirement) {
                 File::create([
                     "file" => $validated[$file_requirement->name],
                     "name" => $file_requirement->name,
-                    "result_id" => $comprehensive->id,
+                    "comprehensive_id" => $newComprehensive->id,
                 ]);
             }
         });
-        return redirect()->route('home');
+        return to_route("home");
     }
 }

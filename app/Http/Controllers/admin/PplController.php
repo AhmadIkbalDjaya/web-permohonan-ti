@@ -52,13 +52,13 @@ class PplController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            "start_date" => "required",
-            "end_date" => "required",
+            "start_date" => "required|date",
+            "end_date" => "required|date",
             "location" => "required",
             "location_address" => "required",
             "applicant_sign" => "required|image",
             "mentor" => "nullable|string",
-            "student_count" => "numeric|min:1",
+            "student_count" => "required|numeric|min:1",
 
             "names" => "required|array|size:" . count($request->student_count),
             "names.*" => "required|string",

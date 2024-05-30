@@ -18,7 +18,10 @@ class ResultController extends Controller
 {
     public function index()
     {
-        return Inertia::render("public/result/Index");
+        $file_requirements = FileRequirement::where("request_type", "proposals")->get();
+        return Inertia::render("public/result/Index", [
+            "file_requirements" => $file_requirements,
+        ]);
     }
 
     public function store(Request $request)
@@ -80,7 +83,7 @@ class ResultController extends Controller
                     "result_id" => $newResult->id,
                 ]);
             }
-            for ($i=0; $i < 2; $i++) { 
+            for ($i = 0; $i < 2; $i++) {
                 Tester::create([
                     "order" => $i,
                     "result_id" => $newResult->id,
