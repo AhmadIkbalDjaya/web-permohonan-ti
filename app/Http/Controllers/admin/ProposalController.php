@@ -80,7 +80,7 @@ class ProposalController extends Controller
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("proposal/applicant_signs", "public");
         foreach ($file_requirements as $index => $file_requirement) {
             if ($request->file($file_requirement->name)) {
-                $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("proposal/file", "public");
+                $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("proposal/files", "public");
             } else {
                 // $validated[$file_requirement->name] = null;
                 unset($validated[$file_requirement->name]);

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\FileRequirement;
 use App\Models\Mentor;
 use App\Models\Proposal;
+use App\Models\Schedule;
 use App\Models\Student;
 use App\Models\File;
 use App\Models\Tester;
@@ -32,9 +33,9 @@ class ProposalController extends Controller
             "pob" => "required",
             "dob" => "required|date",
             "semester" => "required|integer|min:0",
-            "phone" => "required|regex:^(\+62|62|0)8[1-9][0-9]{6,9}$",
+            "phone" => "required|phone:ID",
             "essay_title" => "required",
-            "applicant_sign" => "required",
+            "applicant_sign" => "required|image",
             "mentors" => "array|min:2",
             "mentors.*" => "required|string",
         ];
@@ -48,11 +49,11 @@ class ProposalController extends Controller
             if ($request->file($file_requirement->name)) {
                 $validated[$file_requirement->name] = $request->file($file_requirement)->storePublicly("proposal/files", "public");
             } else {
-                $validated[$file_requirement->name] = "null";
+                unset($validated[$file_requirement->name]);
             }
         }
         DB::transaction(function () use ($validated, $file_requirements) {
-            $student = Student::create([
+            $newStudent = Student::create([
                 "name" => $validated["name"],
                 "nim" => $validated["nim"],
                 "pob" => $validated["pob"],
@@ -60,26 +61,34 @@ class ProposalController extends Controller
                 "semester" => $validated["semester"],
                 "phone" => $validated["phone"],
             ]);
-            $proposal = Proposal::create([
-                "student_id" => $student->id,
+            $newSchedule = Schedule::create();
+            $newProposal = Proposal::create([
+                "student_id" => $newStudent->id,
                 "essay_title" => $validated["essay_title"],
                 "applicant_sign" => $validated["applicant_sign"],
+                "schedule_id" => $newSchedule->id,
             ]);
             foreach ($file_requirements as $index => $file_requirement) {
                 File::create([
                     "file" => $validated[$file_requirement->name],
                     "name" => $file_requirement->name,
-                    "proposal_id" => $proposal->id,
+                    "proposal_id" => $newProposal->id,
                 ]);
             }
             foreach ($validated["mentors"] as $index => $mentor) {
                 Mentor::create([
                     "name" => $mentor,
                     "order" => $index,
-                    "proposal_id" => $proposal->id,
+                    "proposal_id" => $newProposal->id,
+                ]);
+            }
+            for ($i=0; $i < 2; $i++) { 
+                Tester::create([
+                    "order" => $i,
+                    "proposal_id" => $newProposal->id,
                 ]);
             }
         });
-        return redirect()->route('home');
+        return to_route("home");
     }
 }
