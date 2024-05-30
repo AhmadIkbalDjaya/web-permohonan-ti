@@ -252,12 +252,7 @@ export default function Proposal({ proposals, meta }) {
                                                     }
                                                 )}
                                             >
-                                                <TbEdit
-                                                    size={22}
-                                                    // onClick={() => {
-
-                                                    // }}
-                                                />
+                                                <TbEdit size={22} />
                                             </AppLink>
                                             <RiDeleteBin6Line
                                                 size={22}

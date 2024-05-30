@@ -12,7 +12,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('ppls', function (Blueprint $table) {
-            $table->foreignIdFor(Mentor::class)->after("applicant_sign")->nullable()->constrained()->references("id")->on("mentors")->onDelete("setnull")->onUpdate("setnull");
+            $table->foreignIdFor(Mentor::class)->after("applicant_sign")->nullable()->constrained()->references("id")->on("mentors")->onDelete("set null")->onUpdate("set null");
         });
     }
 

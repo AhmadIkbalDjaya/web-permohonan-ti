@@ -80,7 +80,7 @@ class ComprehensiveController extends Controller
             $testerSectors = ["JARKOM", "RPL", "Agama"];
             foreach ($testerSectors as $index => $sector) {
                 Tester::create([
-                    "name" => $validated["testers"][$index] || null,
+                    "name" => $validated["testers"][$index],
                     "description" => $sector,
                     "order" => $index,
                     "comprehensive_id" => $newComprehensive->id,
@@ -92,8 +92,10 @@ class ComprehensiveController extends Controller
 
     public function edit(Comprehensive $comprehensive)
     {
+        $testers = $comprehensive->testers->sortBy("order")->pluck("name");
         return Inertia::render("admin/comprehensive/Edit", [
-            "comprehensive" => $comprehensive,
+            "comprehensive" => $comprehensive->load(["student"]),
+            "testers" => $testers,
         ]);
     }
 
@@ -135,7 +137,7 @@ class ComprehensiveController extends Controller
             foreach ($comprehensive->testers as $index => $tester) {
                 if ($tester->description == $testerSectors[$index]) {
                     $tester->update([
-                        "name" => $validated["testers"][$index] || null,
+                        "name" => $validated["testers"][$index],
                     ]);
                 }
             }
