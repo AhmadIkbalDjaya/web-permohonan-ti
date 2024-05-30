@@ -10,22 +10,17 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import {
-    Divider,
     Grid,
-    List,
-    ListItem,
-    ListItemText,
-    Paper,
-    Stack,
+  
 } from "@mui/material";
 import Model from "../assets/model.png";
 import CardComponent from "../component/cardComponent";
 import "./style.css";
 import useIntersectionObserver from "./animasi";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, } from "react";
 import { Head, Link } from "@inertiajs/react";
-import { RiFacebookLine, RiInstagramLine, RiTwitterLine } from "react-icons/ri";
+import FooterComponent from "../component/footerComponent";
 
 const pages = ["Products", "Pricing", "Blog"];
 
@@ -413,6 +408,7 @@ function Home() {
                         <CardComponent
                             title="Ujian Komprehensif"
                             isi="Presentasikan Rencana Riset Anda di Seminar Proposal!"
+                            hreff="kompren"
                         />
                     </Grid>
                     <Grid
@@ -427,82 +423,13 @@ function Home() {
                         <CardComponent
                             title="PPL"
                             isi="Presentasikan Rencana Riset Anda di Seminar Proposal!"
+                            hreff="ppl"
                         />
                     </Grid>
                 </Grid>
             </Box>
-            <footer style={{ marginTop: 20 }}>
-                <Paper elevation={2}>
-                    <Container maxWidth={"lg"}>
-                        <Grid
-                            container
-                            spacing={2}
-                            justifyContent={"space-between"}
-                        >
-                            <Grid item xs={12} sm={6} md={3}>
-                                <List>
-                                    <ListItem>
-                                        <ListItemText
-                                            primary="Alamat"
-                                            secondary="JI. H.M. Yasin Limpo No. 36 Samata, Kab Gowa, Sulawesi Selatan, Indonesia"
-                                        />
-                                    </ListItem>
-                                </List>
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={3}>
-                                <List>
-                                    <ListItem>
-                                        <ListItemText
-                                            primary="KONTAK"
-                                            secondary="(0411) 841879"
-                                        />
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemText primary="(0411) 8221400" />
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemText primary="kontak@uin-alauddin.ac.id" />
-                                    </ListItem>
-                                </List>
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={3}>
-                                        <h3>Social Media</h3>
-                                        <IconButton
-                                            href="https://www.facebook.com/"
-                                            aria-label="Facebook"
-                                        >
-                                             <RiFacebookLine/>
-                                        </IconButton>
-                                        <IconButton
-                                            href="https://twitter.com/"
-                                            aria-label="Twitter"
-                                        >
-                                            <RiTwitterLine/>
-                                        </IconButton>
-                                        <IconButton
-                                            href="https://www.instagram.com/"
-                                            aria-label="Instagram"
-                                        >
-                                            <RiInstagramLine/>
-                                        </IconButton>
-                            </Grid>
-                        </Grid>
-                        <Divider />
-                        <Grid container alignItems="center">
-                            <Grid item>
-                                <Typography
-                                    variant="body2"
-                                    sx={{ textAlign: "center" }}
-                                >
-                                    Copyright &copy; 2024 Inready Workgroup. All
-                                    Rights Reserved.
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    </Container>
-                </Paper>
-            </footer>
-        </>
+            <FooterComponent></FooterComponent>
+            </>
     );
 }
 export default Home;
