@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\public;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mentor;
 use App\Models\PPL;
 use App\Models\PplStudent;
 use App\Models\Student;
@@ -20,11 +21,18 @@ class PplController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            "student_count" => "required|integer|min:1",
+            "start_date" => "required|date",
+            "end_date" => "required|date",
+            "location" => "required",
+            "location_address" => "required",
+            "applicant_sign" => "required|image",
+            "mentor" => "nullable|string",
+            "student_count" => "required|numeric|min:1",
+
             "names" => "required|array|size:" . count($request->student_count),
-            "names.*" => "required",
+            "names.*" => "required|string",
             "nims" => "required|array|size:" . count($request->student_count),
-            "nim.*" => "required|numeric",
+            "nims.*" => "required|numeric",
             "pobs" => "required|array|size:" . count($request->student_count),
             "pobs.*" => "required|string",
             "dobs" => "required|array|size:" . count($request->student_count),
@@ -32,15 +40,11 @@ class PplController extends Controller
             "semesters" => "required|array|size:" . count($request->student_count),
             "semesters.*" => "required|integer|min:0",
             "phones" => "required|array|size:" . count($request->student_count),
-            "phones.*" => "required|regex:^(\+62|62|0)8[1-9][0-9]{6,9}$",
-            "start_date" => "required|date",
-            "end_date" => "required|date",
-            "location" => "required|string",
-            "location_address" => "required|string",
-            "applicant_sign" => "required",
+            "phones.*" => "required|phone:ID",
         ]);
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("ppl", "public");
         DB::transaction(function () use ($validated) {
+            $newMentor = Mentor::create();
             $newPPL = PPL::create([
                 "start_date" => $validated["start_date"],
                 "end_date" => $validated["end_date"],
@@ -48,14 +52,14 @@ class PplController extends Controller
                 "location_address" => $validated["location_address"],
                 "applicant_sign" => $validated["applicant_sign"],
             ]);
-            foreach ($validated["student_count"] as $index => $student) {
+            for ($i = 0; $i < $validated["student_count"]; $i++) {
                 $newStudent = Student::create([
-                    "name" => $validated["names"][$index],
-                    "nim" => $validated["nims"][$index],
-                    "pob" => $validated["pobs"][$index],
-                    "dob" => $validated["dobs"][$index],
-                    "semester" => $validated["semesters"][$index],
-                    "phone" => $validated["phones"][$index],
+                    "name" => $validated["names"][$i],
+                    "nim" => $validated["nims"][$i],
+                    "pob" => $validated["pobs"][$i],
+                    "dob" => $validated["dobs"][$i],
+                    "semester" => $validated["semesters"][$i],
+                    "phone" => $validated["phones"][$i],
                 ]);
                 PplStudent::create([
                     "student_id" => $newStudent->id,
@@ -63,6 +67,6 @@ class PplController extends Controller
                 ]);
             }
         });
-        return redirect()->route('home');
+        return to_route("home");
     }
 }

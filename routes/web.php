@@ -33,12 +33,36 @@ Route::get("ppl", [PplController::class, "index"])->name("ppl");
 
 Route::prefix('admin')->group(function () {
     Route::get("", [AdminController::class, "dashboard"])->name('admin.home');
-    Route::controller(AdminProposalController::class)->group(function () {
-        Route::get("proposal", "index")->name('admin.proposal.index');
-        Route::get("proposal/create", "create")->name('admin.proposal.create');
-        Route::post("proposal", 'store')->name('admin.proposal.store');
+    Route::prefix("proposal")->controller(AdminProposalController::class)->group(function () {
+        Route::get("", "index")->name('admin.proposal.index');
+        Route::get("create", "create")->name('admin.proposal.create');
+        Route::post("", 'store')->name('admin.proposal.store');
+        Route::get("{proposal}/edit", "edit")->name('admin.proposal.edit');
+        Route::put("{proposal}", "update")->name('admin.proposal.update');
+        Route::delete("{proposal}", "destroy")->name('admin.proposal.delete');
     });
-    Route::get("hasil", [AdminResultController::class, "index"])->name('admin.result.index');
-    Route::get("kompren", [AdminComprehensiveController::class, "index"])->name('admin.comprehensive.index');
-    Route::get("ppl", [AdminPplController::class, "index"])->name('admin.ppl.index');
+    Route::prefix("hasil")->controller(AdminResultController::class)->group(function () {
+        Route::get("", "index")->name('admin.result.index');
+        Route::get("create", "create")->name('admin.result.create');
+        Route::post("", 'store')->name('admin.result.store');
+        Route::get("{result}/edit", "edit")->name('admin.result.edit');
+        Route::put("{result}", "update")->name('admin.result.update');
+        Route::delete("{result}", "destroy")->name('admin.result.delete');
+    });
+    Route::prefix("kompren")->controller(AdminComprehensiveController::class)->group(function () {
+        Route::get("", "index")->name('admin.comprehensive.index');
+        Route::get("create", "create")->name('admin.comprehensive.create');
+        Route::post("", 'store')->name('admin.comprehensive.store');
+        Route::get("{comprehensive}/edit", "edit")->name('admin.comprehensive.edit');
+        Route::put("{comprehensive}", "update")->name('admin.comprehensive.update');
+        Route::delete("{comprehensive}", "destroy")->name('admin.comprehensive.delete');
+    });
+    Route::prefix("ppl")->controller(AdminPplController::class)->group(function () {
+        Route::get("", "index")->name('admin.ppl.index');
+        Route::get("create", "create")->name('admin.ppl.create');
+        Route::post("", 'store')->name('admin.ppl.store');
+        Route::get("{ppl}/edit", "edit")->name('admin.ppl.edit');
+        Route::put("{ppl}", "update")->name('admin.ppl.update');
+        Route::delete("{ppl}", "destroy")->name('admin.ppl.delete');
+    });
 });

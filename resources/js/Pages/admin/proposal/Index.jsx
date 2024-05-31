@@ -31,12 +31,9 @@ import { idFormatDate } from "../../../helper/idFormatDate";
 import pickBy from "lodash.pickby";
 import ReactToPrint from "react-to-print";
 import CetakProposal from "../cetak/cetakProposal";
+import { tableHeadStyle } from "../components/styles/tableHeadStyle";
 
 export default function Proposal({ proposals, meta }) {
-    const tableHeadStyle = {
-        fontWeight: "bold",
-        padding: "10px 10px",
-    };
     const showItemOptions = [5, 10, 15, 20, 25];
     const [loading, setloading] = useState(false);
     const perpage = useRef(meta.perpage);
@@ -48,6 +45,9 @@ export default function Proposal({ proposals, meta }) {
     };
     const handleChangeSearch = (e) => {
         search.current = e.target.value;
+        if (meta.search == "" && search.current != "") {
+            page.current = 1;
+        }
         getData();
     };
     const handleChangePage = (e, value) => {
@@ -63,11 +63,6 @@ export default function Proposal({ proposals, meta }) {
                 search: search.current,
                 page: page.current != 1 ? page.current : undefined,
             }),
-            // {
-            //     perpage: perpage.current,
-            //     search: search.current,
-            //     page: page.current,
-            // },
             {
                 preserveScroll: true,
                 preserveState: true,
@@ -85,8 +80,8 @@ export default function Proposal({ proposals, meta }) {
             <Head title="Proposal" />
             <BaseLayout>
                 <AppBreadcrumbs>
-                    <AppLink href="/admin">Home</AppLink>
-                    <AppLink href="/admin/proposal" color="black">
+                    <AppLink href={route("admin.home")}>Home</AppLink>
+                    <AppLink href={route("admin.proposal.index")} color="black">
                         Proposal
                     </AppLink>
                 </AppBreadcrumbs>
@@ -264,8 +259,31 @@ export default function Proposal({ proposals, meta }) {
                                             alignItems={"center"}
                                         >
                                             <HiOutlineEye size={22} />
-                                            <TbEdit size={22} />
-                                            <RiDeleteBin6Line size={22} />
+                                            <AppLink
+                                                color={"black"}
+                                                href={route(
+                                                    "admin.proposal.edit",
+                                                    {
+                                                        proposal: proposal.id,
+                                                    }
+                                                )}
+                                            >
+                                                <TbEdit size={22} />
+                                            </AppLink>
+                                            <RiDeleteBin6Line
+                                                size={22}
+                                                onClick={() => {
+                                                    router.delete(
+                                                        route(
+                                                            "admin.proposal.delete",
+                                                            {
+                                                                proposal:
+                                                                    proposal.id,
+                                                            }
+                                                        )
+                                                    );
+                                                }}
+                                            />
                                         </Box>
                                     </TableCell>
                                 </TableRow>

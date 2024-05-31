@@ -1,68 +1,56 @@
+import { Head, router, usePage } from "@inertiajs/react";
 import React, { useState } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
-import { Head, router, usePage } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
-import AppInputLabel from "../components/elements/input/AppInputLabel";
-import InputFileUpload from "../components/elements/input/InputFileUpload";
-import InputErrorMessage from "../components/elements/input/InputErrorMessage";
-import Typography from "@mui/material/Typography";
 import {
     Box,
     Button,
+    ButtonGroup,
+    FormHelperText,
     Grid,
+    MenuItem,
     Select,
     TextField,
     ThemeProvider,
-    MenuItem,
-    ButtonGroup,
-    FormHelperText,
+    Typography,
 } from "@mui/material";
-import { FaPlus } from "react-icons/fa";
+import { MdModeEdit } from "react-icons/md";
 import { themeTextField } from "../../../theme/TextFieldTheme";
-import ReactSignatureCanvas from "react-signature-canvas";
+import AppInputLabel from "../components/elements/input/AppInputLabel";
 import { semesterListItems } from "../components/elements/input/SemesterListItems";
+import ReactSignatureCanvas from "react-signature-canvas";
+import InputFileUpload, {
+    themeFileUploadButton,
+} from "../components/elements/input/InputFileUpload";
+import { FaFilePdf } from "react-icons/fa";
+import InputErrorMessage from "../components/elements/input/InputErrorMessage";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
 
-export default function CreateProposal({ file_requirements }) {
-    const [signature, setSignatur] = useState();
-    const [emptySignature, setEmptySignature] = useState(false);
-    const clearSignatur = () => {
-        signature.clear();
-    };
-    const saveSignature = () => {
-        if (signature.isEmpty()) {
-            setEmptySignature(true);
-        } else {
-            setEmptySignature(false);
-            const result = signature
-                .getTrimmedCanvas()
-                .toDataURL("applicant_sign");
-            const image = dataURLtoBlob(result);
-            setFormValues((values) => {
-                return {
-                    ...values,
-                    applicant_sign: image,
-                };
-            });
-        }
-    };
-
+export default function EditProposal({
+    proposal,
+    mentors,
+    testers,
+    file_requirements,
+    files,
+}) {
     const { errors } = usePage().props;
+    testers = testers.map((tester) => tester || "");
     const [formValues, setFormValues] = useState({
-        name: "",
-        nim: "",
-        pob: "",
-        dob: "",
-        semester: "",
-        phone: "",
-        essay_title: "",
-        mentors: ["", ""],
-        testers: ["", ""],
-        date: "",
-        time: "",
-        location: "",
+        name: proposal.student.name,
+        nim: proposal.student.nim,
+        pob: proposal.student.pob,
+        dob: proposal.student.dob,
+        semester: proposal.student.semester,
+        phone: proposal.student.phone,
+        essay_title: proposal.essay_title,
+        mentors: mentors,
+        testers: testers,
+        date: proposal.schedule.date || "",
+        time: proposal.schedule.time ? proposal.schedule.time.slice(0, 5) : "",
+        location: proposal.schedule.location || "",
         files: {},
+        _method: "PUT",
     });
 
     function handleChangeForm(e, index = null) {
@@ -107,28 +95,48 @@ export default function CreateProposal({ file_requirements }) {
                 formData.append(key, value);
             }
         }
-        // router.post("/admin/proposal", formValues);
-        router.post(route("admin.proposal.store"), formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
+        router.post(
+            route("admin.proposal.update", { proposal: proposal.id }),
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
     }
+    const [signature, setSignatur] = useState();
+    const [emptySignature, setEmptySignature] = useState(false);
+    const clearSignatur = () => {
+        signature.clear();
+    };
+    const saveSignature = () => {
+        if (signature.isEmpty()) {
+            setEmptySignature(true);
+        } else {
+            setEmptySignature(false);
+            const result = signature
+                .getTrimmedCanvas()
+                .toDataURL("applicant_sign");
+            const image = dataURLtoBlob(result);
+            setFormValues((values) => {
+                return {
+                    ...values,
+                    applicant_sign: image,
+                };
+            });
+        }
+    };
     return (
         <>
-            <Head title="Tambah Permohonan Proposal" />
+            <Head title="Edit Permohonan Proposal" />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
                     <AppLink href={route("admin.proposal.index")}>
                         Proposal
                     </AppLink>
-                    <AppLink
-                        href={route("admin.proposal.create")}
-                        color="black"
-                    >
-                        Tambah Permohonan
-                    </AppLink>
+                    <AppLink color="black">Edit Permohonan</AppLink>
                 </AppBreadcrumbs>
                 <Box
                     display={"flex"}
@@ -138,10 +146,10 @@ export default function CreateProposal({ file_requirements }) {
                 >
                     <Box>
                         <Typography variant="h5" fontWeight={"600"}>
-                            Tambah Permohonan
+                            Edit Permohonan
                         </Typography>
                         <Typography variant="caption">
-                            Isi Formulir Permohonan Seminar Proposal Baru
+                            Edit Formulir Permohonan Seminar Proposal
                         </Typography>
                     </Box>
                     <Button
@@ -149,7 +157,7 @@ export default function CreateProposal({ file_requirements }) {
                         variant="contained"
                         color="primary"
                         size="small"
-                        startIcon={<FaPlus />}
+                        startIcon={<MdModeEdit />}
                         sx={{
                             background: "#B20600",
                             textTransform: "none",
@@ -484,7 +492,7 @@ export default function CreateProposal({ file_requirements }) {
                                 borderColor: "slate-300",
                                 borderRadius: "4px",
                             }}
-                        >    
+                        >
                             <Typography
                                 variant="body2"
                                 color="initial"
@@ -504,17 +512,60 @@ export default function CreateProposal({ file_requirements }) {
                                                         "_",
                                                         " "
                                                     )}
-                                                    required={
-                                                        file_requirement.is_required
-                                                    }
+                                                    // required={
+                                                    //     file_requirement.is_required
+                                                    // }
                                                 />
-                                                <InputFileUpload
-                                                    id="name"
-                                                    name={file_requirement.name}
-                                                    type="file"
-                                                    accept={".pdf"}
-                                                    onChange={handleChangeForm}
-                                                />
+                                                <Box display={"flex"} gap={2}>
+                                                    <Box flexGrow={1}>
+                                                        <InputFileUpload
+                                                            id="name"
+                                                            name={
+                                                                file_requirement.name
+                                                            }
+                                                            type="file"
+                                                            accept={".pdf"}
+                                                            onChange={
+                                                                handleChangeForm
+                                                            }
+                                                        />
+                                                    </Box>
+                                                    {files.map(
+                                                        (file, index) => {
+                                                            return file.name ==
+                                                                file_requirement.name ? (
+                                                                <Box
+                                                                    key={index}
+                                                                    flexGrow={1}
+                                                                >
+                                                                    <ThemeProvider
+                                                                        theme={
+                                                                            themeFileUploadButton
+                                                                        }
+                                                                    >
+                                                                        <Button
+                                                                            variant="contained"
+                                                                            color="gray-100"
+                                                                            startIcon={
+                                                                                <FaFilePdf />
+                                                                            }
+                                                                            sx={{
+                                                                                height: "33px",
+                                                                                textTransform:
+                                                                                    "capitalize",
+                                                                            }}
+                                                                            fullWidth
+                                                                        >
+                                                                            Lihat
+                                                                        </Button>
+                                                                    </ThemeProvider>
+                                                                </Box>
+                                                            ) : (
+                                                                ""
+                                                            );
+                                                        }
+                                                    )}
+                                                </Box>
                                                 {formValues.files[
                                                     file_requirement.name
                                                 ] ? (
@@ -590,10 +641,10 @@ export default function CreateProposal({ file_requirements }) {
                                     >
                                         Tanda Tangan Pemohon
                                     </Typography>
-                                    <Typography color="red">
-                                        &nbsp; *
-                                    </Typography>
                                 </Box>
+                                <FormHelperText>
+                                    Kosongkan jika tidak ingin mengganti
+                                </FormHelperText>
                                 {errors.applicant_sign ? (
                                     <InputErrorMessage px={0}>
                                         {errors.applicant_sign}
@@ -648,7 +699,7 @@ export default function CreateProposal({ file_requirements }) {
                     >
                         <Button
                             variant="contained"
-                            startIcon={<FaPlus />}
+                            startIcon={<MdModeEdit />}
                             fullWidth
                             color="primary"
                             onClick={handleSubmitForm}

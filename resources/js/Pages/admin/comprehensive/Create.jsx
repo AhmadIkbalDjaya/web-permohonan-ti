@@ -3,51 +3,26 @@ import BaseLayout from "../base_layout/BaseLayout";
 import { Head, router, usePage } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
-import AppInputLabel from "../components/elements/input/AppInputLabel";
-import InputFileUpload from "../components/elements/input/InputFileUpload";
-import InputErrorMessage from "../components/elements/input/InputErrorMessage";
-import Typography from "@mui/material/Typography";
 import {
     Box,
     Button,
+    ButtonGroup,
     Grid,
+    MenuItem,
     Select,
     TextField,
     ThemeProvider,
-    MenuItem,
-    ButtonGroup,
-    FormHelperText,
+    Typography,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
 import { themeTextField } from "../../../theme/TextFieldTheme";
-import ReactSignatureCanvas from "react-signature-canvas";
+import AppInputLabel from "../components/elements/input/AppInputLabel";
 import { semesterListItems } from "../components/elements/input/SemesterListItems";
+import InputErrorMessage from "../components/elements/input/InputErrorMessage";
+import ReactSignatureCanvas from "react-signature-canvas";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
 
-export default function CreateProposal({ file_requirements }) {
-    const [signature, setSignatur] = useState();
-    const [emptySignature, setEmptySignature] = useState(false);
-    const clearSignatur = () => {
-        signature.clear();
-    };
-    const saveSignature = () => {
-        if (signature.isEmpty()) {
-            setEmptySignature(true);
-        } else {
-            setEmptySignature(false);
-            const result = signature
-                .getTrimmedCanvas()
-                .toDataURL("applicant_sign");
-            const image = dataURLtoBlob(result);
-            setFormValues((values) => {
-                return {
-                    ...values,
-                    applicant_sign: image,
-                };
-            });
-        }
-    };
-
+export default function CreateComprehensive() {
     const { errors } = usePage().props;
     const [formValues, setFormValues] = useState({
         name: "",
@@ -57,12 +32,7 @@ export default function CreateProposal({ file_requirements }) {
         semester: "",
         phone: "",
         essay_title: "",
-        mentors: ["", ""],
-        testers: ["", ""],
-        date: "",
-        time: "",
-        location: "",
-        files: {},
+        testers: ["", "", ""],
     });
 
     function handleChangeForm(e, index = null) {
@@ -107,24 +77,46 @@ export default function CreateProposal({ file_requirements }) {
                 formData.append(key, value);
             }
         }
-        // router.post("/admin/proposal", formValues);
-        router.post(route("admin.proposal.store"), formData, {
+        router.post(route("admin.comprehensive.store"), formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
         });
     }
+
+    const [signature, setSignatur] = useState();
+    const [emptySignature, setEmptySignature] = useState(false);
+    const clearSignatur = () => {
+        signature.clear();
+    };
+    const saveSignature = () => {
+        if (signature.isEmpty()) {
+            setEmptySignature(true);
+        } else {
+            setEmptySignature(false);
+            const result = signature
+                .getTrimmedCanvas()
+                .toDataURL("applicant_sign");
+            const image = dataURLtoBlob(result);
+            setFormValues((values) => {
+                return {
+                    ...values,
+                    applicant_sign: image,
+                };
+            });
+        }
+    };
     return (
         <>
-            <Head title="Tambah Permohonan Proposal" />
+            <Head title="Tambah Perhonan Kompren" />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
-                    <AppLink href={route("admin.proposal.index")}>
-                        Proposal
+                    <AppLink href={route("admin.comprehensive.index")}>
+                        Kompren
                     </AppLink>
                     <AppLink
-                        href={route("admin.proposal.create")}
+                        href={route("admin.comprehensive.create")}
                         color="black"
                     >
                         Tambah Permohonan
@@ -141,7 +133,7 @@ export default function CreateProposal({ file_requirements }) {
                             Tambah Permohonan
                         </Typography>
                         <Typography variant="caption">
-                            Isi Formulir Permohonan Seminar Proposal Baru
+                            Isi Formulir Ujian Komprehensif
                         </Typography>
                     </Box>
                     <Button
@@ -345,55 +337,16 @@ export default function CreateProposal({ file_requirements }) {
                                         helperText={errors.essay_title ?? ""}
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs={12} md={4}>
                                     <AppInputLabel
-                                        label="Pembimbing 1"
+                                        label="Penguji Jarkom"
                                         required={true}
                                     />
-                                    <TextField
-                                        id="mentors1"
-                                        name="mentors"
-                                        type="string"
-                                        placeholder="Nama Pembimbing 1"
-                                        fullWidth
-                                        value={formValues.mentors[0]}
-                                        onChange={(e) => {
-                                            handleChangeForm(e, 0);
-                                        }}
-                                        error={
-                                            errors["mentors.0"] ? true : false
-                                        }
-                                        helperText={errors["mentors.0"] ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel
-                                        label="Pembimbing 2"
-                                        required={true}
-                                    />
-                                    <TextField
-                                        id="mentors2"
-                                        name="mentors"
-                                        type="string"
-                                        placeholder="Nama Pembimbing 2"
-                                        fullWidth
-                                        value={formValues.mentors[1]}
-                                        onChange={(e) => {
-                                            handleChangeForm(e, 1);
-                                        }}
-                                        error={
-                                            errors["mentors.1"] ? true : false
-                                        }
-                                        helperText={errors["mentors.1"] ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Penguji 1" />
                                     <TextField
                                         id="testers1"
                                         name="testers"
                                         type="string"
-                                        placeholder="Nama Penguji 1"
+                                        placeholder="Jarkom"
                                         fullWidth
                                         value={formValues.testers[0]}
                                         onChange={(e) => {
@@ -405,13 +358,16 @@ export default function CreateProposal({ file_requirements }) {
                                         helperText={errors["testers.0"] ?? ""}
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Penguji 2" />
+                                <Grid item xs={12} md={4}>
+                                    <AppInputLabel
+                                        label="Penguji RPL"
+                                        required={true}
+                                    />
                                     <TextField
                                         id="testers2"
                                         name="testers"
                                         type="string"
-                                        placeholder="Nama Penguji 2"
+                                        placeholder="RPL"
                                         fullWidth
                                         value={formValues.testers[1]}
                                         onChange={(e) => {
@@ -423,46 +379,25 @@ export default function CreateProposal({ file_requirements }) {
                                         helperText={errors["testers.1"] ?? ""}
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Tanggal" />
-                                    <TextField
-                                        id="date"
-                                        name="date"
-                                        type="date"
-                                        fullWidth
-                                        value={formValues.date}
-                                        onChange={handleChangeForm}
-                                        error={errors.date ? true : false}
-                                        helperText={errors.date ?? ""}
+                                <Grid item xs={12} md={4}>
+                                    <AppInputLabel
+                                        label="Penguji Agama"
+                                        required={true}
                                     />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Jam" />
                                     <TextField
-                                        id="time"
-                                        name="time"
-                                        type="time"
-                                        fullWidth
-                                        value={formValues.time}
-                                        onChange={handleChangeForm}
-                                        error={errors.time ? true : false}
-                                        helperText={errors.time ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <AppInputLabel label="Lokasi Seminar" />
-                                    <TextField
-                                        id="location"
-                                        name="location"
+                                        id="testers3"
+                                        name="testers"
                                         type="string"
-                                        placeholder="Masukkan Lokasi Seminar"
+                                        placeholder="Agama"
                                         fullWidth
-                                        multiline
-                                        rows={2}
-                                        value={formValues.location}
-                                        onChange={handleChangeForm}
-                                        error={errors.location ? true : false}
-                                        helperText={errors.location ?? ""}
+                                        value={formValues.testers[2]}
+                                        onChange={(e) => {
+                                            handleChangeForm(e, 2);
+                                        }}
+                                        error={
+                                            errors["testers.2"] ? true : false
+                                        }
+                                        helperText={errors["testers.2"] ?? ""}
                                     />
                                 </Grid>
                             </Grid>
@@ -477,98 +412,6 @@ export default function CreateProposal({ file_requirements }) {
                         flexDirection={"column"}
                         gap={2}
                     >
-                        <Box
-                            sx={{
-                                background: "white",
-                                border: ".5px solid",
-                                borderColor: "slate-300",
-                                borderRadius: "4px",
-                            }}
-                        >    
-                            <Typography
-                                variant="body2"
-                                color="initial"
-                                sx={{ p: "15px", fontWeight: "600" }}
-                                borderBottom={"1px solid"}
-                                borderColor={"slate-300"}
-                            >
-                                Berkas
-                            </Typography>
-                            <Grid container spacing={2} padding={"15px"}>
-                                {file_requirements.map(
-                                    (file_requirement, index) => {
-                                        return (
-                                            <Grid item xs={12} key={index}>
-                                                <AppInputLabel
-                                                    label={file_requirement.name.replaceAll(
-                                                        "_",
-                                                        " "
-                                                    )}
-                                                    required={
-                                                        file_requirement.is_required
-                                                    }
-                                                />
-                                                <InputFileUpload
-                                                    id="name"
-                                                    name={file_requirement.name}
-                                                    type="file"
-                                                    accept={".pdf"}
-                                                    onChange={handleChangeForm}
-                                                />
-                                                {formValues.files[
-                                                    file_requirement.name
-                                                ] ? (
-                                                    <FormHelperText
-                                                        sx={{
-                                                            display: "flex",
-                                                            justifyContent:
-                                                                "space-between",
-                                                        }}
-                                                    >
-                                                        <Typography variant="">
-                                                            File:{" "}
-                                                            {formValues.files[
-                                                                file_requirement
-                                                                    .name
-                                                            ].name.substring(
-                                                                0,
-                                                                20
-                                                            )}
-                                                        </Typography>
-                                                        <Typography variant="">
-                                                            {(
-                                                                formValues
-                                                                    .files[
-                                                                    file_requirement
-                                                                        .name
-                                                                ].size / 1024
-                                                            ).toFixed(0)}{" "}
-                                                            KB
-                                                        </Typography>
-                                                    </FormHelperText>
-                                                ) : (
-                                                    ""
-                                                )}
-                                                {errors[
-                                                    file_requirement.name
-                                                ] && (
-                                                    <InputErrorMessage
-                                                        px={"0px"}
-                                                    >
-                                                        {
-                                                            errors[
-                                                                file_requirement
-                                                                    .name
-                                                            ]
-                                                        }
-                                                    </InputErrorMessage>
-                                                )}
-                                            </Grid>
-                                        );
-                                    }
-                                )}
-                            </Grid>
-                        </Box>
                         <Box
                             sx={{
                                 background: "white",
@@ -638,23 +481,6 @@ export default function CreateProposal({ file_requirements }) {
                                 </ButtonGroup>
                             </Box>
                         </Box>
-                    </Box>
-                    <Box
-                        flex={"100%"}
-                        display={{
-                            sx: "inherit",
-                            md: "none",
-                        }}
-                    >
-                        <Button
-                            variant="contained"
-                            startIcon={<FaPlus />}
-                            fullWidth
-                            color="primary"
-                            onClick={handleSubmitForm}
-                        >
-                            Simpan
-                        </Button>
                     </Box>
                 </Box>
             </BaseLayout>

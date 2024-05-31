@@ -6,8 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,8 +14,8 @@ return new class extends Migration
     {
         Schema::create('ppl_students', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Student::class)->constrained()->references("id")->on("students");
-            $table->foreignIdFor(PPL::class)->constrained()->references("id")->on("ppls");
+            $table->foreignIdFor(Student::class)->constrained()->references("id")->on("students")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreignIdFor(PPL::class)->constrained()->references("id")->on("ppls")->onDelete("cascade")->onUpdate("cascade");
             $table->timestamps();
         });
     }

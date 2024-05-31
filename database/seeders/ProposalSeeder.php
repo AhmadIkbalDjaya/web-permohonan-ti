@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Mentor;
 use App\Models\Proposal;
 use App\Models\Schedule;
 use App\Models\Student;
+use App\Models\Tester;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -32,6 +34,8 @@ class ProposalSeeder extends Seeder
         //         ],
         //         "essay_title" => "",
         //         "applicant_sign" => "",
+        //         "mentors" => ["", ""],
+        //         "testers" => ["", ""],
         //     ]
         // ];
         $proposals = [
@@ -51,6 +55,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "The Impact of Climate Change on Marine Life",
                 "applicant_sign" => "Alice J.",
+                "mentors" => ["Dr. Smith", "Prof. Johnson"],
+                "testers" => ["Jane Doe", "John Roe"],
             ],
             [
                 "student" => [
@@ -68,6 +74,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "Renewable Energy: Prospects and Challenges",
                 "applicant_sign" => "Bob S.",
+                "mentors" => ["Dr. Allen", "Prof. Brown"],
+                "testers" => ["Emily Davis", "Michael White"],
             ],
             [
                 "student" => [
@@ -85,6 +93,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "Artificial Intelligence in Healthcare",
                 "applicant_sign" => "Cathy B.",
+                "mentors" => ["Dr. Clark", "Prof. Scott"],
+                "testers" => ["Nancy Brown", "George Green"],
             ],
             [
                 "student" => [
@@ -102,6 +112,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "Blockchain Technology: A Decentralized Future",
                 "applicant_sign" => "David L.",
+                "mentors" => ["Dr. Martinez", "Prof. Wilson"],
+                "testers" => ["Liam Parker", "Sophia Taylor"],
             ],
             [
                 "student" => [
@@ -119,6 +131,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "The Evolution of Social Media",
                 "applicant_sign" => "Eva M.",
+                "mentors" => ["Dr. Lee", "Prof. Harris"],
+                "testers" => ["Andrew Martinez", "Olivia Lee"],
             ],
             [
                 "student" => [
@@ -136,6 +150,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "Cybersecurity Threats in the Modern World",
                 "applicant_sign" => "Frank G.",
+                "mentors" => ["Dr. Robinson", "Prof. Gonzalez"],
+                "testers" => ["Paul Harris", "Emma Clark"],
             ],
             [
                 "student" => [
@@ -153,6 +169,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "The Role of Genetics in Modern Medicine",
                 "applicant_sign" => "Grace H.",
+                "mentors" => ["Dr. Walker", "Prof. Lewis"],
+                "testers" => ["Kevin Martinez", "Emily Hernandez"],
             ],
             [
                 "student" => [
@@ -170,6 +188,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "Urban Planning and Sustainable Development",
                 "applicant_sign" => "Henry W.",
+                "mentors" => ["Dr. Hill", "Prof. King"],
+                "testers" => ["David Allen", "Sarah Martin"],
             ],
             [
                 "student" => [
@@ -187,6 +207,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "The Future of Electric Vehicles",
                 "applicant_sign" => "Isabel A.",
+                "mentors" => ["Dr. Perez", "Prof. Roberts"],
+                "testers" => ["Thomas Young", "Sophia King"],
             ],
             [
                 "student" => [
@@ -204,6 +226,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "Advancements in Renewable Energy Technologies",
                 "applicant_sign" => "Jack S.",
+                "mentors" => ["Dr. Lopez", "Prof. Scott"],
+                "testers" => ["James Hernandez", "Mia Brown"],
             ],
             [
                 "student" => [
@@ -221,6 +245,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "Artificial Intelligence: Ethical Considerations",
                 "applicant_sign" => "Kelly T.",
+                "mentors" => ["Dr. Gonzalez", "Prof. Lee"],
+                "testers" => ["Joshua Martinez", "Sophia Lee"],
             ],
             [
                 "student" => [
@@ -238,13 +264,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "The Impact of Globalization on Local Cultures",
                 "applicant_sign" => "Liam C.",
+                "mentors" => ["Dr. Brown", "Prof. Walker"],
+                "testers" => ["Daniel Martinez", "Olivia Wilson"],
             ],
             [
                 "student" => [
-                    "name" => "Mia Harris",
+                    "name" => "Mia Davis",
                     "nim" => "123456013",
                     "pob" => "Fort Worth",
-                    "dob" => "2000-09-25",
+                    "dob" => "2000-09-05",
                     "semester" => "5",
                     "phone" => "555-4566",
                 ],
@@ -253,15 +281,17 @@ class ProposalSeeder extends Seeder
                     "time" => "14:30",
                     "location" => "Room M1313",
                 ],
-                "essay_title" => "The Use of Big Data in Business Decision Making",
-                "applicant_sign" => "Mia H.",
+                "essay_title" => "The Role of Women in STEM Fields",
+                "applicant_sign" => "Mia D.",
+                "mentors" => ["Dr. Taylor", "Prof. Robinson"],
+                "testers" => ["Michael Johnson", "Emily Scott"],
             ],
             [
                 "student" => [
-                    "name" => "Noah Robinson",
+                    "name" => "Noah Edwards",
                     "nim" => "123456014",
                     "pob" => "Columbus",
-                    "dob" => "1999-11-29",
+                    "dob" => "1999-11-11",
                     "semester" => "6",
                     "phone" => "555-5677",
                 ],
@@ -270,12 +300,14 @@ class ProposalSeeder extends Seeder
                     "time" => "15:30",
                     "location" => "Room N1414",
                 ],
-                "essay_title" => "The Role of Social Media in Modern Politics",
-                "applicant_sign" => "Noah R.",
+                "essay_title" => "The Future of Renewable Energy",
+                "applicant_sign" => "Noah E.",
+                "mentors" => ["Dr. Harris", "Prof. Martinez"],
+                "testers" => ["Andrew Brown", "Olivia Davis"],
             ],
             [
                 "student" => [
-                    "name" => "Olivia Walker",
+                    "name" => "Olivia White",
                     "nim" => "123456015",
                     "pob" => "Charlotte",
                     "dob" => "2001-12-20",
@@ -289,6 +321,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "Climate Change and Its Economic Impact",
                 "applicant_sign" => "Olivia W.",
+                "mentors" => ["Dr. Johnson", "Prof. Taylor"],
+                "testers" => ["Lucas Harris", "Mia Lopez"],
             ],
             [
                 "student" => [
@@ -306,6 +340,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "Innovations in Biotechnology",
                 "applicant_sign" => "Paul Y.",
+                "mentors" => ["Dr. Clark", "Prof. Martinez"],
+                "testers" => ["Emma Brown", "Lucas Martinez"],
             ],
             [
                 "student" => [
@@ -323,6 +359,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "The Ethics of Genetic Engineering",
                 "applicant_sign" => "Quinn D.",
+                "mentors" => ["Dr. Taylor", "Prof. Lee"],
+                "testers" => ["John Clark", "Emily Robinson"],
             ],
             [
                 "student" => [
@@ -340,6 +378,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "Sustainable Agriculture Practices",
                 "applicant_sign" => "Rachel M.",
+                "mentors" => ["Dr. King", "Prof. Davis"],
+                "testers" => ["James Taylor", "Emma Martinez"],
             ],
             [
                 "student" => [
@@ -357,6 +397,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "The Future of Space Exploration",
                 "applicant_sign" => "Sam B.",
+                "mentors" => ["Dr. Allen", "Prof. Walker"],
+                "testers" => ["Michael Brown", "Sophia Martinez"],
             ],
             [
                 "student" => [
@@ -374,6 +416,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "The Role of Education in Economic Development",
                 "applicant_sign" => "Tina C.",
+                "mentors" => ["Dr. Wilson", "Prof. King"],
+                "testers" => ["Thomas Brown", "Olivia Martinez"],
             ],
             [
                 "student" => [
@@ -391,6 +435,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "The Psychology of Consumer Behavior",
                 "applicant_sign" => "Uma R.",
+                "mentors" => ["Dr. Harris", "Prof. Martinez"],
+                "testers" => ["John Taylor", "Emily Brown"],
             ],
             [
                 "student" => [
@@ -408,6 +454,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "The Impact of Automation on Employment",
                 "applicant_sign" => "Victor B.",
+                "mentors" => ["Dr. Martinez", "Prof. Robinson"],
+                "testers" => ["Andrew Brown", "Sophia Johnson"],
             ],
             [
                 "student" => [
@@ -425,6 +473,8 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "The Role of Art in Society",
                 "applicant_sign" => "Wendy L.",
+                "mentors" => ["Dr. Wilson", "Prof. Davis"],
+                "testers" => ["Daniel Martinez", "Olivia Clark"],
             ],
             [
                 "student" => [
@@ -442,14 +492,16 @@ class ProposalSeeder extends Seeder
                 ],
                 "essay_title" => "The Evolution of Human Rights",
                 "applicant_sign" => "Xander W.",
+                "mentors" => ["Dr. Gonzalez", "Prof. King"],
+                "testers" => ["Lucas Brown", "Emma Martinez"],
             ],
             [
                 "student" => [
-                    "name" => "Yara Clark",
+                    "name" => "Yara Thompson",
                     "nim" => "123456025",
-                    "pob" => "Portland",
-                    "dob" => "1998-04-05",
-                    "semester" => "7",
+                    "pob" => "Memphis",
+                    "dob" => "1999-09-25",
+                    "semester" => "6",
                     "phone" => "555-6785",
                 ],
                 "schedule" => [
@@ -458,18 +510,35 @@ class ProposalSeeder extends Seeder
                     "location" => "Room Y2525",
                 ],
                 "essay_title" => "The Future of Work in the Digital Age",
-                "applicant_sign" => "Yara C.",
-            ]
+                "applicant_sign" => "Yara T.",
+                "mentors" => ["Dr. Johnson", "Prof. Taylor"],
+                "testers" => ["James Martinez", "Sophia Harris"],
+            ],
         ];
+
         foreach ($proposals as $index => $proposal) {
             $newStudent = Student::create($proposal["student"]);
             $newSchedule = Schedule::create($proposal["schedule"]);
-            Proposal::create([
+            $newProposal = Proposal::create([
                 "student_id" => $newStudent->id,
                 "schedule_id" => $newSchedule->id,
                 "essay_title" => $proposal["essay_title"],
                 "applicant_sign" => $proposal["applicant_sign"],
             ]);
+            foreach ($proposal["mentors"] as $index => $mentor) {
+                Mentor::create([
+                    "name" => $mentor,
+                    "order" => $index,
+                    "proposal_id" => $newProposal->id,
+                ]);
+            }
+            foreach ($proposal["testers"] as $index => $tester) {
+                Tester::create([
+                    "name" => $tester,
+                    "order" => $index,
+                    "proposal_id" => $newProposal->id,
+                ]);
+            }
         }
     }
 }

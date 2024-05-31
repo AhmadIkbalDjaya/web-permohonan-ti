@@ -1,6 +1,18 @@
-import { Button, FormHelperText, ThemeProvider, createTheme, styled } from "@mui/material";
+import {
+    Button,
+    FormHelperText,
+    ThemeProvider,
+    createTheme,
+    styled,
+} from "@mui/material";
 import React from "react";
 import { IoMdCloudUpload } from "react-icons/io";
+
+export const themeFileUploadButton = createTheme({
+    palette: {
+        "gray-100": "#F4F6F8",
+    },
+});
 
 export default function InputFileUpload({ id, name, type, accept, onChange }) {
     const VisuallyHiddenInput = styled("input")({
@@ -15,11 +27,6 @@ export default function InputFileUpload({ id, name, type, accept, onChange }) {
         width: 1,
     });
 
-    const themeFileUploadButton = createTheme({
-        palette: {
-            "gray-100": "#F4F6F8",
-        },
-    });
     return (
         <ThemeProvider theme={themeFileUploadButton}>
             <Button

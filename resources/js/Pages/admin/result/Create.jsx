@@ -1,53 +1,27 @@
+import { Head, usePage } from "@inertiajs/react";
 import React, { useState } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
-import { Head, router, usePage } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
-import AppInputLabel from "../components/elements/input/AppInputLabel";
-import InputFileUpload from "../components/elements/input/InputFileUpload";
-import InputErrorMessage from "../components/elements/input/InputErrorMessage";
-import Typography from "@mui/material/Typography";
 import {
     Box,
     Button,
+    ButtonGroup,
     Grid,
+    MenuItem,
     Select,
     TextField,
     ThemeProvider,
-    MenuItem,
-    ButtonGroup,
-    FormHelperText,
+    Typography,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
 import { themeTextField } from "../../../theme/TextFieldTheme";
-import ReactSignatureCanvas from "react-signature-canvas";
+import AppInputLabel from "../components/elements/input/AppInputLabel";
 import { semesterListItems } from "../components/elements/input/SemesterListItems";
-import dataURLtoBlob from "blueimp-canvas-to-blob";
+import InputFileUpload from "../components/elements/input/InputFileUpload";
+import ReactSignatureCanvas from "react-signature-canvas";
 
-export default function CreateProposal({ file_requirements }) {
-    const [signature, setSignatur] = useState();
-    const [emptySignature, setEmptySignature] = useState(false);
-    const clearSignatur = () => {
-        signature.clear();
-    };
-    const saveSignature = () => {
-        if (signature.isEmpty()) {
-            setEmptySignature(true);
-        } else {
-            setEmptySignature(false);
-            const result = signature
-                .getTrimmedCanvas()
-                .toDataURL("applicant_sign");
-            const image = dataURLtoBlob(result);
-            setFormValues((values) => {
-                return {
-                    ...values,
-                    applicant_sign: image,
-                };
-            });
-        }
-    };
-
+export default function CreateResult({ file_requirements }) {
     const { errors } = usePage().props;
     const [formValues, setFormValues] = useState({
         name: "",
@@ -64,7 +38,6 @@ export default function CreateProposal({ file_requirements }) {
         location: "",
         files: {},
     });
-
     function handleChangeForm(e, index = null) {
         const name = e.target.name;
         const value = e.target.value;
@@ -92,6 +65,7 @@ export default function CreateProposal({ file_requirements }) {
             }));
         }
     }
+
     function handleSubmitForm(e) {
         const formData = new FormData();
         for (const [key, value] of Object.entries(formValues)) {
@@ -108,25 +82,44 @@ export default function CreateProposal({ file_requirements }) {
             }
         }
         // router.post("/admin/proposal", formValues);
-        router.post(route("admin.proposal.store"), formData, {
+        router.post(route("admin.result.store"), formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
         });
     }
+
+    const [signature, setSignatur] = useState();
+    const [emptySignature, setEmptySignature] = useState(false);
+    const clearSignatur = () => {
+        signature.clear();
+    };
+    const saveSignature = () => {
+        if (signature.isEmpty()) {
+            setEmptySignature(true);
+        } else {
+            setEmptySignature(false);
+            const result = signature
+                .getTrimmedCanvas()
+                .toDataURL("applicant_sign");
+            const image = dataURLtoBlob(result);
+            setFormValues((values) => {
+                return {
+                    ...values,
+                    applicant_sign: image,
+                };
+            });
+        }
+    };
+
     return (
         <>
-            <Head title="Tambah Permohonan Proposal" />
+            <Head />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
-                    <AppLink href={route("admin.proposal.index")}>
-                        Proposal
-                    </AppLink>
-                    <AppLink
-                        href={route("admin.proposal.create")}
-                        color="black"
-                    >
+                    <AppLink href={route("admin.result.index")}>Hasil</AppLink>
+                    <AppLink href={route("admin.result.create")} color="black">
                         Tambah Permohonan
                     </AppLink>
                 </AppBreadcrumbs>
@@ -145,7 +138,7 @@ export default function CreateProposal({ file_requirements }) {
                         </Typography>
                     </Box>
                     <Button
-                        onClick={handleSubmitForm}
+                        // onClick={handleSubmitForm}
                         variant="contained"
                         color="primary"
                         size="small"
@@ -484,7 +477,7 @@ export default function CreateProposal({ file_requirements }) {
                                 borderColor: "slate-300",
                                 borderRadius: "4px",
                             }}
-                        >    
+                        >
                             <Typography
                                 variant="body2"
                                 color="initial"
