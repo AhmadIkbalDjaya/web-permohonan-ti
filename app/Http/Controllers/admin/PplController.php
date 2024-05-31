@@ -37,7 +37,6 @@ class PplController extends Controller
             "total_item" => $ppls->total(),
             "search" => $search,
         ];
-
         return Inertia::render("admin/ppl/Index", [
             "ppls" => $ppls,
             "meta" => $meta,

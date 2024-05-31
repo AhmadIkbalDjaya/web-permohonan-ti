@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import { Head, router } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
@@ -7,13 +7,18 @@ import {
     Box,
     Button,
     Checkbox,
+    FormControl,
     InputBase,
+    MenuItem,
+    Pagination,
+    Select,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
+    ThemeProvider,
     Typography,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
@@ -23,8 +28,50 @@ import { tableHeadStyle } from "../components/styles/tableHeadStyle";
 import { idFormatDate } from "../../../helper/idFormatDate";
 import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
+import pickBy from "lodash.pickby";
+import { themePagination } from "../../../theme/PaginationTheme";
 
 export default function Comprehensive({ comprehensives, meta }) {
+    const showItemOptions = [5, 10, 15, 20, 25];
+    const [loading, setloading] = useState(false);
+    const perpage = useRef(meta.perpage);
+    const search = useRef(meta.search ?? "");
+    const page = useRef(meta.page);
+    const handleChangePerpage = (e) => {
+        perpage.current = e.target.value;
+        getData();
+    };
+    const handleChangeSearch = (e) => {
+        search.current = e.target.value;
+        if (meta.search == "" && search.current != "") {
+            page.current = 1;
+        }
+        getData();
+    };
+    const handleChangePage = (e, value) => {
+        page.current = value;
+        getData();
+    };
+    const getData = () => {
+        setloading(true);
+        router.get(
+            route(route().current()),
+            pickBy({
+                perpage: perpage.current != 10 ? perpage.current : undefined,
+                search: search.current,
+                page: page.current != 1 ? page.current : undefined,
+            }),
+            {
+                preserveScroll: true,
+                preserveState: true,
+                onFinish: () => setloading(false),
+            }
+        );
+    };
+    if (page.current > meta.total_page) {
+        page.current = meta.total_page;
+        getData();
+    }
     return (
         <>
             <Head title="Comprehensive" />
@@ -85,8 +132,8 @@ export default function Comprehensive({ comprehensives, meta }) {
                         <FiSearch color="#637381" />
                         <InputBase
                             name="search"
-                            // value={search.current}
-                            // onChange={handleChangeSearch}
+                            value={search.current}
+                            onChange={handleChangeSearch}
                             placeholder="Cari Data ..."
                             sx={{
                                 flexGrow: 1,
@@ -232,6 +279,45 @@ export default function Comprehensive({ comprehensives, meta }) {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <Box display={"flex"} justifyContent={"space-between"}>
+                    <Box display={"flex"} gap={1}>
+                        <Typography color={"gray-500"} fontWeight={"400"}>
+                            Tampilkan
+                        </Typography>
+                        <FormControl size="small">
+                            <Select
+                                name="perpage"
+                                value={perpage.current}
+                                onChange={handleChangePerpage}
+                                style={{ height: "25px" }}
+                                sx={{ border: "1px solid gray-500" }}
+                            >
+                                {showItemOptions.map((option, index) => (
+                                    <MenuItem key={index} value={option}>
+                                        <Typography
+                                            color={"gray-500"}
+                                            fontSize={"14px"}
+                                        >
+                                            {option}
+                                        </Typography>
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <Typography color={"gray-500"} fontWeight={"400"}>
+                            Data
+                        </Typography>
+                    </Box>
+                    <ThemeProvider theme={themePagination}>
+                        <Pagination
+                            count={meta.total_page}
+                            page={page.current}
+                            onChange={handleChangePage}
+                            size="small"
+                            shape="rounded"
+                        ></Pagination>
+                    </ThemeProvider>
+                </Box>
             </BaseLayout>
             ;
         </>
