@@ -1,0 +1,12 @@
+@page {
+    size: 210mm 330mm;
+  }
+  
+  @media print {
+    .print-container {
+      width: 210mm;
+      height: 330mm;
+      box-sizing: border-box;
+    }
+  }
+  

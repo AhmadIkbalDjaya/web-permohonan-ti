@@ -331,7 +331,7 @@ export default function Proposal({ file_requirements }) {
                         onClick={handleSubmitForm}
                         variant="contained"
                         color="primary"
-                        size="small"
+                        // size="small"
                         // startIcon={}
                         sx={{
                             background: "#1976d2",

@@ -331,7 +331,6 @@ export default function Hasil({ file_requirements }) {
                         onClick={handleSubmitForm}
                         variant="contained"
                         color="primary"
-                        size="small"
                         // startIcon={}
                         sx={{
                             background: "#1976d2",

@@ -29,6 +29,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { themePagination } from "../../../theme/PaginationTheme";
 import { idFormatDate } from "../../../helper/idFormatDate";
 import pickBy from "lodash.pickby";
+import ReactToPrint from "react-to-print";
+import CetakProposal from "../cetak/cetakProposal";
 
 export default function Proposal({ proposals, meta }) {
     const tableHeadStyle = {
@@ -77,6 +79,7 @@ export default function Proposal({ proposals, meta }) {
         page.current = meta.total_page;
         getData();
     }
+    const componentRef = useRef();
     return (
         <>
             <Head title="Proposal" />
@@ -118,6 +121,19 @@ export default function Proposal({ proposals, meta }) {
                             Permohonan
                         </Button>
                     </AppLink>
+                    <ReactToPrint
+                        trigger={() => (
+                            <Button variant="contained" color="primary">
+                                Cetak ke PDF
+                            </Button>
+                        )}
+                        content={() => componentRef.current}
+                        paperSize={{ width: '210mm', height: '330mm', unit: 'mm' }} 
+                    />
+                    <Box sx={{display:'none'}}>
+
+                    <CetakProposal  ref={componentRef} />
+                    </Box>
                     <Box
                         display={"flex"}
                         alignItems={"center"}
