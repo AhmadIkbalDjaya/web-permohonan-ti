@@ -484,7 +484,7 @@ export default function CreateProposal({ file_requirements }) {
                                 borderColor: "slate-300",
                                 borderRadius: "4px",
                             }}
-                        >
+                        >    
                             <Typography
                                 variant="body2"
                                 color="initial"

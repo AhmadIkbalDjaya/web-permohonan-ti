@@ -28,7 +28,23 @@
     opacity: 0;
     transform: translateX(-100%);
   }
-  /* *{
-    margin:0;
-    padding: 0;
-  } */
+  *{
+
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .link-head{
+    color: white;
+  
+  }
+  .link-head:hover{
+    color: rgb(197, 197, 202);
+    transition: 0.5s;
+  }
+  .link-head-mobile{
+    color: rgb(0, 0, 0);
+  
+  }
+  .link-head-mobile:hover{
+    color: rgb(32, 32, 32);
+    transition: 0.5s;
+  }
