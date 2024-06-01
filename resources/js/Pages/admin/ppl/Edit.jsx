@@ -21,23 +21,26 @@ import { semesterListItems } from "../components/elements/input/SemesterListItem
 import ReactSignatureCanvas from "react-signature-canvas";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
+import { MdModeEdit } from "react-icons/md";
 
-export default function CreatePpl() {
+export default function EditPpl({ ppl }) {
     const { errors } = usePage().props;
     const [formValues, setFormValues] = useState({
-        start_date: "",
-        end_date: "",
-        location: "",
-        location_address: "",
-        mentor: "",
-        student_count: 1,
+        start_date: ppl.start_date,
+        end_date: ppl.end_date,
+        location: ppl.location,
+        location_address: ppl.location_address,
+        mentor: ppl.mentor.name,
+        student_count: ppl.students.length,
 
-        names: [""],
-        nims: [""],
-        pobs: [""],
-        dobs: [""],
-        semesters: [""],
-        phones: [""],
+        names: ppl.students.map((student) => student.name),
+        nims: ppl.students.map((student) => student.nim),
+        pobs: ppl.students.map((student) => student.pob),
+        dobs: ppl.students.map((student) => student.dob),
+        semesters: ppl.students.map((student) => student.semester),
+        phones: ppl.students.map((student) => student.phone),
+
+        _method: "PUT",
     });
 
     function handleChangeForm(e, index = null) {
@@ -94,10 +97,10 @@ export default function CreatePpl() {
                 };
             });
         }
-        console.log(formValues);
     }
     function handleSubmitForm(e) {
-        router.post(route("admin.ppl.store"), formValues, {
+        console.log(formValues);
+        router.post(route("admin.ppl.update", { ppl: ppl.id }), formValues, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -128,14 +131,12 @@ export default function CreatePpl() {
     };
     return (
         <>
-            <Head title="Tambah Permohonan PPL" />
+            <Head title="Edit PPL" />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
                     <AppLink href={route("admin.ppl.index")}>PPL</AppLink>
-                    <AppLink href={route("admin.ppl.create")} color="black">
-                        Tambah Permohonan
-                    </AppLink>
+                    <AppLink color="black">Edit Permohonan</AppLink>
                 </AppBreadcrumbs>
                 <Box
                     display={"flex"}
@@ -145,10 +146,10 @@ export default function CreatePpl() {
                 >
                     <Box>
                         <Typography variant="h5" fontWeight={"600"}>
-                            Tambah Permohonan
+                            Edit Permohonan
                         </Typography>
                         <Typography variant="caption">
-                            Isi Formulir Permohonan PPL
+                            Edit Formulir Permohonan PPL
                         </Typography>
                     </Box>
                     <Button
@@ -156,7 +157,7 @@ export default function CreatePpl() {
                         variant="contained"
                         color="primary"
                         size="small"
-                        startIcon={<FaPlus />}
+                        startIcon={<MdModeEdit />}
                         sx={{
                             background: "#B20600",
                             textTransform: "none",
@@ -333,41 +334,6 @@ export default function CreatePpl() {
                                 </Grid>
                             </ThemeProvider>
                         </Box>
-                        {/* <Box flex={6}>
-                            <Box
-                                sx={{
-                                    background: "white",
-                                    border: ".5px solid",
-                                    borderColor: "slate-300",
-                                    borderRadius: "4px",
-                                }}
-                            >
-                                <Box
-                                    sx={{ p: "5px 10px" }}
-                                    display={"flex"}
-                                    justifyContent={"space-between"}
-                                    alignItems={"center"}
-                                >
-                                    <ThemeProvider theme={themeTextField}>
-                                        <AppInputLabel
-                                            label="Jumlah Mahasiswa PPL"
-                                            required={true}
-                                        />
-                                        <TextField
-                                            id="student_count"
-                                            name="student_count"
-                                            type="number"
-                                            value={formValues.student_count}
-                                            // min
-                                            onChange={handleChangeForm}
-                                            // fullWidth
-                                            // error={errors.name ? true : false}
-                                            // helperText={errors.name ?? ""}
-                                        />
-                                    </ThemeProvider>
-                                </Box>
-                            </Box>
-                        </Box> */}
                         {Array.from(
                             { length: formValues.student_count },
                             (e, index) => (
@@ -656,7 +622,6 @@ export default function CreatePpl() {
                                 >
                                     Tanda Tangan Pemohon
                                 </Typography>
-                                <Typography color="red">&nbsp; *</Typography>
                             </Box>
                             {errors.applicant_sign ? (
                                 <InputErrorMessage px={0}>

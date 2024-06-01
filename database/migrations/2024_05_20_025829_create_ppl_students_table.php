@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('ppl_students', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Student::class)->constrained()->references("id")->on("students")->onDelete("cascade")->onUpdate("cascade");
-            $table->foreignIdFor(PPL::class)->constrained()->references("id")->on("ppls")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreignIdFor(PPL::class, "ppl_id")->constrained()->references("id")->on("ppls")->onDelete("cascade")->onUpdate("cascade");
             $table->timestamps();
         });
     }

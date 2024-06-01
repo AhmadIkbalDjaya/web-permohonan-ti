@@ -20,8 +20,8 @@ class PplController extends Controller
         $perpage = $request->input("perpage", 10);
         $search = $request->input("search", "");
 
-        $query = PPL::select("id", "location", "created_at", "student_id")
-            ->with(["students" => fn($query) => $query->select("id", "name", "nim")]);
+        $query = PPL::select("id", "location", "created_at")
+            ->with(["students" => fn($query) => $query->select("students.id", "students.name", "students.nim")]);
         if ($search) {
             $query->where('location', "LIKE", "%$search%")
                 ->orWhereHas("students", function ($query) use ($search) {
@@ -59,17 +59,17 @@ class PplController extends Controller
             "mentor" => "nullable|string",
             "student_count" => "required|numeric|min:1",
 
-            "names" => "required|array|size:" . count($request->student_count),
+            "names" => "required|array|min:" . $request->student_count,
             "names.*" => "required|string",
-            "nims" => "required|array|size:" . count($request->student_count),
+            "nims" => "required|array|min:" . $request->student_count,
             "nims.*" => "required|numeric",
-            "pobs" => "required|array|size:" . count($request->student_count),
+            "pobs" => "required|array|min:" . $request->student_count,
             "pobs.*" => "required|string",
-            "dobs" => "required|array|size:" . count($request->student_count),
+            "dobs" => "required|array|min:" . $request->student_count,
             "dobs.*" => "required|date",
-            "semesters" => "required|array|size:" . count($request->student_count),
+            "semesters" => "required|array|min:" . $request->student_count,
             "semesters.*" => "required|integer|min:0",
-            "phones" => "required|array|size:" . count($request->student_count),
+            "phones" => "required|array|min:" . $request->student_count,
             "phones.*" => "required|phone:ID",
         ]);
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("ppl/applicant_signs", "public");
@@ -77,6 +77,7 @@ class PplController extends Controller
         DB::transaction(function () use ($validated) {
             $newMentor = Mentor::create([
                 "name" => $validated["mentor"],
+                "order" => 0,
             ]);
             $newPpl = PPL::create([
                 "start_date" => $validated["start_date"],
@@ -88,12 +89,12 @@ class PplController extends Controller
             ]);
             for ($i = 0; $i < $validated["student_count"]; $i++) {
                 $newStudent = Student::create([
-                    "name" => $validated["name"],
-                    "nim" => $validated["nim"],
-                    "pob" => $validated["pob"],
-                    "dob" => $validated["dob"],
-                    "semester" => $validated["semester"],
-                    "phone" => $validated["phone"],
+                    "name" => $validated["names"][$i],
+                    "nim" => $validated["nims"][$i],
+                    "pob" => $validated["pobs"][$i],
+                    "dob" => $validated["dobs"][$i],
+                    "semester" => $validated["semesters"][$i],
+                    "phone" => $validated["phones"][$i],
                 ]);
                 PplStudent::create([
                     "ppl_id" => $newPpl->id,
@@ -122,17 +123,17 @@ class PplController extends Controller
             "mentor" => "nullable|string",
             "student_count" => "numeric|min:1",
 
-            "names" => "required|array|size:" . count($request->student_count),
+            "names" => "required|array|min:" . $request->student_count,
             "names.*" => "required|string",
-            "nims" => "required|array|size:" . count($request->student_count),
+            "nims" => "required|array|min:" . $request->student_count,
             "nims.*" => "required|numeric",
-            "pobs" => "required|array|size:" . count($request->student_count),
+            "pobs" => "required|array|min:" . $request->student_count,
             "pobs.*" => "required|string",
-            "dobs" => "required|array|size:" . count($request->student_count),
+            "dobs" => "required|array|min:" . $request->student_count,
             "dobs.*" => "required|date",
-            "semesters" => "required|array|size:" . count($request->student_count),
+            "semesters" => "required|array|min:" . $request->student_count,
             "semesters.*" => "required|integer|min:0",
-            "phones" => "required|array|size:" . count($request->student_count),
+            "phones" => "required|array|min:" . $request->student_count,
             "phones.*" => "required|phone:ID",
         ]);
         $updatePpl = [
@@ -155,12 +156,12 @@ class PplController extends Controller
             $ppl->students()->delete();
             for ($i = 0; $i < $validated["student_count"]; $i++) {
                 $newStudent = Student::create([
-                    "name" => $validated["name"],
-                    "nim" => $validated["nim"],
-                    "pob" => $validated["pob"],
-                    "dob" => $validated["dob"],
-                    "semester" => $validated["semester"],
-                    "phone" => $validated["phone"],
+                    "name" => $validated["names"][$i],
+                    "nim" => $validated["nims"][$i],
+                    "pob" => $validated["pobs"][$i],
+                    "dob" => $validated["dobs"][$i],
+                    "semester" => $validated["semesters"][$i],
+                    "phone" => $validated["phones"][$i],
                 ]);
                 PplStudent::create([
                     "ppl_id" => $ppl->id,

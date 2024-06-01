@@ -23,6 +23,6 @@ class Student extends Model
         return $this->hasOne(Comprehensive::class);
     }
     public function ppls() {
-        return $this->belongsToMany(PPL::class, "ppl_students", "ppl_id", "student_id");
+        return $this->belongsToMany(PPL::class, "ppl_students", "student_id", "ppl_id");
     }
 }

@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <link rel="stylesheet" href="{{ asset('css/style.css') }}">
   @vite('resources/js/app.jsx')
-  <!-- @routes() -->
+  @routes()
   @inertiaHead
 </head>
 
