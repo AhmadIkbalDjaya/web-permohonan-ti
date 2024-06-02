@@ -8,6 +8,11 @@ import {
     Box,
     Button,
     Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     FormControl,
     InputBase,
     MenuItem,
@@ -74,9 +79,64 @@ export default function Proposal({ proposals, meta }) {
         page.current = meta.total_page;
         getData();
     }
+
+    const [confirmDelete, setConfirmDelete] = useState({
+        open: false,
+        id: "",
+    });
+    const handleOpenDelete = (id) => {
+        setConfirmDelete({
+            open: true,
+            id,
+        });
+    };
+    const handleCloseDelete = () => {
+        setConfirmDelete({
+            open: false,
+            id: "",
+        });
+    };
+    const handleDeleteData = () => {
+        router.delete(
+            route("admin.proposal.delete", {
+                proposal: confirmDelete.id,
+            })
+        );
+        setConfirmDelete({
+            open: false,
+            id: "",
+        });
+    };
     const componentRef = useRef();
     return (
         <>
+            <Dialog
+                open={confirmDelete.open}
+                onClose={handleCloseDelete}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Konfimasi"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Yakin Ingin Menghapus Permohonan
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button size="small" onClick={handleCloseDelete}>
+                        Batal
+                    </Button>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        color="error"
+                        onClick={handleDeleteData}
+                        autoFocus
+                    >
+                        Hapus
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <Head title="Proposal" />
             <BaseLayout>
                 <AppBreadcrumbs>
@@ -123,11 +183,14 @@ export default function Proposal({ proposals, meta }) {
                             </Button>
                         )}
                         content={() => componentRef.current}
-                        paperSize={{ width: '210mm', height: '330mm', unit: 'mm' }} 
+                        paperSize={{
+                            width: "210mm",
+                            height: "330mm",
+                            unit: "mm",
+                        }}
                     />
-                    <Box sx={{display:'none'}}>
-
-                    <CetakProposal  ref={componentRef} />
+                    <Box sx={{ display: "none" }}>
+                        <CetakProposal ref={componentRef} />
                     </Box>
                     <Box
                         display={"flex"}
@@ -182,9 +245,7 @@ export default function Proposal({ proposals, meta }) {
                                         }}
                                     ></Checkbox>
                                 </TableCell>
-                                <TableCell align="left" sx={tableHeadStyle}>
-                                    Nama
-                                </TableCell>
+                                <TableCell sx={tableHeadStyle}>Nama</TableCell>
                                 <TableCell sx={tableHeadStyle}>NIM</TableCell>
                                 <TableCell sx={tableHeadStyle}>Judul</TableCell>
                                 <TableCell sx={tableHeadStyle}>
@@ -258,7 +319,17 @@ export default function Proposal({ proposals, meta }) {
                                             justifyContent={"space-between"}
                                             alignItems={"center"}
                                         >
-                                            <HiOutlineEye size={22} />
+                                            <AppLink
+                                                color="black"
+                                                href={route(
+                                                    "admin.proposal.show",
+                                                    {
+                                                        proposal: proposal.id,
+                                                    }
+                                                )}
+                                            >
+                                                <HiOutlineEye size={22} />
+                                            </AppLink>
                                             <AppLink
                                                 color={"black"}
                                                 href={route(
@@ -271,16 +342,11 @@ export default function Proposal({ proposals, meta }) {
                                                 <TbEdit size={22} />
                                             </AppLink>
                                             <RiDeleteBin6Line
+                                                cursor={"pointer"}
                                                 size={22}
                                                 onClick={() => {
-                                                    router.delete(
-                                                        route(
-                                                            "admin.proposal.delete",
-                                                            {
-                                                                proposal:
-                                                                    proposal.id,
-                                                            }
-                                                        )
+                                                    handleOpenDelete(
+                                                        proposal.id
                                                     );
                                                 }}
                                             />

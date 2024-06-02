@@ -6,3 +6,9 @@ export const idFormatDate = (dateString) => {
       year: "numeric",
   });
 };
+
+export const getDateDay = (dateString) => {
+  const date = new Date(dateString);
+  const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
+  return days[date.getDay()]
+}

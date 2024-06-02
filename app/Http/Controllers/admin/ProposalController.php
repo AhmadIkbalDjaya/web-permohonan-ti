@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\ProposalDetailResource;
 use App\Models\FileRequirement;
 use App\Models\Mentor;
 use App\Models\File;
@@ -43,6 +44,16 @@ class ProposalController extends Controller
         return Inertia::render("admin/proposal/Index", [
             "proposals" => $proposals,
             "meta" => $meta,
+        ]);
+    }
+
+    public function show(Proposal $proposal)
+    {
+        $file_requirements = FileRequirement::where("request_type", "proposals")->get();
+        return Inertia::render("admin/proposal/Show", [
+            // "proposal" => $proposal->load(["student", "schedule", "mentors", "testers", "files"]),
+            "proposal" => new ProposalDetailResource($proposal->load(["student", "schedule", "mentors", "testers", "files"])),
+            "file_requirements" => $file_requirements,
         ]);
     }
     public function create()
@@ -133,7 +144,6 @@ class ProposalController extends Controller
 
     public function edit(Proposal $proposal)
     {
-        // dd($proposal->mentors);
         $mentors = $proposal->mentors->sortBy('order')->pluck('name');
         $testers = $proposal->testers->sortBy('order')->pluck('name');
         $file_requirements = FileRequirement::where("request_type", "proposals")->get();

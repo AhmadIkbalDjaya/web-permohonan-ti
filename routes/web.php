@@ -11,7 +11,6 @@ use App\Http\Controllers\admin\ResultController as AdminResultController;
 use App\Http\Controllers\admin\ComprehensiveController as AdminComprehensiveController;
 use App\Http\Controllers\admin\PplController as AdminPplController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +36,7 @@ Route::prefix('admin')->group(function () {
         Route::get("", "index")->name('admin.proposal.index');
         Route::get("create", "create")->name('admin.proposal.create');
         Route::post("", 'store')->name('admin.proposal.store');
+        Route::get('{proposal}', "show")->name('admin.proposal.show');
         Route::get("{proposal}/edit", "edit")->name('admin.proposal.edit');
         Route::put("{proposal}", "update")->name('admin.proposal.update');
         Route::delete("{proposal}", "destroy")->name('admin.proposal.delete');
