@@ -32,11 +32,13 @@ import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { themePagination } from "../../../theme/PaginationTheme";
-import { idFormatDate } from "../../../helper/idFormatDate";
+import { idFormatDate } from "../../../helper/dateTimeHelper";
 import pickBy from "lodash.pickby";
-import ReactToPrint from "react-to-print";
-import CetakProposal from "../cetak/cetakProposal";
-import { tableHeadStyle } from "../components/styles/tableHeadStyle";
+import {
+    tableCellStyle,
+    tableCheckboxStyle,
+    tableHeadStyle,
+} from "../components/styles/tableStyles";
 
 export default function Proposal({ proposals, meta }) {
     const showItemOptions = [5, 10, 15, 20, 25];
@@ -107,7 +109,6 @@ export default function Proposal({ proposals, meta }) {
             id: "",
         });
     };
-    const componentRef = useRef();
     return (
         <>
             <Dialog
@@ -176,22 +177,6 @@ export default function Proposal({ proposals, meta }) {
                             Permohonan
                         </Button>
                     </AppLink>
-                    <ReactToPrint
-                        trigger={() => (
-                            <Button variant="contained" color="primary">
-                                Cetak ke PDF
-                            </Button>
-                        )}
-                        content={() => componentRef.current}
-                        paperSize={{
-                            width: "210mm",
-                            height: "330mm",
-                            unit: "mm",
-                        }}
-                    />
-                    <Box sx={{ display: "none" }}>
-                        <CetakProposal ref={componentRef} />
-                    </Box>
                     <Box
                         display={"flex"}
                         alignItems={"center"}
@@ -236,18 +221,13 @@ export default function Proposal({ proposals, meta }) {
                         <TableHead>
                             <TableRow sx={{ backgroundColor: "gray-100" }}>
                                 <TableCell padding="checkbox">
-                                    <Checkbox
-                                        sx={{
-                                            color: "zinc-200",
-                                            "&.Mui-checked": {
-                                                color: "primary2",
-                                            },
-                                        }}
-                                    ></Checkbox>
+                                    <Checkbox sx={tableCheckboxStyle} />
                                 </TableCell>
                                 <TableCell sx={tableHeadStyle}>Nama</TableCell>
                                 <TableCell sx={tableHeadStyle}>NIM</TableCell>
-                                <TableCell sx={tableHeadStyle}>Judul</TableCell>
+                                <TableCell sx={tableHeadStyle}>
+                                    Judul Skripsi
+                                </TableCell>
                                 <TableCell sx={tableHeadStyle}>
                                     Tanggal Pengajuan
                                 </TableCell>
@@ -261,35 +241,27 @@ export default function Proposal({ proposals, meta }) {
                             {proposals.data.map((proposal, index) => (
                                 <TableRow key={index}>
                                     <TableCell padding="checkbox">
-                                        <Checkbox
-                                            sx={{
-                                                color: "zinc-200",
-                                                "&.Mui-checked": {
-                                                    color: "primary2",
-                                                },
-                                            }}
-                                        ></Checkbox>
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "700",
-                                        }}
-                                    >
-                                        {proposal.student.name}
+                                        <Checkbox sx={tableCheckboxStyle} />
                                     </TableCell>
                                     <TableCell
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "150px",
+                                            maxWidth: "200px",
                                         }}
                                     >
+                                        {proposal.student.name}
+                                    </TableCell>
+                                    <TableCell sx={tableCellStyle}>
                                         {proposal.student.nim}
                                     </TableCell>
                                     <TableCell
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "250px",
+                                            maxWidth: "250px",
                                         }}
                                     >
                                         {proposal.essay_title}
@@ -298,22 +270,30 @@ export default function Proposal({ proposals, meta }) {
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "150px",
+                                            maxWidth: "200px",
                                         }}
                                     >
                                         {idFormatDate(proposal.created_at)}
                                     </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                        }}
-                                    >
-                                        Pending
+                                    <TableCell sx={tableCellStyle}>
+                                        <Typography
+                                            variant=""
+                                            // color={"green"}
+                                            // color={"red"}
+                                            color={"#fbc02d"}
+                                            // backgroundColor={"#e8f5e9"}
+                                            // backgroundColor={"#ffebee"}
+                                            backgroundColor={"#fffde7"}
+                                            padding={"0px 3px"}
+                                            borderRadius={"3px"}
+                                        >
+                                            {/* Diterima */}
+                                            {/* Ditolak */}
+                                            Pending
+                                        </Typography>
                                     </TableCell>
-                                    <TableCell
-                                        sx={{ padding: "0 10px" }}
-                                        align="center"
-                                    >
+                                    <TableCell sx={tableCellStyle}>
                                         <Box
                                             display={"flex"}
                                             justifyContent={"space-between"}

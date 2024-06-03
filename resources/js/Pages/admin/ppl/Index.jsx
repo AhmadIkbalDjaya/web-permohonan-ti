@@ -23,13 +23,16 @@ import {
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
-import { tableHeadStyle } from "../components/styles/tableHeadStyle";
-import { idFormatDate } from "../../../helper/idFormatDate";
+import {
+    tableCheckboxStyle,
+    tableHeadStyle,
+} from "../components/styles/tableStyles";
 import { HiOutlineEye } from "react-icons/hi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbEdit } from "react-icons/tb";
 import { themePagination } from "../../../theme/PaginationTheme";
 import pickBy from "lodash.pickby";
+import { idFormatDate } from "../../../helper/dateTimeHelper";
 
 export default function Ppl({ ppls, meta }) {
     const showItemOptions = [5, 10, 15, 20, 25];

@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useRef } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
 import { Head } from "@inertiajs/react";
-import { Box, Button, Grid, Typography } from "@mui/material";
-import { MdModeEdit } from "react-icons/md";
-import { getDateDay, idFormatDate } from "../../../helper/idFormatDate";
+import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import { MdDelete, MdModeEdit } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa";
+import ReactToPrint from "react-to-print";
+import CetakProposal from "../cetak/cetakProposal";
+import { getDateDay, idFormatDate } from "../../../helper/dateTimeHelper";
 
 export default function ShowProposal({ proposal, file_requirements }) {
+    const componentRef = useRef();
     return (
         <>
             <Head title="Detail Permohonan" />
@@ -34,23 +37,43 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             Detail Permohonan Seminar Proposal
                         </Typography>
                     </Box>
-                    <Button
-                        // onClick={handleSubmitForm}
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        startIcon={<MdModeEdit />}
-                        sx={{
-                            background: "#B20600",
-                            textTransform: "none",
-                            display: {
-                                xs: "none",
-                                sm: "inherit",
-                            },
-                        }}
-                    >
-                        Edit
-                    </Button>
+                    <Stack direction={"row"} spacing={1}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            startIcon={<MdDelete />}
+                            sx={{
+                                background: "#B20600",
+                                textTransform: "none",
+                                display: {
+                                    xs: "none",
+                                    sm: "inherit",
+                                },
+                            }}
+                        >
+                            Hapus
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            startIcon={<MdModeEdit />}
+                            sx={{
+                                background: "#B20600",
+                                textTransform: "none",
+                                display: {
+                                    xs: "none",
+                                    sm: "inherit",
+                                },
+                            }}
+                            href={route("admin.proposal.edit", {
+                                proposal: proposal.id,
+                            })}
+                        >
+                            Edit
+                        </Button>
+                    </Stack>
                 </Box>
                 <Box
                     display={"flex"}
@@ -85,6 +108,83 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             Data Seminar
                         </Typography>
                         <Grid container spacing={1} padding={"15px"}>
+                            <Grid
+                                item
+                                xs={5}
+                                display={"flex"}
+                                justifyContent={"space-between"}
+                            >
+                                <Typography variant="body2" fontWeight={"500"}>
+                                    Status Permohonan
+                                </Typography>
+                                <Typography variant="body2" fontWeight={"500"}>
+                                    :
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <Typography variant="body2" fontWeight={"500"}>
+                                    {/* {proposal.status} */}Diterima <br />
+                                    {/* ({proposal.status.description}){" "} */}
+                                    (Deskripsi Status)
+                                </Typography>
+                            </Grid>
+                            <Grid
+                                item
+                                xs={5}
+                                display={"flex"}
+                                justifyContent={"space-between"}
+                            >
+                                <Typography variant="body2" fontWeight={"500"}>
+                                    Nomor Surat
+                                </Typography>
+                                <Typography variant="body2" fontWeight={"500"}>
+                                    :
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <Typography variant="body2" fontWeight={"500"}>
+                                    {/* {proposal.letter_number} */}
+                                    347/TI-UINAM/V/2024
+                                </Typography>
+                            </Grid>
+                            <Grid
+                                item
+                                xs={5}
+                                display={"flex"}
+                                justifyContent={"space-between"}
+                            >
+                                <Typography variant="body2" fontWeight={"500"}>
+                                    Tanggal Surat
+                                </Typography>
+                                <Typography variant="body2" fontWeight={"500"}>
+                                    :
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <Typography variant="body2" fontWeight={"500"}>
+                                    {/* {proposal.letter_number} */}
+                                    15 Mei 2024
+                                </Typography>
+                            </Grid>
+                            <Grid
+                                item
+                                xs={5}
+                                display={"flex"}
+                                justifyContent={"space-between"}
+                            >
+                                <Typography variant="body2" fontWeight={"500"}>
+                                    Kode Pengajuan
+                                </Typography>
+                                <Typography variant="body2" fontWeight={"500"}>
+                                    :
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <Typography variant="body2" fontWeight={"500"}>
+                                    {/* {proposal.letter_number} */}
+                                    PROPO200524121231
+                                </Typography>
+                            </Grid>
                             <Grid item xs={12}>
                                 <Typography
                                     variant="body2"
@@ -501,6 +601,68 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                     src={proposal.applicant_sign}
                                 />
                             </Box>
+                        </Box>
+                        <Box
+                            display={"flex"}
+                            gap={1}
+                            sx={{
+                                display: {
+                                    xs: "inherit",
+                                    sm: "none",
+                                },
+                            }}
+                        >
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                startIcon={<MdDelete />}
+                                sx={{
+                                    background: "#B20600",
+                                    textTransform: "none",
+                                }}
+                            >
+                                Hapus
+                            </Button>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                startIcon={<MdModeEdit />}
+                                sx={{
+                                    background: "#B20600",
+                                    textTransform: "none",
+                                }}
+                                href={route("admin.proposal.edit", {
+                                    proposal: proposal.id,
+                                })}
+                            >
+                                Edit
+                            </Button>
+                        </Box>
+
+                        <ReactToPrint
+                            trigger={() => (
+                                <Button
+                                    variant="contained"
+                                    startIcon={<FaFilePdf />}
+                                    color="zinc-200"
+                                    sx={{ textTransform: "none" }}
+                                >
+                                    Cetak PDF
+                                </Button>
+                            )}
+                            content={() => componentRef.current}
+                            paperSize={{
+                                width: "210mm",
+                                height: "330mm",
+                                unit: "mm",
+                            }}
+                        />
+                        <Box sx={{ display: "none" }}>
+                            <CetakProposal ref={componentRef} />
                         </Box>
                     </Box>
                 </Box>

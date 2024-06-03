@@ -21,15 +21,18 @@ import {
     ThemeProvider,
     Typography,
 } from "@mui/material";
-import { idFormatDate } from "../../../helper/idFormatDate";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
-import { tableHeadStyle } from "../components/styles/tableHeadStyle";
+import {
+    tableCheckboxStyle,
+    tableHeadStyle,
+} from "../components/styles/tableStyles";
 import { themePagination } from "../../../theme/PaginationTheme";
 import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import pickBy from "lodash.pickby";
+import { idFormatDate } from "../../../helper/dateTimeHelper";
 
 export default function Result({ results, meta }) {
     const showItemOptions = [5, 10, 15, 20, 25];

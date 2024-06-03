@@ -24,12 +24,15 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { tableHeadStyle } from "../components/styles/tableHeadStyle";
-import { idFormatDate } from "../../../helper/idFormatDate";
+import {
+    tableCheckboxStyle,
+    tableHeadStyle,
+} from "../components/styles/tableStyles";
 import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import pickBy from "lodash.pickby";
 import { themePagination } from "../../../theme/PaginationTheme";
+import { idFormatDate } from "../../../helper/dateTimeHelper";
 
 export default function Comprehensive({ comprehensives, meta }) {
     const showItemOptions = [5, 10, 15, 20, 25];
