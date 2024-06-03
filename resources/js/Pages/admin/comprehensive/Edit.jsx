@@ -192,6 +192,110 @@ export default function EditComprehensive({ comprehensive, testers }) {
                             <Grid container spacing={2} padding={"15px"}>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel
+                                        label="Status Permohonan"
+                                        required={true}
+                                    />
+                                    <Select
+                                        id="status"
+                                        name="status"
+                                        // value={formValues.status}
+                                        // onChange={handleChangeForm}
+                                        displayEmpty
+                                        error={errors.status ? true : false}
+                                        fullWidth
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Status Permohonan
+                                            </Typography>
+                                        </MenuItem>
+                                        <MenuItem>Pending</MenuItem>
+                                        <MenuItem>Diterima</MenuItem>
+                                        <MenuItem>Ditolak</MenuItem>
+                                    </Select>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel label="Deskripsi Status" />
+                                    <Select
+                                        id="status_describtion"
+                                        name="status_describtion"
+                                        // value={formValues.status_describtion}
+                                        // onChange={handleChangeForm}
+                                        displayEmpty
+                                        error={
+                                            errors.status_describtion
+                                                ? true
+                                                : false
+                                        }
+                                        fullWidth
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Deskripsi Status
+                                            </Typography>
+                                        </MenuItem>
+                                        <MenuItem>
+                                            Silahkan Membawa Kelengkapan Berkas
+                                            Ke Jurusan
+                                        </MenuItem>
+                                        <MenuItem>
+                                            Berkas Tidak Lengkap
+                                        </MenuItem>
+                                    </Select>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel label="Nomor Surat" />
+                                    <TextField
+                                        id="letter_number"
+                                        name="letter_number"
+                                        type="string"
+                                        // value={formValues.letter_number}
+                                        // onChange={handleChangeForm}
+                                        placeholder="Masukkan Nomor Surat"
+                                        fullWidth
+                                        error={
+                                            errors.letter_number ? true : false
+                                        }
+                                        helperText={errors.letter_number ?? ""}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel label="Tanggal Surat" />
+                                    <TextField
+                                        id="letter_date"
+                                        name="letter_date"
+                                        type="date"
+                                        // value={formValues.letter_date}
+                                        // onChange={handleChangeForm}
+                                        placeholder="Masukkan Nomor Surat"
+                                        fullWidth
+                                        error={
+                                            errors.letter_date ? true : false
+                                        }
+                                        helperText={errors.letter_date ?? ""}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography
+                                        variant="body2"
+                                        color="initial"
+                                        sx={{ fontWeight: "600" }}
+                                    >
+                                        Data Mahasiswa :
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel
                                         label="Nama"
                                         required={true}
                                     />
@@ -337,6 +441,43 @@ export default function EditComprehensive({ comprehensive, testers }) {
                                             errors.essay_title ? true : false
                                         }
                                         helperText={errors.essay_title ?? ""}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography
+                                        variant="body2"
+                                        color="initial"
+                                        sx={{ fontWeight: "600" }}
+                                    >
+                                        Dewan Penguji dan Pelaksana :
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel label="Ketua" />
+                                    <TextField
+                                        id="leader"
+                                        name="leader"
+                                        type="string"
+                                        placeholder="Ketua"
+                                        fullWidth
+                                        value={formValues.leader}
+                                        onChange={handleChangeForm}
+                                        error={errors.leader ? true : false}
+                                        helperText={errors.leader ?? ""}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel label="Sekertaris" />
+                                    <TextField
+                                        id="lead"
+                                        name="lead"
+                                        type="string"
+                                        placeholder="Sekertaris"
+                                        fullWidth
+                                        value={formValues.lead}
+                                        onChange={handleChangeForm}
+                                        error={errors.lead ? true : false}
+                                        helperText={errors.lead ?? ""}
                                     />
                                 </Grid>
                                 <Grid item xs={12} md={4}>

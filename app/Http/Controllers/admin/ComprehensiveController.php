@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\ComprehensiveDetailResource;
 use App\Models\Comprehensive;
 use App\Models\Student;
 use App\Models\Tester;
@@ -40,6 +41,13 @@ class ComprehensiveController extends Controller
         return Inertia::render("admin/comprehensive/Index", [
             "comprehensives" => $comprehensives,
             "meta" => $meta,
+        ]);
+    }
+
+    public function show(Comprehensive $comprehensive)
+    {
+        return Inertia::render("admin/comprehensive/Show", [
+            "comprehensive" => new ComprehensiveDetailResource($comprehensive->load(["student", "testers"])),
         ]);
     }
 

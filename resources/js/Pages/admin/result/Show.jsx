@@ -15,7 +15,8 @@ import {
 } from "../../../helper/dateTimeHelper";
 import { ShowRowData } from "../components/ShowRowData";
 
-export default function ShowProposal({ proposal, file_requirements }) {
+export default function ShowResult({ result, file_requirements }) {
+  console.log(result);
     const componentRef = useRef();
     return (
         <>
@@ -23,9 +24,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
-                    <AppLink href={route("admin.proposal.index")}>
-                        Proposal
-                    </AppLink>
+                    <AppLink href={route("admin.result.index")}>Hasil</AppLink>
                     <AppLink color="black">Detail Permohonan</AppLink>
                 </AppBreadcrumbs>
                 <Box
@@ -39,7 +38,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             Detail Permohonan
                         </Typography>
                         <Typography variant="caption">
-                            Detail Permohonan Seminar Proposal
+                            Detail Permohonan Seminar Hasil
                         </Typography>
                     </Box>
                     <Stack direction={"row"} spacing={1}>
@@ -72,8 +71,8 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                     sm: "inherit",
                                 },
                             }}
-                            href={route("admin.proposal.edit", {
-                                proposal: proposal.id,
+                            href={route("admin.result.edit", {
+                                result: result.id,
                             })}
                         >
                             Edit
@@ -117,8 +116,8 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 name={"Status Permohonan"}
                                 value={
                                     <>
-                                        {/* {proposal.status} */}Diterima <br />
-                                        {/* ({proposal.status.description}){" "} */}
+                                        {/* {result.status} */}Diterima <br />
+                                        {/* ({result.status.description}){" "} */}
                                         (Deskripsi Status)
                                     </>
                                 }
@@ -127,7 +126,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 name={"Nomor Surat"}
                                 value={
                                     <>
-                                        {/* {proposal.letter_number} */}
+                                        {/* {result.letter_number} */}
                                         347/TI-UINAM/V/2024
                                     </>
                                 }
@@ -136,7 +135,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 name={"Tanggal Surat"}
                                 value={
                                     <>
-                                        {/* {proposal.letter_number} */}
+                                        {/* {result.letter_number} */}
                                         15 Mei 2024
                                     </>
                                 }
@@ -153,26 +152,26 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             </Grid>
                             <ShowRowData
                                 name={"Nama"}
-                                value={proposal.student.name}
+                                value={result.student.name}
                             />
                             <ShowRowData
                                 name={"NIM"}
-                                value={proposal.student.nim}
+                                value={result.student.nim}
                             />
                             <ShowRowData
                                 name={"Tempat, Tanggal Lahir"}
                                 value={
-                                    `${proposal.student.pob}, ` +
-                                    idFormatDate(proposal.student.dob)
+                                    `${result.student.pob}, ` +
+                                    idFormatDate(result.student.dob)
                                 }
                             />
                             <ShowRowData
                                 name={"Jurusan, Semester"}
-                                value={`Teknik Informatika, ${proposal.student.semester}`}
+                                value={`Teknik Informatika, ${result.student.semester}`}
                             />
                             <ShowRowData
                                 name={"Judul Skripsi"}
-                                value={proposal.essay_title}
+                                value={result.essay_title}
                             />
                             <Grid item xs={12} marginTop={"15px"}>
                                 <Typography
@@ -186,14 +185,14 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             <ShowRowData name={"Ketua"} />
                             <ShowRowData name={"Sekertaris"} />
                             <Grid item xs={12} container spacing={1}>
-                                {proposal.mentors.map((mentor, index) => (
+                                {result.mentors.map((mentor, index) => (
                                     <ShowRowData
                                         key={`mentor${index}`}
                                         name={`Pembimbing ${index + 1}`}
                                         value={mentor.name}
                                     />
                                 ))}
-                                {proposal.testers.map((tester, index) => (
+                                {result.testers.map((tester, index) => (
                                     <ShowRowData
                                         key={`tester${index}`}
                                         name={`Penguji ${index + 1}`}
@@ -214,20 +213,20 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             <ShowRowData
                                 name={"Hari dan Tanggal"}
                                 value={`${getDateDay(
-                                    proposal.schedule.date
-                                )}, ${idFormatDate(proposal.schedule.date)}`}
+                                    result.schedule.date
+                                )}, ${idFormatDate(result.schedule.date)}`}
                             />
                             <ShowRowData
                                 name={"Waktu"}
                                 value={`${convertToHHMM(
-                                    proposal.schedule.time
+                                    result.schedule.time
                                 )} - ${convertToHHMM(
-                                    proposal.schedule.time
+                                    result.schedule.time
                                 )} WITA`}
                             />
                             <ShowRowData
                                 name={"Tempat Pelaksanaan"}
-                                value={proposal.schedule.location}
+                                value={result.schedule.location}
                             />
                         </Grid>
                     </Box>
@@ -284,7 +283,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={12}>
-                                                {proposal.files.some(
+                                                {result.files.some(
                                                     (file) =>
                                                         file.name ==
                                                         file_requirement.name
@@ -339,7 +338,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                         height: "200px",
                                         width: "300px",
                                     }}
-                                    src={proposal.applicant_sign}
+                                    src={result.applicant_sign}
                                 />
                             </Box>
                         </Box>
@@ -376,8 +375,8 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                     background: "#B20600",
                                     textTransform: "none",
                                 }}
-                                href={route("admin.proposal.edit", {
-                                    proposal: proposal.id,
+                                href={route("admin.result.edit", {
+                                    result: result.id,
                                 })}
                             >
                                 Edit

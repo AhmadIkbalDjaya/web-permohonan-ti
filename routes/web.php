@@ -45,6 +45,7 @@ Route::prefix('admin')->group(function () {
         Route::get("", "index")->name('admin.result.index');
         Route::get("create", "create")->name('admin.result.create');
         Route::post("", 'store')->name('admin.result.store');
+        Route::get('{result}', "show")->name('admin.result.show');
         Route::get("{result}/edit", "edit")->name('admin.result.edit');
         Route::put("{result}", "update")->name('admin.result.update');
         Route::delete("{result}", "destroy")->name('admin.result.delete');
@@ -53,6 +54,7 @@ Route::prefix('admin')->group(function () {
         Route::get("", "index")->name('admin.comprehensive.index');
         Route::get("create", "create")->name('admin.comprehensive.create');
         Route::post("", 'store')->name('admin.comprehensive.store');
+        Route::get('{comprehensive}', "show")->name('admin.comprehensive.show');
         Route::get("{comprehensive}/edit", "edit")->name('admin.comprehensive.edit');
         Route::put("{comprehensive}", "update")->name('admin.comprehensive.update');
         Route::delete("{comprehensive}", "destroy")->name('admin.comprehensive.delete');
@@ -61,6 +63,7 @@ Route::prefix('admin')->group(function () {
         Route::get("", "index")->name('admin.ppl.index');
         Route::get("create", "create")->name('admin.ppl.create');
         Route::post("", 'store')->name('admin.ppl.store');
+        Route::get('{ppl}', "show")->name('admin.ppl.show');
         Route::get("{ppl}/edit", "edit")->name('admin.ppl.edit');
         Route::put("{ppl}", "update")->name('admin.ppl.update');
         Route::delete("{ppl}", "destroy")->name('admin.ppl.delete');

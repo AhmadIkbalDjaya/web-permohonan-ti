@@ -111,12 +111,8 @@ export default function Proposal({ proposals, meta }) {
     };
     return (
         <>
-            <Dialog
-                open={confirmDelete.open}
-                onClose={handleCloseDelete}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
+            <Head title="Proposal" />
+            <Dialog open={confirmDelete.open} onClose={handleCloseDelete}>
                 <DialogTitle id="alert-dialog-title">{"Konfimasi"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
@@ -138,7 +134,6 @@ export default function Proposal({ proposals, meta }) {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <Head title="Proposal" />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -168,9 +163,7 @@ export default function Proposal({ proposals, meta }) {
                             variant="contained"
                             startIcon={<FaPlus />}
                             size="small"
-                            color="primary"
                             sx={{
-                                background: "#B20600",
                                 textTransform: "none",
                             }}
                         >

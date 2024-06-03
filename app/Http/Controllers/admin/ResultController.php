@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\ResultDetailResource;
 use App\Models\FileRequirement;
 use App\Models\Mentor;
 use App\Models\Result;
@@ -43,6 +44,15 @@ class ResultController extends Controller
         return Inertia::render("admin/result/Index", [
             "results" => $results,
             "meta" => $meta,
+        ]);
+    }
+
+    public function show(Result $result)
+    {
+        $file_requirements = FileRequirement::where("request_type", "results")->get();
+        return Inertia::render("admin/result/Show", [
+            "result" => new ResultDetailResource($result->load(["student", "schedule", "mentors", "testers", "files"])),
+            "file_requirements" => $file_requirements,
         ]);
     }
 

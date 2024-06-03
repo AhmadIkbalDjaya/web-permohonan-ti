@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\PPLDetailResource;
 use App\Models\Mentor;
 use App\Models\PPL;
 use App\Models\PplStudent;
@@ -40,6 +41,13 @@ class PplController extends Controller
         return Inertia::render("admin/ppl/Index", [
             "ppls" => $ppls,
             "meta" => $meta,
+        ]);
+    }
+
+    public function show(PPL $ppl)
+    {
+        return Inertia::render("admin/ppl/Show", [
+            "ppl" => new PPLDetailResource($ppl),
         ]);
     }
 

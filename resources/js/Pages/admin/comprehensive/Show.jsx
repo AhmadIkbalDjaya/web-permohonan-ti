@@ -15,7 +15,11 @@ import {
 } from "../../../helper/dateTimeHelper";
 import { ShowRowData } from "../components/ShowRowData";
 
-export default function ShowProposal({ proposal, file_requirements }) {
+export default function ShowComprehensive({
+    comprehensive,
+    file_requirements,
+}) {
+    console.log(comprehensive);
     const componentRef = useRef();
     return (
         <>
@@ -23,8 +27,8 @@ export default function ShowProposal({ proposal, file_requirements }) {
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
-                    <AppLink href={route("admin.proposal.index")}>
-                        Proposal
+                    <AppLink href={route("admin.comprehensive.index")}>
+                        Kompren
                     </AppLink>
                     <AppLink color="black">Detail Permohonan</AppLink>
                 </AppBreadcrumbs>
@@ -39,7 +43,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             Detail Permohonan
                         </Typography>
                         <Typography variant="caption">
-                            Detail Permohonan Seminar Proposal
+                            Detail Permohonan Seminar Hasil
                         </Typography>
                     </Box>
                     <Stack direction={"row"} spacing={1}>
@@ -72,8 +76,8 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                     sm: "inherit",
                                 },
                             }}
-                            href={route("admin.proposal.edit", {
-                                proposal: proposal.id,
+                            href={route("admin.comprehensive.edit", {
+                                comprehensive: comprehensive.id,
                             })}
                         >
                             Edit
@@ -117,8 +121,9 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 name={"Status Permohonan"}
                                 value={
                                     <>
-                                        {/* {proposal.status} */}Diterima <br />
-                                        {/* ({proposal.status.description}){" "} */}
+                                        {/* {comprehensive.status} */}Diterima{" "}
+                                        <br />
+                                        {/* ({comprehensive.status.description}){" "} */}
                                         (Deskripsi Status)
                                     </>
                                 }
@@ -127,7 +132,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 name={"Nomor Surat"}
                                 value={
                                     <>
-                                        {/* {proposal.letter_number} */}
+                                        {/* {comprehensive.letter_number} */}
                                         347/TI-UINAM/V/2024
                                     </>
                                 }
@@ -136,7 +141,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 name={"Tanggal Surat"}
                                 value={
                                     <>
-                                        {/* {proposal.letter_number} */}
+                                        {/* {comprehensive.letter_number} */}
                                         15 Mei 2024
                                     </>
                                 }
@@ -153,26 +158,26 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             </Grid>
                             <ShowRowData
                                 name={"Nama"}
-                                value={proposal.student.name}
+                                value={comprehensive.student.name}
                             />
                             <ShowRowData
                                 name={"NIM"}
-                                value={proposal.student.nim}
+                                value={comprehensive.student.nim}
                             />
                             <ShowRowData
                                 name={"Tempat, Tanggal Lahir"}
                                 value={
-                                    `${proposal.student.pob}, ` +
-                                    idFormatDate(proposal.student.dob)
+                                    `${comprehensive.student.pob}, ` +
+                                    idFormatDate(comprehensive.student.dob)
                                 }
                             />
                             <ShowRowData
                                 name={"Jurusan, Semester"}
-                                value={`Teknik Informatika, ${proposal.student.semester}`}
+                                value={`Teknik Informatika, ${comprehensive.student.semester}`}
                             />
                             <ShowRowData
                                 name={"Judul Skripsi"}
-                                value={proposal.essay_title}
+                                value={comprehensive.essay_title}
                             />
                             <Grid item xs={12} marginTop={"15px"}>
                                 <Typography
@@ -185,50 +190,18 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             </Grid>
                             <ShowRowData name={"Ketua"} />
                             <ShowRowData name={"Sekertaris"} />
+                            <ShowRowData name={"Pelaksana"} />
                             <Grid item xs={12} container spacing={1}>
-                                {proposal.mentors.map((mentor, index) => (
-                                    <ShowRowData
-                                        key={`mentor${index}`}
-                                        name={`Pembimbing ${index + 1}`}
-                                        value={mentor.name}
-                                    />
-                                ))}
-                                {proposal.testers.map((tester, index) => (
+                                {comprehensive.testers.map((tester, index) => (
                                     <ShowRowData
                                         key={`tester${index}`}
-                                        name={`Penguji ${index + 1}`}
+                                        name={`Penguji ${index + 1} (${
+                                            tester.description
+                                        })`}
                                         value={tester.name}
                                     />
                                 ))}
                             </Grid>
-                            <ShowRowData name={"Pelaksana"} />
-                            <Grid item xs={12} marginTop={"15px"}>
-                                <Typography
-                                    variant="body2"
-                                    color="initial"
-                                    sx={{ fontWeight: "600" }}
-                                >
-                                    Jadwal Pelaksanaan :
-                                </Typography>
-                            </Grid>
-                            <ShowRowData
-                                name={"Hari dan Tanggal"}
-                                value={`${getDateDay(
-                                    proposal.schedule.date
-                                )}, ${idFormatDate(proposal.schedule.date)}`}
-                            />
-                            <ShowRowData
-                                name={"Waktu"}
-                                value={`${convertToHHMM(
-                                    proposal.schedule.time
-                                )} - ${convertToHHMM(
-                                    proposal.schedule.time
-                                )} WITA`}
-                            />
-                            <ShowRowData
-                                name={"Tempat Pelaksanaan"}
-                                value={proposal.schedule.location}
-                            />
                         </Grid>
                     </Box>
                     <Box
@@ -255,81 +228,6 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 borderBottom={"1px solid"}
                                 borderColor={"slate-300"}
                             >
-                                Berkas Pemohon
-                            </Typography>
-                            <Grid container spacing={2} padding={"15px"}>
-                                {file_requirements.map(
-                                    (file_requirement, index) => (
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            container
-                                            key={index}
-                                        >
-                                            <Grid item xs={12}>
-                                                <Typography
-                                                    variant="body2"
-                                                    color="initial"
-                                                    fontWeight={"600"}
-                                                    display={"flex"}
-                                                    sx={{
-                                                        textTransform:
-                                                            "capitalize",
-                                                    }}
-                                                >
-                                                    {file_requirement.name.replaceAll(
-                                                        "_",
-                                                        " "
-                                                    )}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                {proposal.files.some(
-                                                    (file) =>
-                                                        file.name ==
-                                                        file_requirement.name
-                                                ) ? (
-                                                    <Button
-                                                        variant="contained"
-                                                        color="gray-100"
-                                                        startIcon={
-                                                            <FaFilePdf />
-                                                        }
-                                                        sx={{
-                                                            height: "33px",
-                                                            textTransform:
-                                                                "capitalize",
-                                                        }}
-                                                        fullWidth
-                                                    >
-                                                        Lihat
-                                                    </Button>
-                                                ) : (
-                                                    <Typography variant="body2">
-                                                        Tidak Ada Berkas
-                                                    </Typography>
-                                                )}
-                                            </Grid>
-                                        </Grid>
-                                    )
-                                )}
-                            </Grid>
-                        </Box>
-                        <Box
-                            sx={{
-                                background: "white",
-                                border: ".5px solid",
-                                borderColor: "slate-300",
-                                borderRadius: "4px",
-                            }}
-                        >
-                            <Typography
-                                variant="body2"
-                                color="initial"
-                                sx={{ p: "15px", fontWeight: "600" }}
-                                borderBottom={"1px solid"}
-                                borderColor={"slate-300"}
-                            >
                                 Tanda Tangan Pemohon
                             </Typography>
                             <Box display={"flex"} justifyContent={"center"}>
@@ -339,7 +237,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                         height: "200px",
                                         width: "300px",
                                     }}
-                                    src={proposal.applicant_sign}
+                                    src={comprehensive.applicant_sign}
                                 />
                             </Box>
                         </Box>
@@ -376,8 +274,8 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                     background: "#B20600",
                                     textTransform: "none",
                                 }}
-                                href={route("admin.proposal.edit", {
-                                    proposal: proposal.id,
+                                href={route("admin.comprehensive.edit", {
+                                    comprehensive: comprehensive.id,
                                 })}
                             >
                                 Edit

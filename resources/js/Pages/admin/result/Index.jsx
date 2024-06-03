@@ -7,6 +7,11 @@ import {
     Box,
     Button,
     Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     FormControl,
     InputBase,
     MenuItem,
@@ -24,6 +29,7 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import {
+    tableCellStyle,
     tableCheckboxStyle,
     tableHeadStyle,
 } from "../components/styles/tableStyles";
@@ -75,9 +81,58 @@ export default function Result({ results, meta }) {
         page.current = meta.total_page;
         getData();
     }
+    const [confirmDelete, setConfirmDelete] = useState({
+        open: false,
+        id: "",
+    });
+    const handleOpenDelete = (id) => {
+        setConfirmDelete({
+            open: true,
+            id,
+        });
+    };
+    const handleCloseDelete = () => {
+        setConfirmDelete({
+            open: false,
+            id: "",
+        });
+    };
+    const handleDeleteData = () => {
+        router.delete(
+            route("admin.result.delete", {
+                result: confirmDelete.id,
+            })
+        );
+        setConfirmDelete({
+            open: false,
+            id: "",
+        });
+    };
     return (
         <>
             <Head title="Result" />
+            <Dialog open={confirmDelete.open} onClose={handleCloseDelete}>
+                <DialogTitle id="alert-dialog-title">{"Konfimasi"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Yakin Ingin Menghapus Permohonan
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button size="small" onClick={handleCloseDelete}>
+                        Batal
+                    </Button>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        color="error"
+                        onClick={handleDeleteData}
+                        autoFocus
+                    >
+                        Hapus
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -107,9 +162,7 @@ export default function Result({ results, meta }) {
                             variant="contained"
                             startIcon={<FaPlus />}
                             size="small"
-                            color="primary"
                             sx={{
-                                background: "#B20600",
                                 textTransform: "none",
                             }}
                         >
@@ -169,11 +222,11 @@ export default function Result({ results, meta }) {
                                         }}
                                     ></Checkbox>
                                 </TableCell>
-                                <TableCell align="left" sx={tableHeadStyle}>
-                                    Nama
-                                </TableCell>
+                                <TableCell sx={tableHeadStyle}>Nama</TableCell>
                                 <TableCell sx={tableHeadStyle}>NIM</TableCell>
-                                <TableCell sx={tableHeadStyle}>Judul</TableCell>
+                                <TableCell sx={tableHeadStyle}>
+                                    Judul Skripsi
+                                </TableCell>
                                 <TableCell sx={tableHeadStyle}>
                                     Tanggal Pengajuan
                                 </TableCell>
@@ -187,35 +240,27 @@ export default function Result({ results, meta }) {
                             {results.data.map((result, index) => (
                                 <TableRow key={index}>
                                     <TableCell padding="checkbox">
-                                        <Checkbox
-                                            sx={{
-                                                color: "zinc-200",
-                                                "&.Mui-checked": {
-                                                    color: "primary2",
-                                                },
-                                            }}
-                                        ></Checkbox>
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "700",
-                                        }}
-                                    >
-                                        {result.student.name}
+                                        <Checkbox sx={tableCheckboxStyle} />
                                     </TableCell>
                                     <TableCell
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "150px",
+                                            maxWidth: "200px",
                                         }}
                                     >
+                                        {result.student.name}
+                                    </TableCell>
+                                    <TableCell sx={tableCellStyle}>
                                         {result.student.nim}
                                     </TableCell>
                                     <TableCell
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "250px",
+                                            maxWidth: "250px",
                                         }}
                                     >
                                         {result.essay_title}
@@ -224,28 +269,46 @@ export default function Result({ results, meta }) {
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "150px",
+                                            maxWidth: "200px",
                                         }}
                                     >
                                         {idFormatDate(result.created_at)}
                                     </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                        }}
-                                    >
-                                        Pending
+                                    <TableCell sx={tableCellStyle}>
+                                        <Typography
+                                            variant=""
+                                            // color={"green"}
+                                            // color={"red"}
+                                            color={"#fbc02d"}
+                                            // backgroundColor={"#e8f5e9"}
+                                            // backgroundColor={"#ffebee"}
+                                            backgroundColor={"#fffde7"}
+                                            padding={"0px 3px"}
+                                            borderRadius={"3px"}
+                                        >
+                                            {/* Diterima */}
+                                            {/* Ditolak */}
+                                            Pending
+                                        </Typography>
                                     </TableCell>
-                                    <TableCell
-                                        sx={{ padding: "0 10px" }}
-                                        align="center"
-                                    >
+                                    <TableCell sx={tableCellStyle}>
                                         <Box
                                             display={"flex"}
                                             justifyContent={"space-between"}
                                             alignItems={"center"}
                                         >
-                                            <HiOutlineEye size={22} />
+                                            <AppLink
+                                                color="black"
+                                                href={route(
+                                                    "admin.result.show",
+                                                    {
+                                                        result: result.id,
+                                                    }
+                                                )}
+                                            >
+                                                <HiOutlineEye size={22} />
+                                            </AppLink>
                                             <AppLink
                                                 color={"black"}
                                                 href={route(
@@ -255,25 +318,13 @@ export default function Result({ results, meta }) {
                                                     }
                                                 )}
                                             >
-                                                <TbEdit
-                                                    size={22}
-                                                    // onClick={() => {
-
-                                                    // }}
-                                                />
+                                                <TbEdit size={22} />
                                             </AppLink>
                                             <RiDeleteBin6Line
+                                                cursor={"pointer"}
                                                 size={22}
                                                 onClick={() => {
-                                                    router.delete(
-                                                        route(
-                                                            "admin.proposal.delete",
-                                                            {
-                                                                proposal:
-                                                                    proposal.id,
-                                                            }
-                                                        )
-                                                    );
+                                                    handleOpenDelete(result.id);
                                                 }}
                                             />
                                         </Box>

@@ -51,7 +51,6 @@ class ProposalController extends Controller
     {
         $file_requirements = FileRequirement::where("request_type", "proposals")->get();
         return Inertia::render("admin/proposal/Show", [
-            // "proposal" => $proposal->load(["student", "schedule", "mentors", "testers", "files"]),
             "proposal" => new ProposalDetailResource($proposal->load(["student", "schedule", "mentors", "testers", "files"])),
             "file_requirements" => $file_requirements,
         ]);

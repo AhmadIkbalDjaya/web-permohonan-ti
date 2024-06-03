@@ -15,7 +15,8 @@ import {
 } from "../../../helper/dateTimeHelper";
 import { ShowRowData } from "../components/ShowRowData";
 
-export default function ShowProposal({ proposal, file_requirements }) {
+export default function ShowPPL({ ppl }) {
+    console.log(ppl);
     const componentRef = useRef();
     return (
         <>
@@ -23,9 +24,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
-                    <AppLink href={route("admin.proposal.index")}>
-                        Proposal
-                    </AppLink>
+                    <AppLink href={route("admin.ppl.index")}>PPL</AppLink>
                     <AppLink color="black">Detail Permohonan</AppLink>
                 </AppBreadcrumbs>
                 <Box
@@ -39,7 +38,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             Detail Permohonan
                         </Typography>
                         <Typography variant="caption">
-                            Detail Permohonan Seminar Proposal
+                            Detail Permohonan Seminar Hasil
                         </Typography>
                     </Box>
                     <Stack direction={"row"} spacing={1}>
@@ -72,8 +71,8 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                     sm: "inherit",
                                 },
                             }}
-                            href={route("admin.proposal.edit", {
-                                proposal: proposal.id,
+                            href={route("admin.ppl.edit", {
+                                ppl: ppl.id,
                             })}
                         >
                             Edit
@@ -117,18 +116,36 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 name={"Status Permohonan"}
                                 value={
                                     <>
-                                        {/* {proposal.status} */}Diterima <br />
-                                        {/* ({proposal.status.description}){" "} */}
+                                        {/* {ppl.status} */}Diterima <br />
+                                        {/* ({ppl.status.description}){" "} */}
                                         (Deskripsi Status)
                                     </>
                                 }
                             />
                             <ShowRowData
-                                name={"Nomor Surat"}
+                                name={"Nomor Surat Pembimbing"}
                                 value={
                                     <>
-                                        {/* {proposal.letter_number} */}
+                                        {/* {ppl.letter_number} */}
                                         347/TI-UINAM/V/2024
+                                    </>
+                                }
+                            />
+                            <ShowRowData
+                                name={"Nomor Surat Pengantar"}
+                                value={
+                                    <>
+                                        {/* {ppl.letter_number} */}
+                                        347/TI-UINAM/V/2024
+                                    </>
+                                }
+                            />
+                            <ShowRowData
+                                name={"Ditujukan Kepada"}
+                                value={
+                                    <>
+                                        {/* {ppl.letter_number} */}
+                                        Kepala Pustipat UINAM
                                     </>
                                 }
                             />
@@ -136,99 +153,67 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 name={"Tanggal Surat"}
                                 value={
                                     <>
-                                        {/* {proposal.letter_number} */}
+                                        {/* {ppl.letter_number} */}
                                         15 Mei 2024
                                     </>
                                 }
                             />
-
-                            <Grid item xs={12}>
-                                <Typography
-                                    variant="body2"
-                                    color="initial"
-                                    sx={{ fontWeight: "600" }}
+                            <ShowRowData
+                                name={"Lokasi PPL"}
+                                value={ppl.location}
+                            />
+                            <ShowRowData
+                                name={"Alamat"}
+                                value={ppl.location_address}
+                            />
+                            <ShowRowData
+                                name={"Jadwal PPL"}
+                                value={`${idFormatDate(
+                                    ppl.start_date
+                                )} - ${idFormatDate(ppl.start_date)}`}
+                            />
+                            <ShowRowData
+                                name={"Pembimbing"}
+                                value={ppl.mentor.name}
+                            />
+                            {ppl.students.map((student, index) => (
+                                <Grid
+                                    item
+                                    container
+                                    spacing={2}
+                                    marginTop={"10px"}
+                                    key={index}
                                 >
-                                    Data Mahasiswa :
-                                </Typography>
-                            </Grid>
-                            <ShowRowData
-                                name={"Nama"}
-                                value={proposal.student.name}
-                            />
-                            <ShowRowData
-                                name={"NIM"}
-                                value={proposal.student.nim}
-                            />
-                            <ShowRowData
-                                name={"Tempat, Tanggal Lahir"}
-                                value={
-                                    `${proposal.student.pob}, ` +
-                                    idFormatDate(proposal.student.dob)
-                                }
-                            />
-                            <ShowRowData
-                                name={"Jurusan, Semester"}
-                                value={`Teknik Informatika, ${proposal.student.semester}`}
-                            />
-                            <ShowRowData
-                                name={"Judul Skripsi"}
-                                value={proposal.essay_title}
-                            />
-                            <Grid item xs={12} marginTop={"15px"}>
-                                <Typography
-                                    variant="body2"
-                                    color="initial"
-                                    sx={{ fontWeight: "600" }}
-                                >
-                                    Dewan Penguji dan Pelaksana :
-                                </Typography>
-                            </Grid>
-                            <ShowRowData name={"Ketua"} />
-                            <ShowRowData name={"Sekertaris"} />
-                            <Grid item xs={12} container spacing={1}>
-                                {proposal.mentors.map((mentor, index) => (
+                                    <Grid item xs={12}>
+                                        <Typography
+                                            variant="body2"
+                                            color="initial"
+                                            sx={{ fontWeight: "600" }}
+                                        >
+                                            Data Mahasiswa Ke-{index + 1} :
+                                        </Typography>
+                                    </Grid>
                                     <ShowRowData
-                                        key={`mentor${index}`}
-                                        name={`Pembimbing ${index + 1}`}
-                                        value={mentor.name}
+                                        name={"Nama"}
+                                        value={student.name}
                                     />
-                                ))}
-                                {proposal.testers.map((tester, index) => (
                                     <ShowRowData
-                                        key={`tester${index}`}
-                                        name={`Penguji ${index + 1}`}
-                                        value={tester.name}
+                                        name={"NIM"}
+                                        value={student.nim}
                                     />
-                                ))}
-                            </Grid>
-                            <ShowRowData name={"Pelaksana"} />
-                            <Grid item xs={12} marginTop={"15px"}>
-                                <Typography
-                                    variant="body2"
-                                    color="initial"
-                                    sx={{ fontWeight: "600" }}
-                                >
-                                    Jadwal Pelaksanaan :
-                                </Typography>
-                            </Grid>
-                            <ShowRowData
-                                name={"Hari dan Tanggal"}
-                                value={`${getDateDay(
-                                    proposal.schedule.date
-                                )}, ${idFormatDate(proposal.schedule.date)}`}
-                            />
-                            <ShowRowData
-                                name={"Waktu"}
-                                value={`${convertToHHMM(
-                                    proposal.schedule.time
-                                )} - ${convertToHHMM(
-                                    proposal.schedule.time
-                                )} WITA`}
-                            />
-                            <ShowRowData
-                                name={"Tempat Pelaksanaan"}
-                                value={proposal.schedule.location}
-                            />
+                                    <ShowRowData
+                                        name={"Tempat, Tanggal Lahir"}
+                                        value={
+                                            `${student.pob}, ` +
+                                            idFormatDate(student.dob)
+                                        }
+                                    />
+                                    <ShowRowData
+                                        name={"Jurusan, Semester"}
+                                        value={`Teknik Informatika, ${student.semester}`}
+                                    />
+                                </Grid>
+                            ))}
                         </Grid>
                     </Box>
                     <Box
@@ -255,81 +240,6 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 borderBottom={"1px solid"}
                                 borderColor={"slate-300"}
                             >
-                                Berkas Pemohon
-                            </Typography>
-                            <Grid container spacing={2} padding={"15px"}>
-                                {file_requirements.map(
-                                    (file_requirement, index) => (
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            container
-                                            key={index}
-                                        >
-                                            <Grid item xs={12}>
-                                                <Typography
-                                                    variant="body2"
-                                                    color="initial"
-                                                    fontWeight={"600"}
-                                                    display={"flex"}
-                                                    sx={{
-                                                        textTransform:
-                                                            "capitalize",
-                                                    }}
-                                                >
-                                                    {file_requirement.name.replaceAll(
-                                                        "_",
-                                                        " "
-                                                    )}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                {proposal.files.some(
-                                                    (file) =>
-                                                        file.name ==
-                                                        file_requirement.name
-                                                ) ? (
-                                                    <Button
-                                                        variant="contained"
-                                                        color="gray-100"
-                                                        startIcon={
-                                                            <FaFilePdf />
-                                                        }
-                                                        sx={{
-                                                            height: "33px",
-                                                            textTransform:
-                                                                "capitalize",
-                                                        }}
-                                                        fullWidth
-                                                    >
-                                                        Lihat
-                                                    </Button>
-                                                ) : (
-                                                    <Typography variant="body2">
-                                                        Tidak Ada Berkas
-                                                    </Typography>
-                                                )}
-                                            </Grid>
-                                        </Grid>
-                                    )
-                                )}
-                            </Grid>
-                        </Box>
-                        <Box
-                            sx={{
-                                background: "white",
-                                border: ".5px solid",
-                                borderColor: "slate-300",
-                                borderRadius: "4px",
-                            }}
-                        >
-                            <Typography
-                                variant="body2"
-                                color="initial"
-                                sx={{ p: "15px", fontWeight: "600" }}
-                                borderBottom={"1px solid"}
-                                borderColor={"slate-300"}
-                            >
                                 Tanda Tangan Pemohon
                             </Typography>
                             <Box display={"flex"} justifyContent={"center"}>
@@ -339,7 +249,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                         height: "200px",
                                         width: "300px",
                                     }}
-                                    src={proposal.applicant_sign}
+                                    src={ppl.applicant_sign}
                                 />
                             </Box>
                         </Box>
@@ -376,8 +286,8 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                     background: "#B20600",
                                     textTransform: "none",
                                 }}
-                                href={route("admin.proposal.edit", {
-                                    proposal: proposal.id,
+                                href={route("admin.ppl.edit", {
+                                    ppl: ppl.id,
                                 })}
                             >
                                 Edit

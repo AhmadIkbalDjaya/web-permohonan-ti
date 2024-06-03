@@ -7,6 +7,11 @@ import {
     Box,
     Button,
     Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     FormControl,
     InputBase,
     MenuItem,
@@ -25,6 +30,7 @@ import { FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import {
+    tableCellStyle,
     tableCheckboxStyle,
     tableHeadStyle,
 } from "../components/styles/tableStyles";
@@ -75,9 +81,58 @@ export default function Comprehensive({ comprehensives, meta }) {
         page.current = meta.total_page;
         getData();
     }
+    const [confirmDelete, setConfirmDelete] = useState({
+        open: false,
+        id: "",
+    });
+    const handleOpenDelete = (id) => {
+        setConfirmDelete({
+            open: true,
+            id,
+        });
+    };
+    const handleCloseDelete = () => {
+        setConfirmDelete({
+            open: false,
+            id: "",
+        });
+    };
+    const handleDeleteData = () => {
+        router.delete(
+            route("admin.comprehensive.delete", {
+                comprehensive: confirmDelete.id,
+            })
+        );
+        setConfirmDelete({
+            open: false,
+            id: "",
+        });
+    };
     return (
         <>
             <Head title="Comprehensive" />
+            <Dialog open={confirmDelete.open} onClose={handleCloseDelete}>
+                <DialogTitle id="alert-dialog-title">{"Konfimasi"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Yakin Ingin Menghapus Permohonan
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button size="small" onClick={handleCloseDelete}>
+                        Batal
+                    </Button>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        color="error"
+                        onClick={handleDeleteData}
+                        autoFocus
+                    >
+                        Hapus
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -85,7 +140,7 @@ export default function Comprehensive({ comprehensives, meta }) {
                         href={route("admin.comprehensive.index")}
                         color="black"
                     >
-                        Kompren
+                        Komprehensif
                     </AppLink>
                 </AppBreadcrumbs>
                 <Box display={"flex"} alignItems={"center"} gap={1} mt={1}>
@@ -163,20 +218,13 @@ export default function Comprehensive({ comprehensives, meta }) {
                         <TableHead>
                             <TableRow sx={{ backgroundColor: "gray-100" }}>
                                 <TableCell padding="checkbox">
-                                    <Checkbox
-                                        sx={{
-                                            color: "zinc-200",
-                                            "&.Mui-checked": {
-                                                color: "primary2",
-                                            },
-                                        }}
-                                    ></Checkbox>
+                                    <Checkbox sx={tableCheckboxStyle} />
                                 </TableCell>
-                                <TableCell align="left" sx={tableHeadStyle}>
-                                    Nama
-                                </TableCell>
+                                <TableCell sx={tableHeadStyle}>Nama</TableCell>
                                 <TableCell sx={tableHeadStyle}>NIM</TableCell>
-                                <TableCell sx={tableHeadStyle}>Judul</TableCell>
+                                <TableCell sx={tableHeadStyle}>
+                                    Judul Skripsi
+                                </TableCell>
                                 <TableCell sx={tableHeadStyle}>
                                     Tanggal Pengajuan
                                 </TableCell>
@@ -190,35 +238,27 @@ export default function Comprehensive({ comprehensives, meta }) {
                             {comprehensives.data.map((comprehensive, index) => (
                                 <TableRow key={index}>
                                     <TableCell padding="checkbox">
-                                        <Checkbox
-                                            sx={{
-                                                color: "zinc-200",
-                                                "&.Mui-checked": {
-                                                    color: "primary2",
-                                                },
-                                            }}
-                                        ></Checkbox>
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "700",
-                                        }}
-                                    >
-                                        {comprehensive.student.name}
+                                        <Checkbox sx={tableCheckboxStyle} />
                                     </TableCell>
                                     <TableCell
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "150px",
+                                            maxWidth: "200px",
                                         }}
                                     >
+                                        {comprehensive.student.name}
+                                    </TableCell>
+                                    <TableCell sx={tableCellStyle}>
                                         {comprehensive.student.nim}
                                     </TableCell>
                                     <TableCell
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "250px",
+                                            maxWidth: "250px",
                                         }}
                                     >
                                         {comprehensive.essay_title}
@@ -227,17 +267,28 @@ export default function Comprehensive({ comprehensives, meta }) {
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "150px",
+                                            maxWidth: "200px",
                                         }}
                                     >
                                         {idFormatDate(comprehensive.created_at)}
                                     </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                        }}
-                                    >
-                                        Pending
+                                    <TableCell sx={tableCellStyle}>
+                                        <Typography
+                                            variant=""
+                                            // color={"green"}
+                                            // color={"red"}
+                                            color={"#fbc02d"}
+                                            // backgroundColor={"#e8f5e9"}
+                                            // backgroundColor={"#ffebee"}
+                                            backgroundColor={"#fffde7"}
+                                            padding={"0px 3px"}
+                                            borderRadius={"3px"}
+                                        >
+                                            {/* Diterima */}
+                                            {/* Ditolak */}
+                                            Pending
+                                        </Typography>
                                     </TableCell>
                                     <TableCell
                                         sx={{ padding: "0 10px" }}
@@ -248,7 +299,18 @@ export default function Comprehensive({ comprehensives, meta }) {
                                             justifyContent={"space-between"}
                                             alignItems={"center"}
                                         >
-                                            <HiOutlineEye size={22} />
+                                            <AppLink
+                                                color="black"
+                                                href={route(
+                                                    "admin.comprehensive.show",
+                                                    {
+                                                        comprehensive:
+                                                            comprehensive.id,
+                                                    }
+                                                )}
+                                            >
+                                                <HiOutlineEye size={22} />
+                                            </AppLink>
                                             <AppLink
                                                 color={"black"}
                                                 href={route(
@@ -262,16 +324,11 @@ export default function Comprehensive({ comprehensives, meta }) {
                                                 <TbEdit size={22} />
                                             </AppLink>
                                             <RiDeleteBin6Line
+                                                cursor={"pointer"}
                                                 size={22}
                                                 onClick={() => {
-                                                    router.delete(
-                                                        route(
-                                                            "admin.proposal.delete",
-                                                            {
-                                                                proposal:
-                                                                    proposal.id,
-                                                            }
-                                                        )
+                                                    handleOpenDelete(
+                                                        comprehensive.id
                                                     );
                                                 }}
                                             />
