@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Mentor;
+use App\Models\Status;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,8 +11,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('ppls', function (Blueprint $table) {
-            $table->foreignIdFor(Mentor::class)->after("applicant_sign")->nullable()->constrained()->references("id")->on("mentors")->onDelete("set null")->onUpdate("set null");
+        Schema::create('status_descriptions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Status::class)->constrained()->references("id")->on("statuses")->onDelete("cascade")->onUpdate("cascade");
+            $table->timestamps();
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('ppls', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('status_descriptions');
     }
 };

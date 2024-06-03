@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        $this->call(StatusSeeder::class);
+        $this->call(LecturerSeeder::class);
         $this->call(FileRequirementSeeder::class);
         $this->call(ProposalSeeder::class);
         $this->call(ResultSeeder::class);

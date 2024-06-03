@@ -219,11 +219,15 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             />
                             <ShowRowData
                                 name={"Waktu"}
-                                value={`${convertToHHMM(
-                                    proposal.schedule.time
-                                )} - ${convertToHHMM(
-                                    proposal.schedule.time
-                                )} WITA`}
+                                value={
+                                    proposal.schedule.start_time
+                                        ? `$
+                                        {convertToHHMM(proposal.schedule.start_time)}{" "}
+                                        - $
+                                        {convertToHHMM(proposal.schedule.end_time)}{" "}
+                                        ${proposal.schedule.time_zone}`
+                                        : "-"
+                                }
                             />
                             <ShowRowData
                                 name={"Tempat Pelaksanaan"}
