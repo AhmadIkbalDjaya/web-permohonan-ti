@@ -19,7 +19,7 @@ class LecturerSeeder extends Seeder
                 "name" => "Mustikasari, S.Kom., M.Kom.",
                 "gender" => "female",
                 "nip" => "19781106 200604 2 001",
-                "signature" => "head_signature.jpg",
+                "signature" => "lecturer/signatures/head_signature.png",
                 "role" => "head",
                 "created_at" => Carbon::now(),
                 "updated_at" => Carbon::now(),

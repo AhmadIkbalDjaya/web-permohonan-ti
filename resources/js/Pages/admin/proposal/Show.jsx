@@ -1,10 +1,18 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
 import StatusBox from "../components/StatusBox";
 import { Head } from "@inertiajs/react";
-import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    Grid,
+    Stack,
+    Switch,
+    Typography,
+} from "@mui/material";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa";
 import ReactToPrint from "react-to-print";
@@ -18,6 +26,7 @@ import { ShowRowData } from "../components/ShowRowData";
 
 export default function ShowProposal({ proposal, file_requirements }) {
     const componentRef = useRef();
+    const [hodSignature, setHodSignature] = useState(false);
     return (
         <>
             <Head title="Detail Permohonan" />
@@ -402,7 +411,17 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 Edit
                             </Button>
                         </Box>
-
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={hodSignature}
+                                    onChange={(e) => {
+                                        setHodSignature(e.target.checked);
+                                    }}
+                                />
+                            }
+                            label="Tanda Tangan kajur"
+                        />
                         <ReactToPrint
                             trigger={() => (
                                 <Button
@@ -422,7 +441,11 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             }}
                         />
                         <Box sx={{ display: "none" }}>
-                            <CetakProposal ref={componentRef} />
+                            <CetakProposal
+                                ref={componentRef}
+                                proposal={proposal}
+                                hodSignature={hodSignature}
+                            />
                         </Box>
                     </Box>
                 </Box>
