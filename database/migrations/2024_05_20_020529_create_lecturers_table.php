@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('lecturers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('gender', ['male', 'female']);
+            $table->enum('gender', ['male', 'female'])->nullable();
             $table->string('nip')->nullable();
             $table->string('signature')->nullable();
             $table->enum('role', ['head', 'secretary'])->nullable()->default(null);

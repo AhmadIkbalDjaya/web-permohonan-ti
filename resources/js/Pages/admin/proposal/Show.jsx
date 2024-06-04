@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
+import StatusBox from "../components/StatusBox";
 import { Head } from "@inertiajs/react";
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import { MdDelete, MdModeEdit } from "react-icons/md";
@@ -103,42 +104,47 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             borderRadius: "4px",
                         }}
                     >
-                        <Typography
-                            variant="body2"
-                            color="initial"
-                            sx={{ p: "15px", fontWeight: "600" }}
+                        <Box
+                            sx={{ p: "15px" }}
                             borderBottom={"1px solid"}
                             borderColor={"slate-300"}
+                            display={"flex"}
+                            justifyContent={"space-between"}
                         >
-                            Data Seminar
-                        </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ fontWeight: "600" }}
+                            >
+                                Data Seminar
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ fontWeight: "600" }}
+                            >
+                                {proposal.code}
+                            </Typography>
+                        </Box>
                         <Grid container spacing={1} padding={"15px"}>
                             <ShowRowData
                                 name={"Status Permohonan"}
                                 value={
                                     <>
-                                        {/* {proposal.status} */}Diterima <br />
-                                        {/* ({proposal.status.description}){" "} */}
-                                        (Deskripsi Status)
+                                        <StatusBox status={proposal.status} />
+                                        <br />
+                                        {proposal.status_description}
                                     </>
                                 }
                             />
                             <ShowRowData
                                 name={"Nomor Surat"}
-                                value={
-                                    <>
-                                        {/* {proposal.letter_number} */}
-                                        347/TI-UINAM/V/2024
-                                    </>
-                                }
+                                value={proposal.letter_number}
                             />
                             <ShowRowData
                                 name={"Tanggal Surat"}
                                 value={
-                                    <>
-                                        {/* {proposal.letter_number} */}
-                                        15 Mei 2024
-                                    </>
+                                    proposal.letter_date
+                                        ? idFormatDate(proposal.letter_date)
+                                        : null
                                 }
                             />
 
@@ -183,8 +189,14 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                     Dewan Penguji dan Pelaksana :
                                 </Typography>
                             </Grid>
-                            <ShowRowData name={"Ketua"} />
-                            <ShowRowData name={"Sekertaris"} />
+                            <ShowRowData
+                                name={"Ketua"}
+                                value={proposal.chairman}
+                            />
+                            <ShowRowData
+                                name={"Sekertaris"}
+                                value={proposal.secretary}
+                            />
                             <Grid item xs={12} container spacing={1}>
                                 {proposal.mentors.map((mentor, index) => (
                                     <ShowRowData
@@ -201,7 +213,10 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                     />
                                 ))}
                             </Grid>
-                            <ShowRowData name={"Pelaksana"} />
+                            <ShowRowData
+                                name={"Pelaksana"}
+                                value={proposal.executor}
+                            />
                             <Grid item xs={12} marginTop={"15px"}>
                                 <Typography
                                     variant="body2"
@@ -221,12 +236,12 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 name={"Waktu"}
                                 value={
                                     proposal.schedule.start_time
-                                        ? `$
-                                        {convertToHHMM(proposal.schedule.start_time)}{" "}
-                                        - $
-                                        {convertToHHMM(proposal.schedule.end_time)}{" "}
-                                        ${proposal.schedule.time_zone}`
-                                        : "-"
+                                        ? `${convertToHHMM(
+                                              proposal.schedule.start_time
+                                          )} - ${convertToHHMM(
+                                              proposal.schedule.end_time
+                                          )} ${proposal.schedule.time_zone}`
+                                        : null
                                 }
                             />
                             <ShowRowData

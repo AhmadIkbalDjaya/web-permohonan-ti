@@ -14,6 +14,7 @@ return new class extends Migration {
         Schema::create('status_descriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Status::class)->constrained()->references("id")->on("statuses")->onDelete("cascade")->onUpdate("cascade");
+            $table->string('description');
             $table->timestamps();
         });
     }

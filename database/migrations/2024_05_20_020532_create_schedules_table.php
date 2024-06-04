@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('date')->nullable();
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();
-            $table->enum('time_zne', ['wib', 'wita', 'wit'])->nullable()->default("wita");
+            $table->enum('time_zone', ['wib', 'wita', 'wit'])->nullable()->default("wita");
             $table->string('location')->nullable();
             $table->timestamps();
         });

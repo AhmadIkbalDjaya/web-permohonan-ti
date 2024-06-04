@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Admin;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ScheduleResource extends JsonResource
+class LecturerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,11 @@ class ScheduleResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "date" => $this->date,
-            "time_zone" => $this->time_zone,
-            "start_time" => $this->start_time,
-            "end_time" => $this->end_time,
-            "location" => $this->location,
+            "name" => $this->name,
+            "gender" => $this->gender,
+            "nip" => $this->nip,
+            "signature" => $this->signature ? url("storage/$this->signature") : "",
+            "role" => $this->role,
         ];
     }
 }

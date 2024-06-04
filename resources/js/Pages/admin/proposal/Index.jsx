@@ -3,6 +3,7 @@ import BaseLayout from "../base_layout/BaseLayout";
 import { Head, router } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
+import StatusBox from "../components/StatusBox";
 import Typography from "@mui/material/Typography";
 import {
     Box,
@@ -270,21 +271,9 @@ export default function Proposal({ proposals, meta }) {
                                         {idFormatDate(proposal.created_at)}
                                     </TableCell>
                                     <TableCell sx={tableCellStyle}>
-                                        <Typography
-                                            variant=""
-                                            // color={"green"}
-                                            // color={"red"}
-                                            color={"#fbc02d"}
-                                            // backgroundColor={"#e8f5e9"}
-                                            // backgroundColor={"#ffebee"}
-                                            backgroundColor={"#fffde7"}
-                                            padding={"0px 3px"}
-                                            borderRadius={"3px"}
-                                        >
-                                            {/* Diterima */}
-                                            {/* Ditolak */}
-                                            Pending
-                                        </Typography>
+                                        <StatusBox
+                                            status={proposal.status.name}
+                                        />
                                     </TableCell>
                                     <TableCell sx={tableCellStyle}>
                                         <Box

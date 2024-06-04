@@ -4,7 +4,11 @@ export function ShowRowData({ name, value }) {
     return (
         <Grid item container spacing={1}>
             <Grid item xs={5} display={"flex"} justifyContent={"space-between"}>
-                <Typography variant="body2" fontWeight={"500"}>
+                <Typography
+                    variant="body2"
+                    fontWeight={"500"}
+                    sx={{ textTransform: "capitalize" }}
+                >
                     {name}
                 </Typography>
                 <Typography variant="body2" fontWeight={"500"}>
@@ -12,7 +16,11 @@ export function ShowRowData({ name, value }) {
                 </Typography>
             </Grid>
             <Grid item xs={7}>
-                <Typography variant="body2" fontWeight={"500"}>
+                <Typography
+                    variant="body2"
+                    fontWeight={"500"}
+                    sx={{ textTransform: "capitalize" }}
+                >
                     {value ?? "-"}
                 </Typography>
             </Grid>

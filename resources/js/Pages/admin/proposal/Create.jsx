@@ -24,7 +24,12 @@ import ReactSignatureCanvas from "react-signature-canvas";
 import { semesterListItems } from "../components/elements/input/SemesterListItems";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
 
-export default function CreateProposal({ file_requirements }) {
+export default function CreateProposal({
+    file_requirements,
+    lecturers,
+    statuses,
+    status_descriptions,
+}) {
     const [signature, setSignatur] = useState();
     const [emptySignature, setEmptySignature] = useState(false);
     const clearSignatur = () => {
@@ -50,6 +55,14 @@ export default function CreateProposal({ file_requirements }) {
 
     const { errors } = usePage().props;
     const [formValues, setFormValues] = useState({
+        status_id: "1",
+        status_description_id: "",
+        letter_number: "",
+        letter_date: "",
+        chairman_id: "",
+        secretary_id: "",
+        executor_id: "",
+
         name: "",
         nim: "",
         pob: "",
@@ -57,10 +70,14 @@ export default function CreateProposal({ file_requirements }) {
         semester: "",
         phone: "",
         essay_title: "",
+
         mentors: ["", ""],
         testers: ["", ""],
+
         date: "",
-        time: "",
+        time_zone: "wita",
+        start_time: "",
+        end_time: "",
         location: "",
         files: {},
     });
@@ -197,18 +214,16 @@ export default function CreateProposal({ file_requirements }) {
                         <ThemeProvider theme={themeTextField}>
                             <Grid container spacing={2} padding={"15px"}>
                                 <Grid item xs={12} sm={6}>
-                                    <AppInputLabel
-                                        label="Status Permohonan"
-                                        required={true}
-                                    />
+                                    <AppInputLabel label="Status Permohonan" />
                                     <Select
-                                        id="status"
-                                        name="status"
-                                        // value={formValues.status}
-                                        // onChange={handleChangeForm}
+                                        id="status_id"
+                                        name="status_id"
+                                        value={formValues.status_id}
+                                        onChange={handleChangeForm}
                                         displayEmpty
-                                        error={errors.status ? true : false}
+                                        error={errors.status_id ? true : false}
                                         fullWidth
+                                        sx={{ textTransform: "capitalize" }}
                                     >
                                         <MenuItem value="" disabled>
                                             <Typography
@@ -220,21 +235,34 @@ export default function CreateProposal({ file_requirements }) {
                                                 Status Permohonan
                                             </Typography>
                                         </MenuItem>
-                                        <MenuItem>Pending</MenuItem>
-                                        <MenuItem>Diterima</MenuItem>
-                                        <MenuItem>Ditolak</MenuItem>
+                                        {statuses.map((status, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={status.id}
+                                                sx={{
+                                                    textTransform: "capitalize",
+                                                }}
+                                            >
+                                                {status.name}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
+                                    {errors.status_id && (
+                                        <InputErrorMessage>
+                                            {errors.status_id}
+                                        </InputErrorMessage>
+                                    )}
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel label="Deskripsi Status" />
                                     <Select
-                                        id="status_describtion"
-                                        name="status_describtion"
-                                        // value={formValues.status_describtion}
-                                        // onChange={handleChangeForm}
+                                        id="status_description_id"
+                                        name="status_description_id"
+                                        value={formValues.status_description_id}
+                                        onChange={handleChangeForm}
                                         displayEmpty
                                         error={
-                                            errors.status_describtion
+                                            errors.status_description_id
                                                 ? true
                                                 : false
                                         }
@@ -250,14 +278,37 @@ export default function CreateProposal({ file_requirements }) {
                                                 Deskripsi Status
                                             </Typography>
                                         </MenuItem>
-                                        <MenuItem>
-                                            Silahkan Membawa Kelengkapan Berkas
-                                            Ke Jurusan
-                                        </MenuItem>
-                                        <MenuItem>
-                                            Berkas Tidak Lengkap
-                                        </MenuItem>
+                                        {status_descriptions.map(
+                                            (description, index) => {
+                                                if (
+                                                    description.status_id ==
+                                                    formValues.status_id
+                                                ) {
+                                                    return (
+                                                        <MenuItem
+                                                            key={index}
+                                                            value={
+                                                                description.id
+                                                            }
+                                                            sx={{
+                                                                textTransform:
+                                                                    "capitalize",
+                                                            }}
+                                                        >
+                                                            {
+                                                                description.description
+                                                            }
+                                                        </MenuItem>
+                                                    );
+                                                }
+                                            }
+                                        )}
                                     </Select>
+                                    {errors.status_description_id && (
+                                        <InputErrorMessage>
+                                            {errors.status_description_id}
+                                        </InputErrorMessage>
+                                    )}
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel label="Nomor Surat" />
@@ -265,8 +316,8 @@ export default function CreateProposal({ file_requirements }) {
                                         id="letter_number"
                                         name="letter_number"
                                         type="string"
-                                        // value={formValues.letter_number}
-                                        // onChange={handleChangeForm}
+                                        value={formValues.letter_number}
+                                        onChange={handleChangeForm}
                                         placeholder="Masukkan Nomor Surat"
                                         fullWidth
                                         error={
@@ -281,8 +332,8 @@ export default function CreateProposal({ file_requirements }) {
                                         id="letter_date"
                                         name="letter_date"
                                         type="date"
-                                        // value={formValues.letter_date}
-                                        // onChange={handleChangeForm}
+                                        value={formValues.letter_date}
+                                        onChange={handleChangeForm}
                                         placeholder="Masukkan Nomor Surat"
                                         fullWidth
                                         error={
@@ -460,45 +511,129 @@ export default function CreateProposal({ file_requirements }) {
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <AppInputLabel label="Ketua" />
-                                    <TextField
-                                        id="leader"
-                                        name="leader"
-                                        type="string"
-                                        placeholder="Ketua"
-                                        fullWidth
-                                        value={formValues.leader}
+                                    <Select
+                                        id="chairman_id"
+                                        name="chairman_id"
+                                        value={formValues.chairman_id}
                                         onChange={handleChangeForm}
-                                        error={errors.leader ? true : false}
-                                        helperText={errors.leader ?? ""}
-                                    />
+                                        displayEmpty
+                                        error={
+                                            errors.chairman_id ? true : false
+                                        }
+                                        fullWidth
+                                        sx={{ textTransform: "capitalize" }}
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Ketua Seminar
+                                            </Typography>
+                                        </MenuItem>
+                                        {lecturers.map((lecturer, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={lecturer.id}
+                                                sx={{
+                                                    textTransform: "capitalize",
+                                                }}
+                                            >
+                                                {lecturer.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    {errors.chairman_id && (
+                                        <InputErrorMessage>
+                                            {errors.chairman_id}
+                                        </InputErrorMessage>
+                                    )}
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <AppInputLabel label="Sekertaris" />
-                                    <TextField
-                                        id="lead"
-                                        name="lead"
-                                        type="string"
-                                        placeholder="Sekertaris"
-                                        fullWidth
-                                        value={formValues.lead}
+                                    <Select
+                                        id="secretary_id"
+                                        name="secretary_id"
+                                        value={formValues.secretary_id}
                                         onChange={handleChangeForm}
-                                        error={errors.lead ? true : false}
-                                        helperText={errors.lead ?? ""}
-                                    />
+                                        displayEmpty
+                                        error={
+                                            errors.secretary_id ? true : false
+                                        }
+                                        fullWidth
+                                        sx={{ textTransform: "capitalize" }}
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Sekertaris Seminar
+                                            </Typography>
+                                        </MenuItem>
+                                        {lecturers.map((lecturer, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={lecturer.id}
+                                                sx={{
+                                                    textTransform: "capitalize",
+                                                }}
+                                            >
+                                                {lecturer.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    {errors.secretary_id && (
+                                        <InputErrorMessage>
+                                            {errors.secretary_id}
+                                        </InputErrorMessage>
+                                    )}
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <AppInputLabel label="Pelaksana" />
-                                    <TextField
-                                        id="executor"
-                                        name="executor"
-                                        type="string"
-                                        placeholder="Pelaksana"
-                                        fullWidth
-                                        value={formValues.executor}
+                                    <Select
+                                        id="executor_id"
+                                        name="executor_id"
+                                        value={formValues.executor_id}
                                         onChange={handleChangeForm}
-                                        error={errors.executor ? true : false}
-                                        helperText={errors.executor ?? ""}
-                                    />
+                                        displayEmpty
+                                        error={
+                                            errors.executor_id ? true : false
+                                        }
+                                        fullWidth
+                                        sx={{ textTransform: "capitalize" }}
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Pelaksana Seminar
+                                            </Typography>
+                                        </MenuItem>
+                                        {lecturers.map((lecturer, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={lecturer.id}
+                                                sx={{
+                                                    textTransform: "capitalize",
+                                                }}
+                                            >
+                                                {lecturer.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    {errors.executor_id && (
+                                        <InputErrorMessage>
+                                            {errors.executor_id}
+                                        </InputErrorMessage>
+                                    )}
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel
@@ -621,7 +756,7 @@ export default function CreateProposal({ file_requirements }) {
                                                 fontWeight={"600"}
                                                 display={"flex"}
                                             >
-                                                time_zone Saat Ini
+                                                Zona Waktu
                                             </Typography>
                                         </MenuItem>
                                         <MenuItem value="wib">
@@ -701,7 +836,7 @@ export default function CreateProposal({ file_requirements }) {
                                 borderColor: "slate-300",
                                 borderRadius: "4px",
                             }}
-                        >    
+                        >
                             <Typography
                                 variant="body2"
                                 color="initial"

@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->id();
             $table->string('code')->unique();
             $table->foreignIdFor(Status::class)->default(1)->constrained()->references("id")->on("statuses")->onDelete("cascade")->onUpdate("cascade");
-            $table->foreignIdFor(StatusDescription::class)->nullable()->constrained()->references("id")->on("status_descriptions")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreignIdFor(StatusDescription::class)->default(1)->nullable()->constrained()->references("id")->on("status_descriptions")->onDelete("cascade")->onUpdate("cascade");
 
             $table->string('letter_number')->nullable();
             $table->date('letter_date')->nullable();
