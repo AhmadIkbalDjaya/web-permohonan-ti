@@ -8,6 +8,7 @@ import { MdDelete, MdModeEdit } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa";
 import ReactToPrint from "react-to-print";
 import CetakProposal from "../cetak/cetakProposal";
+import StatusBox from "../components/StatusBox";
 import {
     convertToHHMM,
     getDateDay,
@@ -19,7 +20,6 @@ export default function ShowComprehensive({
     comprehensive,
     file_requirements,
 }) {
-    console.log(comprehensive);
     const componentRef = useRef();
     return (
         <>
@@ -107,47 +107,54 @@ export default function ShowComprehensive({
                             borderRadius: "4px",
                         }}
                     >
-                        <Typography
-                            variant="body2"
-                            color="initial"
-                            sx={{ p: "15px", fontWeight: "600" }}
+                        <Box
+                            sx={{ p: "15px" }}
                             borderBottom={"1px solid"}
                             borderColor={"slate-300"}
+                            display={"flex"}
+                            justifyContent={"space-between"}
                         >
-                            Data Seminar
-                        </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ fontWeight: "600" }}
+                            >
+                                Data Kompren
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ fontWeight: "600" }}
+                            >
+                                {comprehensive.code}
+                            </Typography>
+                        </Box>
                         <Grid container spacing={1} padding={"15px"}>
                             <ShowRowData
                                 name={"Status Permohonan"}
                                 value={
                                     <>
-                                        {/* {comprehensive.status} */}Diterima{" "}
+                                        <StatusBox
+                                            status={comprehensive.status}
+                                        />
                                         <br />
-                                        {/* ({comprehensive.status.description}){" "} */}
-                                        (Deskripsi Status)
+                                        {comprehensive.status_description}
                                     </>
                                 }
                             />
                             <ShowRowData
                                 name={"Nomor Surat"}
-                                value={
-                                    <>
-                                        {/* {comprehensive.letter_number} */}
-                                        347/TI-UINAM/V/2024
-                                    </>
-                                }
+                                value={comprehensive.letter_number}
                             />
                             <ShowRowData
                                 name={"Tanggal Surat"}
                                 value={
-                                    <>
-                                        {/* {comprehensive.letter_number} */}
-                                        15 Mei 2024
-                                    </>
+                                    comprehensive.letter_date
+                                        ? idFormatDate(
+                                              comprehensive.letter_date
+                                          )
+                                        : null
                                 }
                             />
-
-                            <Grid item xs={12}>
+                            <Grid item xs={12} marginTop={"15px"}>
                                 <Typography
                                     variant="body2"
                                     color="initial"
@@ -188,9 +195,14 @@ export default function ShowComprehensive({
                                     Dewan Penguji dan Pelaksana :
                                 </Typography>
                             </Grid>
-                            <ShowRowData name={"Ketua"} />
-                            <ShowRowData name={"Sekertaris"} />
-                            <ShowRowData name={"Pelaksana"} />
+                            <ShowRowData
+                                name={"Ketua"}
+                                value={comprehensive.chairman}
+                            />
+                            <ShowRowData
+                                name={"Sekertaris"}
+                                value={comprehensive.secretary}
+                            />
                             <Grid item xs={12} container spacing={1}>
                                 {comprehensive.testers.map((tester, index) => (
                                     <ShowRowData

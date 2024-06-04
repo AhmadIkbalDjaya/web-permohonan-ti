@@ -8,6 +8,7 @@ import { MdDelete, MdModeEdit } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa";
 import ReactToPrint from "react-to-print";
 import CetakProposal from "../cetak/cetakProposal";
+import StatusBox from "../components/StatusBox";
 import {
     convertToHHMM,
     getDateDay,
@@ -16,7 +17,6 @@ import {
 import { ShowRowData } from "../components/ShowRowData";
 
 export default function ShowResult({ result, file_requirements }) {
-  console.log(result);
     const componentRef = useRef();
     return (
         <>
@@ -102,46 +102,50 @@ export default function ShowResult({ result, file_requirements }) {
                             borderRadius: "4px",
                         }}
                     >
-                        <Typography
-                            variant="body2"
-                            color="initial"
-                            sx={{ p: "15px", fontWeight: "600" }}
+                        <Box
+                            sx={{ p: "15px" }}
                             borderBottom={"1px solid"}
                             borderColor={"slate-300"}
+                            display={"flex"}
+                            justifyContent={"space-between"}
                         >
-                            Data Seminar
-                        </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ fontWeight: "600" }}
+                            >
+                                Data Seminar
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ fontWeight: "600" }}
+                            >
+                                {result.code}
+                            </Typography>
+                        </Box>
                         <Grid container spacing={1} padding={"15px"}>
                             <ShowRowData
                                 name={"Status Permohonan"}
                                 value={
                                     <>
-                                        {/* {result.status} */}Diterima <br />
-                                        {/* ({result.status.description}){" "} */}
-                                        (Deskripsi Status)
+                                        <StatusBox status={result.status} />
+                                        <br />
+                                        {result.status_description}
                                     </>
                                 }
                             />
                             <ShowRowData
                                 name={"Nomor Surat"}
-                                value={
-                                    <>
-                                        {/* {result.letter_number} */}
-                                        347/TI-UINAM/V/2024
-                                    </>
-                                }
+                                value={result.letter_number}
                             />
                             <ShowRowData
                                 name={"Tanggal Surat"}
                                 value={
-                                    <>
-                                        {/* {result.letter_number} */}
-                                        15 Mei 2024
-                                    </>
+                                    result.letter_date
+                                        ? idFormatDate(result.letter_date)
+                                        : null
                                 }
                             />
-
-                            <Grid item xs={12}>
+                            <Grid item xs={12} marginTop={"15px"}>
                                 <Typography
                                     variant="body2"
                                     color="initial"
@@ -182,8 +186,23 @@ export default function ShowResult({ result, file_requirements }) {
                                     Dewan Penguji dan Pelaksana :
                                 </Typography>
                             </Grid>
-                            <ShowRowData name={"Ketua"} />
-                            <ShowRowData name={"Sekertaris"} />
+                            <Grid item xs={12} marginTop={"15px"}>
+                                <Typography
+                                    variant="body2"
+                                    color="initial"
+                                    sx={{ fontWeight: "600" }}
+                                >
+                                    Dewan Penguji dan Pelaksana :
+                                </Typography>
+                            </Grid>
+                            <ShowRowData
+                                name={"Ketua"}
+                                value={result.chairman}
+                            />
+                            <ShowRowData
+                                name={"Sekertaris"}
+                                value={result.secretary}
+                            />
                             <Grid item xs={12} container spacing={1}>
                                 {result.mentors.map((mentor, index) => (
                                     <ShowRowData
@@ -200,7 +219,10 @@ export default function ShowResult({ result, file_requirements }) {
                                     />
                                 ))}
                             </Grid>
-                            <ShowRowData name={"Pelaksana"} />
+                            <ShowRowData
+                                name={"Pelaksana"}
+                                value={result.executor}
+                            />
                             <Grid item xs={12} marginTop={"15px"}>
                                 <Typography
                                     variant="body2"
@@ -218,11 +240,15 @@ export default function ShowResult({ result, file_requirements }) {
                             />
                             <ShowRowData
                                 name={"Waktu"}
-                                value={`${convertToHHMM(
-                                    result.schedule.time
-                                )} - ${convertToHHMM(
-                                    result.schedule.time
-                                )} WITA`}
+                                value={
+                                    result.schedule.start_time
+                                        ? `${convertToHHMM(
+                                              result.schedule.start_time
+                                          )} - ${convertToHHMM(
+                                              result.schedule.end_time
+                                          )} ${result.schedule.time_zone}`
+                                        : null
+                                }
                             />
                             <ShowRowData
                                 name={"Tempat Pelaksanaan"}

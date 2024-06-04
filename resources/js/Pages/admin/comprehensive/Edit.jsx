@@ -7,6 +7,7 @@ import {
     Box,
     Button,
     ButtonGroup,
+    FormHelperText,
     Grid,
     MenuItem,
     Select,
@@ -21,10 +22,25 @@ import { semesterListItems } from "../components/elements/input/SemesterListItem
 import ReactSignatureCanvas from "react-signature-canvas";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
 
-export default function EditComprehensive({ comprehensive, testers }) {
+export default function EditComprehensive({
+    comprehensive,
+    testers,
+
+    lecturers,
+    statuses,
+    status_descriptions,
+}) {
     testers = testers.map((tester) => tester || "");
     const { errors } = usePage().props;
     const [formValues, setFormValues] = useState({
+        status_id: comprehensive.status_id || "",
+        status_description_id: comprehensive.status_description_id || "",
+        status_description_id: comprehensive.status_description_id || "",
+        letter_number: comprehensive.letter_number || "",
+        letter_date: comprehensive.letter_date || "",
+        chairman_id: comprehensive.chairman_id || "",
+        secretary_id: comprehensive.secretary_id || "",
+
         name: comprehensive.student.name,
         nim: comprehensive.student.nim,
         pob: comprehensive.student.pob,
@@ -179,30 +195,39 @@ export default function EditComprehensive({ comprehensive, testers }) {
                             borderRadius: "4px",
                         }}
                     >
-                        <Typography
-                            variant="body2"
-                            color="initial"
-                            sx={{ p: "15px", fontWeight: "600" }}
+                        <Box
+                            sx={{ p: "15px" }}
                             borderBottom={"1px solid"}
                             borderColor={"slate-300"}
+                            display={"flex"}
+                            justifyContent={"space-between"}
                         >
-                            Data Seminar
-                        </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ fontWeight: "600" }}
+                            >
+                                Data Kompren
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ fontWeight: "600" }}
+                            >
+                                {comprehensive.code}
+                            </Typography>
+                        </Box>
                         <ThemeProvider theme={themeTextField}>
                             <Grid container spacing={2} padding={"15px"}>
                                 <Grid item xs={12} sm={6}>
-                                    <AppInputLabel
-                                        label="Status Permohonan"
-                                        required={true}
-                                    />
+                                    <AppInputLabel label="Status Permohonan" />
                                     <Select
-                                        id="status"
-                                        name="status"
-                                        // value={formValues.status}
-                                        // onChange={handleChangeForm}
+                                        id="status_id"
+                                        name="status_id"
+                                        value={formValues.status_id}
+                                        onChange={handleChangeForm}
                                         displayEmpty
-                                        error={errors.status ? true : false}
+                                        error={errors.status_id ? true : false}
                                         fullWidth
+                                        sx={{ textTransform: "capitalize" }}
                                     >
                                         <MenuItem value="" disabled>
                                             <Typography
@@ -214,21 +239,34 @@ export default function EditComprehensive({ comprehensive, testers }) {
                                                 Status Permohonan
                                             </Typography>
                                         </MenuItem>
-                                        <MenuItem>Pending</MenuItem>
-                                        <MenuItem>Diterima</MenuItem>
-                                        <MenuItem>Ditolak</MenuItem>
+                                        {statuses.map((status, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={status.id}
+                                                sx={{
+                                                    textTransform: "capitalize",
+                                                }}
+                                            >
+                                                {status.name}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
+                                    {errors.status_id && (
+                                        <InputErrorMessage>
+                                            {errors.status_id}
+                                        </InputErrorMessage>
+                                    )}
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel label="Deskripsi Status" />
                                     <Select
-                                        id="status_describtion"
-                                        name="status_describtion"
-                                        // value={formValues.status_describtion}
-                                        // onChange={handleChangeForm}
+                                        id="status_description_id"
+                                        name="status_description_id"
+                                        value={formValues.status_description_id}
+                                        onChange={handleChangeForm}
                                         displayEmpty
                                         error={
-                                            errors.status_describtion
+                                            errors.status_description_id
                                                 ? true
                                                 : false
                                         }
@@ -244,14 +282,37 @@ export default function EditComprehensive({ comprehensive, testers }) {
                                                 Deskripsi Status
                                             </Typography>
                                         </MenuItem>
-                                        <MenuItem>
-                                            Silahkan Membawa Kelengkapan Berkas
-                                            Ke Jurusan
-                                        </MenuItem>
-                                        <MenuItem>
-                                            Berkas Tidak Lengkap
-                                        </MenuItem>
+                                        {status_descriptions.map(
+                                            (description, index) => {
+                                                if (
+                                                    description.status_id ==
+                                                    formValues.status_id
+                                                ) {
+                                                    return (
+                                                        <MenuItem
+                                                            key={index}
+                                                            value={
+                                                                description.id
+                                                            }
+                                                            sx={{
+                                                                textTransform:
+                                                                    "capitalize",
+                                                            }}
+                                                        >
+                                                            {
+                                                                description.description
+                                                            }
+                                                        </MenuItem>
+                                                    );
+                                                }
+                                            }
+                                        )}
                                     </Select>
+                                    {errors.status_description_id && (
+                                        <InputErrorMessage>
+                                            {errors.status_description_id}
+                                        </InputErrorMessage>
+                                    )}
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel label="Nomor Surat" />
@@ -259,8 +320,8 @@ export default function EditComprehensive({ comprehensive, testers }) {
                                         id="letter_number"
                                         name="letter_number"
                                         type="string"
-                                        // value={formValues.letter_number}
-                                        // onChange={handleChangeForm}
+                                        value={formValues.letter_number}
+                                        onChange={handleChangeForm}
                                         placeholder="Masukkan Nomor Surat"
                                         fullWidth
                                         error={
@@ -275,8 +336,8 @@ export default function EditComprehensive({ comprehensive, testers }) {
                                         id="letter_date"
                                         name="letter_date"
                                         type="date"
-                                        // value={formValues.letter_date}
-                                        // onChange={handleChangeForm}
+                                        value={formValues.letter_date}
+                                        onChange={handleChangeForm}
                                         placeholder="Masukkan Nomor Surat"
                                         fullWidth
                                         error={
@@ -285,7 +346,7 @@ export default function EditComprehensive({ comprehensive, testers }) {
                                         helperText={errors.letter_date ?? ""}
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={12} marginTop={"15px"}>
                                     <Typography
                                         variant="body2"
                                         color="initial"
@@ -454,31 +515,87 @@ export default function EditComprehensive({ comprehensive, testers }) {
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel label="Ketua" />
-                                    <TextField
-                                        id="leader"
-                                        name="leader"
-                                        type="string"
-                                        placeholder="Ketua"
-                                        fullWidth
-                                        value={formValues.leader}
+                                    <Select
+                                        id="chairman_id"
+                                        name="chairman_id"
+                                        value={formValues.chairman_id}
                                         onChange={handleChangeForm}
-                                        error={errors.leader ? true : false}
-                                        helperText={errors.leader ?? ""}
-                                    />
+                                        displayEmpty
+                                        error={
+                                            errors.chairman_id ? true : false
+                                        }
+                                        fullWidth
+                                        sx={{ textTransform: "capitalize" }}
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Ketua Seminar
+                                            </Typography>
+                                        </MenuItem>
+                                        {lecturers.map((lecturer, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={lecturer.id}
+                                                sx={{
+                                                    textTransform: "capitalize",
+                                                }}
+                                            >
+                                                {lecturer.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    {errors.chairman_id && (
+                                        <InputErrorMessage>
+                                            {errors.chairman_id}
+                                        </InputErrorMessage>
+                                    )}
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <AppInputLabel label="Sekertaris" />
-                                    <TextField
-                                        id="lead"
-                                        name="lead"
-                                        type="string"
-                                        placeholder="Sekertaris"
-                                        fullWidth
-                                        value={formValues.lead}
+                                    <Select
+                                        id="secretary_id"
+                                        name="secretary_id"
+                                        value={formValues.secretary_id}
                                         onChange={handleChangeForm}
-                                        error={errors.lead ? true : false}
-                                        helperText={errors.lead ?? ""}
-                                    />
+                                        displayEmpty
+                                        error={
+                                            errors.secretary_id ? true : false
+                                        }
+                                        fullWidth
+                                        sx={{ textTransform: "capitalize" }}
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Sekertaris Seminar
+                                            </Typography>
+                                        </MenuItem>
+                                        {lecturers.map((lecturer, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={lecturer.id}
+                                                sx={{
+                                                    textTransform: "capitalize",
+                                                }}
+                                            >
+                                                {lecturer.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    {errors.secretary_id && (
+                                        <InputErrorMessage>
+                                            {errors.secretary_id}
+                                        </InputErrorMessage>
+                                    )}
                                 </Grid>
                                 <Grid item xs={12} md={4}>
                                     <AppInputLabel
@@ -576,10 +693,10 @@ export default function EditComprehensive({ comprehensive, testers }) {
                                     >
                                         Tanda Tangan Pemohon
                                     </Typography>
-                                    <Typography color="red">
-                                        &nbsp; *
-                                    </Typography>
                                 </Box>
+                                <FormHelperText>
+                                    Kosongkan jika tidak ingin mengganti
+                                </FormHelperText>
                                 {errors.applicant_sign ? (
                                     <InputErrorMessage px={0}>
                                         {errors.applicant_sign}

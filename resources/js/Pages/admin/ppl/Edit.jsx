@@ -7,6 +7,7 @@ import {
     Box,
     Button,
     ButtonGroup,
+    FormHelperText,
     Grid,
     MenuItem,
     Select,
@@ -23,14 +24,26 @@ import dataURLtoBlob from "blueimp-canvas-to-blob";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
 import { MdModeEdit } from "react-icons/md";
 
-export default function EditPpl({ ppl }) {
+export default function EditPpl({
+    ppl,
+    lecturers,
+    statuses,
+    status_descriptions,
+}) {
     const { errors } = usePage().props;
     const [formValues, setFormValues] = useState({
+        status_id: ppl.status_id || "",
+        status_description_id: ppl.status_description_id || "",
+        letter_number_mentor: ppl.letter_number_mentor || "",
+        letter_number_introduction: ppl.letter_number_introduction || "",
+        letter_date: ppl.letter_date || "",
+        addressed_to: ppl.addressed_to || "",
+        mentor_id: ppl.mentor_id || "",
+
         start_date: ppl.start_date,
         end_date: ppl.end_date,
         location: ppl.location,
         location_address: ppl.location_address,
-        mentor: ppl.mentor.name,
         student_count: ppl.students.length,
 
         names: ppl.students.map((student) => student.name),
@@ -99,7 +112,6 @@ export default function EditPpl({ ppl }) {
         }
     }
     function handleSubmitForm(e) {
-        console.log(formValues);
         router.post(route("admin.ppl.update", { ppl: ppl.id }), formValues, {
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -198,15 +210,26 @@ export default function EditPpl({ ppl }) {
                                 borderRadius: "4px",
                             }}
                         >
-                            <Typography
-                                variant="body2"
-                                color="initial"
-                                sx={{ p: "15px", fontWeight: "600" }}
+                            <Box
+                                sx={{ p: "15px" }}
                                 borderBottom={"1px solid"}
                                 borderColor={"slate-300"}
+                                display={"flex"}
+                                justifyContent={"space-between"}
                             >
-                                Data PPL
-                            </Typography>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ fontWeight: "600" }}
+                                >
+                                    Data PPL
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ fontWeight: "600" }}
+                                >
+                                    {ppl.code}
+                                </Typography>
+                            </Box>
                             <ThemeProvider theme={themeTextField}>
                                 <Grid container spacing={2} padding={"15px"}>
                                     <Grid item xs={12} sm={6}>
@@ -215,13 +238,18 @@ export default function EditPpl({ ppl }) {
                                             required={true}
                                         />
                                         <Select
-                                            id="status"
-                                            name="status"
-                                            // value={formValues.status}
-                                            // onChange={handleChangeForm}
+                                            id="status_id"
+                                            name="status_id"
+                                            value={formValues.status_id}
+                                            onChange={handleChangeForm}
                                             displayEmpty
-                                            error={errors.status ? true : false}
+                                            error={
+                                                errors.status_id ? true : false
+                                            }
                                             fullWidth
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
                                         >
                                             <MenuItem value="" disabled>
                                                 <Typography
@@ -233,21 +261,37 @@ export default function EditPpl({ ppl }) {
                                                     Status Permohonan
                                                 </Typography>
                                             </MenuItem>
-                                            <MenuItem>Pending</MenuItem>
-                                            <MenuItem>Diterima</MenuItem>
-                                            <MenuItem>Ditolak</MenuItem>
+                                            {statuses.map((status, index) => (
+                                                <MenuItem
+                                                    key={index}
+                                                    value={status.id}
+                                                    sx={{
+                                                        textTransform:
+                                                            "capitalize",
+                                                    }}
+                                                >
+                                                    {status.name}
+                                                </MenuItem>
+                                            ))}
                                         </Select>
+                                        {errors.status_id && (
+                                            <InputErrorMessage>
+                                                {errors.status_id}
+                                            </InputErrorMessage>
+                                        )}
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <AppInputLabel label="Deskripsi Status" />
                                         <Select
-                                            id="status_describtion"
-                                            name="status_describtion"
-                                            // value={formValues.status_describtion}
-                                            // onChange={handleChangeForm}
+                                            id="status_description_id"
+                                            name="status_description_id"
+                                            value={
+                                                formValues.status_description_id
+                                            }
+                                            onChange={handleChangeForm}
                                             displayEmpty
                                             error={
-                                                errors.status_describtion
+                                                errors.status_description_id
                                                     ? true
                                                     : false
                                             }
@@ -263,52 +307,81 @@ export default function EditPpl({ ppl }) {
                                                     Deskripsi Status
                                                 </Typography>
                                             </MenuItem>
-                                            <MenuItem>
-                                                Silahkan Membawa Kelengkapan
-                                                Berkas Ke Jurusan
-                                            </MenuItem>
-                                            <MenuItem>
-                                                Berkas Tidak Lengkap
-                                            </MenuItem>
+                                            {status_descriptions.map(
+                                                (description, index) => {
+                                                    if (
+                                                        description.status_id ==
+                                                        formValues.status_id
+                                                    ) {
+                                                        return (
+                                                            <MenuItem
+                                                                key={index}
+                                                                value={
+                                                                    description.id
+                                                                }
+                                                                sx={{
+                                                                    textTransform:
+                                                                        "capitalize",
+                                                                }}
+                                                            >
+                                                                {
+                                                                    description.description
+                                                                }
+                                                            </MenuItem>
+                                                        );
+                                                    }
+                                                }
+                                            )}
                                         </Select>
+                                        {errors.status_description_id && (
+                                            <InputErrorMessage>
+                                                {errors.status_description_id}
+                                            </InputErrorMessage>
+                                        )}
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <AppInputLabel label="Nomor Surat Pembimbing" />
                                         <TextField
-                                            id="letter_number"
-                                            name="letter_number"
+                                            id="letter_number_mentor"
+                                            name="letter_number_mentor"
                                             type="string"
-                                            // value={formValues.letter_number}
-                                            // onChange={handleChangeForm}
+                                            value={
+                                                formValues.letter_number_mentor
+                                            }
+                                            onChange={handleChangeForm}
                                             placeholder="Masukkan Nomor Surat"
                                             fullWidth
                                             error={
-                                                errors.letter_number
+                                                errors.letter_number_mentor
                                                     ? true
                                                     : false
                                             }
                                             helperText={
-                                                errors.letter_number ?? ""
+                                                errors.letter_number_mentor ??
+                                                ""
                                             }
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <AppInputLabel label="Nomor Surat Pengantar" />
                                         <TextField
-                                            id="letter_number"
-                                            name="letter_number"
+                                            id="letter_number_introduction"
+                                            name="letter_number_introduction"
                                             type="string"
-                                            // value={formValues.letter_number}
-                                            // onChange={handleChangeForm}
+                                            value={
+                                                formValues.letter_number_introduction
+                                            }
+                                            onChange={handleChangeForm}
                                             placeholder="Masukkan Nomor Surat"
                                             fullWidth
                                             error={
-                                                errors.letter_number
+                                                errors.letter_number_introduction
                                                     ? true
                                                     : false
                                             }
                                             helperText={
-                                                errors.letter_number ?? ""
+                                                errors.letter_number_introduction ??
+                                                ""
                                             }
                                         />
                                     </Grid>
@@ -318,8 +391,8 @@ export default function EditPpl({ ppl }) {
                                             id="letter_date"
                                             name="letter_date"
                                             type="date"
-                                            // value={formValues.letter_date}
-                                            // onChange={handleChangeForm}
+                                            value={formValues.letter_date}
+                                            onChange={handleChangeForm}
                                             placeholder="Masukkan Nomor Surat"
                                             fullWidth
                                             error={
@@ -335,22 +408,31 @@ export default function EditPpl({ ppl }) {
                                     <Grid item xs={12} sm={6}>
                                         <AppInputLabel label="Ditujukan Kepada" />
                                         <TextField
-                                            id="letter_number"
-                                            name="letter_number"
+                                            id="addressed_to"
+                                            name="addressed_to"
                                             type="string"
-                                            // value={formValues.letter_number}
-                                            // onChange={handleChangeForm}
+                                            value={formValues.addressed_to}
+                                            onChange={handleChangeForm}
                                             placeholder="Surat Ditujukan Kepada"
                                             fullWidth
                                             error={
-                                                errors.letter_number
+                                                errors.addressed_to
                                                     ? true
                                                     : false
                                             }
                                             helperText={
-                                                errors.letter_number ?? ""
+                                                errors.addressed_to ?? ""
                                             }
                                         />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography
+                                            variant="body2"
+                                            color="initial"
+                                            sx={{ fontWeight: "600" }}
+                                        >
+                                            Data Mahasiswa :
+                                        </Typography>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <AppInputLabel
@@ -434,16 +516,48 @@ export default function EditPpl({ ppl }) {
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <AppInputLabel label="Pembimbing PPL" />
-                                        <TextField
-                                            id="mentor"
-                                            name="mentor"
-                                            placeholder="Nama Pembimbing PPL"
-                                            value={formValues.mentor}
+                                        <Select
+                                            id="mentor_id"
+                                            name="mentor_id"
+                                            value={formValues.mentor_id}
                                             onChange={handleChangeForm}
+                                            displayEmpty
+                                            error={
+                                                errors.mentor_id ? true : false
+                                            }
                                             fullWidth
-                                            error={errors.mentor ? true : false}
-                                            helperText={errors.mentor ?? ""}
-                                        />
+                                            sx={{ textTransform: "capitalize" }}
+                                        >
+                                            <MenuItem value="" disabled>
+                                                <Typography
+                                                    variant="body2"
+                                                    color="#ababab"
+                                                    fontWeight={"600"}
+                                                    display={"flex"}
+                                                >
+                                                    Pembimbing
+                                                </Typography>
+                                            </MenuItem>
+                                            {lecturers.map(
+                                                (lecturer, index) => (
+                                                    <MenuItem
+                                                        key={index}
+                                                        value={lecturer.id}
+                                                        sx={{
+                                                            textTransform:
+                                                                "capitalize",
+                                                        }}
+                                                    >
+                                                        {lecturer.name}
+                                                    </MenuItem>
+                                                )
+                                            )}
+                                        </Select>
+                                        {errors.mentor_id && (
+                                            <InputErrorMessage>
+                                                {errors.mentor_id}
+                                            </InputErrorMessage>
+                                        )}
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <AppInputLabel
@@ -766,6 +880,9 @@ export default function EditPpl({ ppl }) {
                                     Tanda Tangan Pemohon
                                 </Typography>
                             </Box>
+                            <FormHelperText>
+                                Kosongkan jika tidak ingin mengganti
+                            </FormHelperText>
                             {errors.applicant_sign ? (
                                 <InputErrorMessage px={0}>
                                     {errors.applicant_sign}

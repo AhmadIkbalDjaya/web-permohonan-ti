@@ -14,9 +14,9 @@ import {
     idFormatDate,
 } from "../../../helper/dateTimeHelper";
 import { ShowRowData } from "../components/ShowRowData";
+import StatusBox from "../components/StatusBox";
 
 export default function ShowPPL({ ppl }) {
-    console.log(ppl);
     const componentRef = useRef();
     return (
         <>
@@ -102,60 +102,55 @@ export default function ShowPPL({ ppl }) {
                             borderRadius: "4px",
                         }}
                     >
-                        <Typography
-                            variant="body2"
-                            color="initial"
-                            sx={{ p: "15px", fontWeight: "600" }}
+                        <Box
+                            sx={{ p: "15px" }}
                             borderBottom={"1px solid"}
                             borderColor={"slate-300"}
+                            display={"flex"}
+                            justifyContent={"space-between"}
                         >
-                            Data Seminar
-                        </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ fontWeight: "600" }}
+                            >
+                                Data PPL
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{ fontWeight: "600" }}
+                            >
+                                {ppl.code}
+                            </Typography>
+                        </Box>
                         <Grid container spacing={1} padding={"15px"}>
                             <ShowRowData
                                 name={"Status Permohonan"}
                                 value={
                                     <>
-                                        {/* {ppl.status} */}Diterima <br />
-                                        {/* ({ppl.status.description}){" "} */}
-                                        (Deskripsi Status)
+                                        <StatusBox status={ppl.status} />
+                                        <br />
+                                        {ppl.status_description}
                                     </>
                                 }
                             />
                             <ShowRowData
                                 name={"Nomor Surat Pembimbing"}
-                                value={
-                                    <>
-                                        {/* {ppl.letter_number} */}
-                                        347/TI-UINAM/V/2024
-                                    </>
-                                }
+                                value={ppl.letter_number_mentor}
                             />
                             <ShowRowData
                                 name={"Nomor Surat Pengantar"}
-                                value={
-                                    <>
-                                        {/* {ppl.letter_number} */}
-                                        347/TI-UINAM/V/2024
-                                    </>
-                                }
+                                value={ppl.letter_number_introduction}
                             />
                             <ShowRowData
                                 name={"Ditujukan Kepada"}
-                                value={
-                                    <>
-                                        {/* {ppl.letter_number} */}
-                                        Kepala Pustipat UINAM
-                                    </>
-                                }
+                                value={ppl.addressed_to}
                             />
                             <ShowRowData
                                 name={"Tanggal Surat"}
                                 value={
-                                    <>
-                                        {/* {ppl.letter_number} */}
-                                        15 Mei 2024
-                                    </>
+                                    ppl.letter_date
+                                        ? idFormatDate(ppl.letter_date)
+                                        : null
                                 }
                             />
                             <ShowRowData
@@ -174,7 +169,7 @@ export default function ShowPPL({ ppl }) {
                             />
                             <ShowRowData
                                 name={"Pembimbing"}
-                                value={ppl.mentor.name}
+                                value={ppl.mentor}
                             />
                             {ppl.students.map((student, index) => (
                                 <Grid

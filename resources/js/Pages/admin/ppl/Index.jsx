@@ -39,6 +39,7 @@ import { TbEdit } from "react-icons/tb";
 import { themePagination } from "../../../theme/PaginationTheme";
 import pickBy from "lodash.pickby";
 import { idFormatDate } from "../../../helper/dateTimeHelper";
+import StatusBox from "../components/StatusBox";
 
 export default function Ppl({ ppls, meta }) {
     const showItemOptions = [5, 10, 15, 20, 25];
@@ -272,21 +273,7 @@ export default function Ppl({ ppls, meta }) {
                                         {idFormatDate(ppl.created_at)}
                                     </TableCell>
                                     <TableCell sx={tableCellStyle}>
-                                        <Typography
-                                            variant=""
-                                            // color={"green"}
-                                            // color={"red"}
-                                            color={"#fbc02d"}
-                                            // backgroundColor={"#e8f5e9"}
-                                            // backgroundColor={"#ffebee"}
-                                            backgroundColor={"#fffde7"}
-                                            padding={"0px 3px"}
-                                            borderRadius={"3px"}
-                                        >
-                                            {/* Diterima */}
-                                            {/* Ditolak */}
-                                            Pending
-                                        </Typography>
+                                        <StatusBox status={ppl.status.name} />
                                     </TableCell>
                                     <TableCell
                                         sx={{ padding: "0 10px" }}
