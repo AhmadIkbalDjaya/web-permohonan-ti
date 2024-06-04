@@ -7,11 +7,6 @@ import {
     Box,
     Button,
     Checkbox,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     FormControl,
     InputBase,
     MenuItem,
@@ -40,6 +35,7 @@ import { themePagination } from "../../../theme/PaginationTheme";
 import pickBy from "lodash.pickby";
 import { idFormatDate } from "../../../helper/dateTimeHelper";
 import StatusBox from "../components/StatusBox";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 export default function Ppl({ ppls, meta }) {
     const showItemOptions = [5, 10, 15, 20, 25];
@@ -101,8 +97,8 @@ export default function Ppl({ ppls, meta }) {
     };
     const handleDeleteData = () => {
         router.delete(
-            route("admin.comprehensive.delete", {
-                comprehensive: confirmDelete.id,
+            route("admin.ppl.delete", {
+                ppl: confirmDelete.id,
             })
         );
         setConfirmDelete({
@@ -113,28 +109,11 @@ export default function Ppl({ ppls, meta }) {
     return (
         <>
             <Head title="Permohonan PPL" />
-            <Dialog open={confirmDelete.open} onClose={handleCloseDelete}>
-                <DialogTitle id="alert-dialog-title">{"Konfimasi"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Yakin Ingin Menghapus Permohonan
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button size="small" onClick={handleCloseDelete}>
-                        Batal
-                    </Button>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        color="error"
-                        onClick={handleDeleteData}
-                        autoFocus
-                    >
-                        Hapus
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <ConfirmDeleteModal
+                open={confirmDelete.open}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>

@@ -1,13 +1,20 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
-import { Head } from "@inertiajs/react";
-import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import { Head, router } from "@inertiajs/react";
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    Grid,
+    Stack,
+    Switch,
+    Typography,
+} from "@mui/material";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa";
 import ReactToPrint from "react-to-print";
-import CetakProposal from "../cetak/cetakProposal";
 import StatusBox from "../components/StatusBox";
 import {
     convertToHHMM,
@@ -15,12 +22,35 @@ import {
     idFormatDate,
 } from "../../../helper/dateTimeHelper";
 import { ShowRowData } from "../components/ShowRowData";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 export default function ShowResult({ result, file_requirements }) {
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const handleOpenDelete = (id) => {
+        setConfirmDelete(true);
+    };
+    const handleCloseDelete = () => {
+        setConfirmDelete(false);
+    };
+    const handleDeleteData = () => {
+        router.delete(
+            route("admin.result.delete", {
+                result: result.id,
+            })
+        );
+        setConfirmDelete(false);
+    };
+
     const componentRef = useRef();
+    const [hodSignature, setHodSignature] = useState(false);
     return (
         <>
             <Head title="Detail Permohonan" />
+            <ConfirmDeleteModal
+                open={confirmDelete}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -55,6 +85,7 @@ export default function ShowResult({ result, file_requirements }) {
                                     sm: "inherit",
                                 },
                             }}
+                            onClick={handleOpenDelete}
                         >
                             Hapus
                         </Button>
@@ -408,7 +439,17 @@ export default function ShowResult({ result, file_requirements }) {
                                 Edit
                             </Button>
                         </Box>
-
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={hodSignature}
+                                    onChange={(e) => {
+                                        setHodSignature(e.target.checked);
+                                    }}
+                                />
+                            }
+                            label="Tanda Tangan kajur"
+                        />
                         <ReactToPrint
                             trigger={() => (
                                 <Button
@@ -428,7 +469,7 @@ export default function ShowResult({ result, file_requirements }) {
                             }}
                         />
                         <Box sx={{ display: "none" }}>
-                            <CetakProposal ref={componentRef} />
+                            {/* <CetakProposal ref={componentRef} /> */}
                         </Box>
                     </Box>
                 </Box>

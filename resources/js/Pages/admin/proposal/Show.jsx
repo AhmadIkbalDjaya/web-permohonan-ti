@@ -3,7 +3,7 @@ import BaseLayout from "../base_layout/BaseLayout";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
 import StatusBox from "../components/StatusBox";
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import {
     Box,
     Button,
@@ -23,13 +23,35 @@ import {
     idFormatDate,
 } from "../../../helper/dateTimeHelper";
 import { ShowRowData } from "../components/ShowRowData";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 export default function ShowProposal({ proposal, file_requirements }) {
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const handleOpenDelete = (id) => {
+        setConfirmDelete(true);
+    };
+    const handleCloseDelete = () => {
+        setConfirmDelete(false);
+    };
+    const handleDeleteData = () => {
+        router.delete(
+            route("admin.proposal.delete", {
+                proposal: proposal.id,
+            })
+        );
+        setConfirmDelete(false);
+    };
+
     const componentRef = useRef();
     const [hodSignature, setHodSignature] = useState(false);
     return (
         <>
             <Head title="Detail Permohonan" />
+            <ConfirmDeleteModal
+                open={confirmDelete}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -66,6 +88,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                     sm: "inherit",
                                 },
                             }}
+                            onClick={handleOpenDelete}
                         >
                             Hapus
                         </Button>

@@ -200,7 +200,7 @@ class ComprehensiveController extends Controller
                 }
             }
         });
-        return to_route("admin.comprehensive.index");
+        return to_route("admin.comprehensive.show", ["comprehensive" => $comprehensive->id]);
     }
 
     public function destroy(Comprehensive $comprehensive)

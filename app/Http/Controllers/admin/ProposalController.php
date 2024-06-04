@@ -310,7 +310,7 @@ class ProposalController extends Controller
                 }
             }
         });
-        return to_route("admin.proposal.index");
+        return to_route("admin.proposal.show", ["proposal" => $proposal->id]);
     }
 
     public function destroy(Proposal $proposal)

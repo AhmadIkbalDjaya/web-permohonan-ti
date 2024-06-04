@@ -312,7 +312,7 @@ class ResultController extends Controller
                 }
             }
         });
-        return to_route("admin.result.index");
+        return to_route("admin.result.show", ["result" => $result->id]);
     }
 
     public function destroy(Result $result)

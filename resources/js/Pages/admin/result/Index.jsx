@@ -8,11 +8,6 @@ import {
     Box,
     Button,
     Checkbox,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     FormControl,
     InputBase,
     MenuItem,
@@ -40,6 +35,7 @@ import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import pickBy from "lodash.pickby";
 import { idFormatDate } from "../../../helper/dateTimeHelper";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 export default function Result({ results, meta }) {
     const showItemOptions = [5, 10, 15, 20, 25];
@@ -112,28 +108,11 @@ export default function Result({ results, meta }) {
     return (
         <>
             <Head title="Result" />
-            <Dialog open={confirmDelete.open} onClose={handleCloseDelete}>
-                <DialogTitle id="alert-dialog-title">{"Konfimasi"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Yakin Ingin Menghapus Permohonan
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button size="small" onClick={handleCloseDelete}>
-                        Batal
-                    </Button>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        color="error"
-                        onClick={handleDeleteData}
-                        autoFocus
-                    >
-                        Hapus
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <ConfirmDeleteModal
+                open={confirmDelete.open}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>

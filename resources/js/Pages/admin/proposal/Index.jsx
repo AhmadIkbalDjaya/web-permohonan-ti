@@ -9,11 +9,6 @@ import {
     Box,
     Button,
     Checkbox,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     FormControl,
     InputBase,
     MenuItem,
@@ -40,6 +35,7 @@ import {
     tableCheckboxStyle,
     tableHeadStyle,
 } from "../components/styles/tableStyles";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 export default function Proposal({ proposals, meta }) {
     const showItemOptions = [5, 10, 15, 20, 25];
@@ -113,28 +109,11 @@ export default function Proposal({ proposals, meta }) {
     return (
         <>
             <Head title="Proposal" />
-            <Dialog open={confirmDelete.open} onClose={handleCloseDelete}>
-                <DialogTitle id="alert-dialog-title">{"Konfimasi"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Yakin Ingin Menghapus Permohonan
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button size="small" onClick={handleCloseDelete}>
-                        Batal
-                    </Button>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        color="error"
-                        onClick={handleDeleteData}
-                        autoFocus
-                    >
-                        Hapus
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <ConfirmDeleteModal
+                open={confirmDelete.open}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>

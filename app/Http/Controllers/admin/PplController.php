@@ -218,7 +218,7 @@ class PplController extends Controller
                 ]);
             }
         });
-        return to_route("admin.ppl.index");
+        return to_route("admin.ppl.show", ["ppl" => $ppl->id]);
     }
     public function destroy(PPL $ppl)
     {
