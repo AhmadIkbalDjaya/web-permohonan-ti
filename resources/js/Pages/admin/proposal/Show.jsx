@@ -24,6 +24,7 @@ import {
 } from "../../../helper/dateTimeHelper";
 import { ShowRowData } from "../components/ShowRowData";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import ShowPDFModal from "../components/ShowPDFModal";
 
 export default function ShowProposal({ proposal, file_requirements }) {
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -44,9 +45,39 @@ export default function ShowProposal({ proposal, file_requirements }) {
 
     const componentRef = useRef();
     const [hodSignature, setHodSignature] = useState(false);
+
+    const [showPDF, setShowPDF] = useState({
+        open: false,
+        name: "",
+        file: "",
+    });
+
+    const handleClickShowPDF = (name, file) => {
+        // setShowPDF(true);
+        setShowPDF({
+            open: true,
+            name,
+            file,
+        });
+    };
+    const handleCloseShowPDF = () => {
+        // setShowPDF(false);
+        setShowPDF({
+            open: false,
+            name: "",
+            file: "",
+        });
+    };
     return (
         <>
             <Head title="Detail Permohonan" />
+            <ShowPDFModal
+                handleClose={handleCloseShowPDF}
+                open={showPDF.open}
+                name={showPDF.name}
+                file={showPDF.file}
+            />
+
             <ConfirmDeleteModal
                 open={confirmDelete}
                 handleClose={handleCloseDelete}
@@ -310,59 +341,78 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             </Typography>
                             <Grid container spacing={2} padding={"15px"}>
                                 {file_requirements.map(
-                                    (file_requirement, index) => (
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            container
-                                            key={index}
-                                        >
-                                            <Grid item xs={12}>
-                                                <Typography
-                                                    variant="body2"
-                                                    color="initial"
-                                                    fontWeight={"600"}
-                                                    display={"flex"}
-                                                    sx={{
-                                                        textTransform:
-                                                            "capitalize",
-                                                    }}
-                                                >
-                                                    {file_requirement.name.replaceAll(
-                                                        "_",
-                                                        " "
-                                                    )}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                {proposal.files.some(
-                                                    (file) =>
-                                                        file.name ==
-                                                        file_requirement.name
-                                                ) ? (
-                                                    <Button
-                                                        variant="contained"
-                                                        color="gray-100"
-                                                        startIcon={
-                                                            <FaFilePdf />
-                                                        }
+                                    (file_requirement, index) => {
+                                        const anyFileMatches =
+                                            proposal.files.some(
+                                                (file) =>
+                                                    file.name ===
+                                                    file_requirement.name
+                                            );
+                                        return (
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                container
+                                                key={index}
+                                            >
+                                                <Grid item xs={12}>
+                                                    <Typography
+                                                        variant="body2"
+                                                        color="initial"
+                                                        fontWeight={"600"}
+                                                        display={"flex"}
                                                         sx={{
-                                                            height: "33px",
                                                             textTransform:
                                                                 "capitalize",
                                                         }}
-                                                        fullWidth
                                                     >
-                                                        Lihat
-                                                    </Button>
-                                                ) : (
-                                                    <Typography variant="body2">
-                                                        Tidak Ada Berkas
+                                                        {file_requirement.name.replaceAll(
+                                                            "_",
+                                                            " "
+                                                        )}
                                                     </Typography>
-                                                )}
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    {proposal.files.map(
+                                                        (file, index) =>
+                                                            file.name ==
+                                                                file_requirement.name && (
+                                                                <Button
+                                                                    key={index}
+                                                                    variant="contained"
+                                                                    color="gray-100"
+                                                                    startIcon={
+                                                                        <FaFilePdf />
+                                                                    }
+                                                                    sx={{
+                                                                        height: "33px",
+                                                                        textTransform:
+                                                                            "capitalize",
+                                                                    }}
+                                                                    fullWidth
+                                                                    onClick={() => {
+                                                                        handleClickShowPDF(
+                                                                            file.name.replaceAll(
+                                                                                "_",
+                                                                                " "
+                                                                            ),
+                                                                            file.file
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    Lihat
+                                                                </Button>
+                                                            )
+                                                    )}
+                                                    {!anyFileMatches && (
+                                                        <Typography variant="body2">
+                                                            Tidak Ada Berkas
+                                                        </Typography>
+                                                    )}
+                                                </Grid>
                                             </Grid>
-                                        </Grid>
-                                    )
+                                        );
+                                    }
                                 )}
                             </Grid>
                         </Box>
