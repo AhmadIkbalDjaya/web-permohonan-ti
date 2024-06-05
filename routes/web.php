@@ -26,9 +26,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get("proposal", [ProposalController::class, "index"])->name("proposal");
+Route::post("proposal", [ProposalController::class, "store"])->name("proposal.store");
 Route::get("hasil", [ResultController::class, "index"])->name("result");
-Route::get("kompren", [ComprehensiveController::class, "index"])->name("comprenhensive");
+Route::post("hasil", [ResultController::class, "store"])->name("result.store");
+Route::get("kompren", [ComprehensiveController::class, "index"])->name("comprehensive");
+Route::post("kompren", [ComprehensiveController::class, "store"])->name("comprehensive.store");
 Route::get("ppl", [PplController::class, "index"])->name("ppl");
+Route::post("ppl", [PplController::class, "store"])->name("ppl.store");
 
 Route::prefix('admin')->group(function () {
     Route::get("", [AdminController::class, "dashboard"])->name('admin.home');

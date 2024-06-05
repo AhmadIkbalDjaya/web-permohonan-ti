@@ -5,6 +5,7 @@ namespace App\Http\Controllers\public;
 use App\Http\Controllers\Controller;
 use App\Models\Comprehensive;
 use App\Models\FileRequirement;
+use App\Models\Lecturer;
 use App\Models\Student;
 use App\Models\File;
 use App\Models\Tester;
@@ -16,9 +17,11 @@ class ComprehensiveController extends Controller
 {
     public function index()
     {
+        $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
         $file_requirements = FileRequirement::where("request_type", "comprehensives")->get();
         return Inertia::render("public/comprehensive/Index", [
             "file_requirements" => $file_requirements,
+            "lecturers" => $lecturers,
         ]);
     }
 
@@ -42,7 +45,7 @@ class ComprehensiveController extends Controller
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("result/applicant_signs", "public");
         foreach ($file_requirements as $index => $file_requirement) {
             if ($request->file($file_requirement->name)) {
-                $validated[$file_requirement->name] = $request->file($file_requirement)->storePublicly("result/files", "public");
+                $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("result/files", "public");
             } else {
                 unset($validated[$file_requirement->name]);
             }
@@ -61,15 +64,15 @@ class ComprehensiveController extends Controller
                 "essay_title" => $validated["essay_title"],
                 "applicant_sign" => $validated["applicant_sign"],
             ]);
-            $testerSectors = ["JARKOM", "RPL", "Agama"];
-            foreach ($testerSectors as $index => $sector) {
-                Tester::create([
-                    "name" => $validated["testers"][$index] || null,
-                    "description" => $sector,
-                    "order" => $index,
-                    "comprehensive_id" => $newComprehensive->id,
-                ]);
-            }
+            // $testerSectors = ["JARKOM", "RPL", "Agama"];
+            // foreach ($testerSectors as $index => $sector) {
+            //     Tester::create([
+            //         "name" => $validated["testers"][$index] || null,
+            //         "description" => $sector,
+            //         "order" => $index,
+            //         "comprehensive_id" => $newComprehensive->id,
+            //     ]);
+            // }
             foreach ($file_requirements as $index => $file_requirement) {
                 File::create([
                     "file" => $validated[$file_requirement->name],

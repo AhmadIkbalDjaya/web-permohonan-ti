@@ -4,6 +4,7 @@ namespace App\Http\Controllers\public;
 
 use App\Http\Controllers\Controller;
 use App\Models\FileRequirement;
+use App\Models\Lecturer;
 use App\Models\Mentor;
 use App\Models\Proposal;
 use App\Models\Schedule;
@@ -18,10 +19,11 @@ class ProposalController extends Controller
 {
     public function index()
     {
+        $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
         $file_requirements = FileRequirement::where("request_type", "proposals")->get();
-        // dd($file_requirements);
         return Inertia::render("public/proposal/Index", [
             "file_requirements" => $file_requirements,
+            "lecturers" => $lecturers,
         ]);
     }
 
@@ -47,7 +49,7 @@ class ProposalController extends Controller
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("proposal/applicant_signs", "public");
         foreach ($file_requirements as $index => $file_requirement) {
             if ($request->file($file_requirement->name)) {
-                $validated[$file_requirement->name] = $request->file($file_requirement)->storePublicly("proposal/files", "public");
+                $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("proposal/files", "public");
             } else {
                 unset($validated[$file_requirement->name]);
             }
@@ -82,7 +84,7 @@ class ProposalController extends Controller
                     "proposal_id" => $newProposal->id,
                 ]);
             }
-            for ($i=0; $i < 2; $i++) { 
+            for ($i = 0; $i < 2; $i++) {
                 Tester::create([
                     "order" => $i,
                     "proposal_id" => $newProposal->id,

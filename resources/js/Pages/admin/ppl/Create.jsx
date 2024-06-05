@@ -34,7 +34,7 @@ export default function CreatePpl({
         letter_number_mentor: "",
         letter_number_introduction: "",
         letter_date: "",
-        addressed: "",
+        addressed_to: "",
         mentor_id: "",
 
         start_date: "",
@@ -105,7 +105,6 @@ export default function CreatePpl({
                 };
             });
         }
-        console.log(formValues);
     }
     function handleSubmitForm(e) {
         router.post(route("admin.ppl.store"), formValues, {
@@ -418,7 +417,7 @@ export default function CreatePpl({
                                             color="initial"
                                             sx={{ fontWeight: "600" }}
                                         >
-                                            Data Mahasiswa :
+                                            Data PPL :
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={12}>
@@ -578,41 +577,6 @@ export default function CreatePpl({
                                 </Grid>
                             </ThemeProvider>
                         </Box>
-                        {/* <Box flex={6}>
-                            <Box
-                                sx={{
-                                    background: "white",
-                                    border: ".5px solid",
-                                    borderColor: "slate-300",
-                                    borderRadius: "4px",
-                                }}
-                            >
-                                <Box
-                                    sx={{ p: "5px 10px" }}
-                                    display={"flex"}
-                                    justifyContent={"space-between"}
-                                    alignItems={"center"}
-                                >
-                                    <ThemeProvider theme={themeTextField}>
-                                        <AppInputLabel
-                                            label="Jumlah Mahasiswa PPL"
-                                            required={true}
-                                        />
-                                        <TextField
-                                            id="student_count"
-                                            name="student_count"
-                                            type="number"
-                                            value={formValues.student_count}
-                                            // min
-                                            onChange={handleChangeForm}
-                                            // fullWidth
-                                            // error={errors.name ? true : false}
-                                            // helperText={errors.name ?? ""}
-                                        />
-                                    </ThemeProvider>
-                                </Box>
-                            </Box>
-                        </Box> */}
                         {Array.from(
                             { length: formValues.student_count },
                             (e, index) => (
