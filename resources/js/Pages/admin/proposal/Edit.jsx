@@ -26,6 +26,7 @@ import InputFileUpload, {
 import { FaFilePdf } from "react-icons/fa";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
+import ShowPDFModal from "../components/ShowPDFModal";
 
 export default function EditProposal({
     proposal,
@@ -38,6 +39,7 @@ export default function EditProposal({
     statuses,
     status_descriptions,
 }) {
+    console.log(files);
     const { errors } = usePage().props;
     testers = testers.map((tester) => tester || "");
     const [formValues, setFormValues] = useState({
@@ -146,9 +148,36 @@ export default function EditProposal({
             });
         }
     };
+
+    const [showPDF, setShowPDF] = useState({
+        open: false,
+        name: "",
+        file: "",
+    });
+
+    const handleClickShowPDF = (name, file) => {
+        setShowPDF({
+            open: true,
+            name,
+            file,
+        });
+    };
+    const handleCloseShowPDF = () => {
+        setShowPDF({
+            open: false,
+            name: "",
+            file: "",
+        });
+    };
     return (
         <>
             <Head title="Edit Permohonan Proposal" />
+            <ShowPDFModal
+                handleClose={handleCloseShowPDF}
+                open={showPDF.open}
+                name={showPDF.name}
+                file={showPDF.file}
+            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -884,9 +913,6 @@ export default function EditProposal({
                                                         "_",
                                                         " "
                                                     )}
-                                                    // required={
-                                                    //     file_requirement.is_required
-                                                    // }
                                                 />
                                                 <Box display={"flex"} gap={2}>
                                                     <Box flexGrow={1}>
@@ -927,6 +953,15 @@ export default function EditProposal({
                                                                                     "capitalize",
                                                                             }}
                                                                             fullWidth
+                                                                            onClick={() => {
+                                                                                handleClickShowPDF(
+                                                                                    file.name.replaceAll(
+                                                                                        "_",
+                                                                                        " "
+                                                                                    ),
+                                                                                    file.file
+                                                                                );
+                                                                            }}
                                                                         >
                                                                             Lihat
                                                                         </Button>

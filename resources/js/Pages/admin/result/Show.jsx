@@ -23,6 +23,7 @@ import {
 } from "../../../helper/dateTimeHelper";
 import { ShowRowData } from "../components/ShowRowData";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import ShowPDFModal from "../components/ShowPDFModal";
 
 export default function ShowResult({ result, file_requirements }) {
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -43,9 +44,36 @@ export default function ShowResult({ result, file_requirements }) {
 
     const componentRef = useRef();
     const [hodSignature, setHodSignature] = useState(false);
+
+    const [showPDF, setShowPDF] = useState({
+        open: false,
+        name: "",
+        file: "",
+    });
+
+    const handleClickShowPDF = (name, file) => {
+        setShowPDF({
+            open: true,
+            name,
+            file,
+        });
+    };
+    const handleCloseShowPDF = () => {
+        setShowPDF({
+            open: false,
+            name: "",
+            file: "",
+        });
+    };
     return (
         <>
             <Head title="Detail Permohonan" />
+            <ShowPDFModal
+                handleClose={handleCloseShowPDF}
+                open={showPDF.open}
+                name={showPDF.name}
+                file={showPDF.file}
+            />
             <ConfirmDeleteModal
                 open={confirmDelete}
                 handleClose={handleCloseDelete}
@@ -357,6 +385,15 @@ export default function ShowResult({ result, file_requirements }) {
                                                                 "capitalize",
                                                         }}
                                                         fullWidth
+                                                        onClick={() => {
+                                                            handleClickShowPDF(
+                                                                file.name.replaceAll(
+                                                                    "_",
+                                                                    " "
+                                                                ),
+                                                                file.file
+                                                            );
+                                                        }}
                                                     >
                                                         Lihat
                                                     </Button>

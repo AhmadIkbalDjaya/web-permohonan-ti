@@ -124,7 +124,6 @@ export default function CreateProposal({
                 formData.append(key, value);
             }
         }
-        // router.post("/admin/proposal", formValues);
         router.post(route("admin.proposal.store"), formData, {
             headers: {
                 "Content-Type": "multipart/form-data",

@@ -68,7 +68,7 @@ export default function ShowPDFModal({ open, handleClose, name, file }) {
                 ></Box>
                 <Typography
                     sx={{
-                        dispay: {
+                        display: {
                             xs: "inherit",
                             md: "none",
                         },

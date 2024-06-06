@@ -26,6 +26,7 @@ import InputFileUpload, {
 import { FaFilePdf } from "react-icons/fa";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
+import ShowPDFModal from "../components/ShowPDFModal";
 
 export default function EditResult({
     result,
@@ -114,8 +115,6 @@ export default function EditResult({
                 formData.append(key, value);
             }
         }
-        // console.log(formValues);
-        // router.post("/admin/result", formValues);
         router.post(
             route("admin.result.update", { result: result.id }),
             formData,
@@ -148,9 +147,36 @@ export default function EditResult({
             });
         }
     };
+
+    const [showPDF, setShowPDF] = useState({
+        open: false,
+        name: "",
+        file: "",
+    });
+
+    const handleClickShowPDF = (name, file) => {
+        setShowPDF({
+            open: true,
+            name,
+            file,
+        });
+    };
+    const handleCloseShowPDF = () => {
+        setShowPDF({
+            open: false,
+            name: "",
+            file: "",
+        });
+    };
     return (
         <>
             <Head title="Edit Permohonan Hasil" />
+            <ShowPDFModal
+                handleClose={handleCloseShowPDF}
+                open={showPDF.open}
+                name={showPDF.name}
+                file={showPDF.file}
+            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -929,6 +955,15 @@ export default function EditResult({
                                                                                     "capitalize",
                                                                             }}
                                                                             fullWidth
+                                                                            onClick={() => {
+                                                                                handleClickShowPDF(
+                                                                                    file.name.replaceAll(
+                                                                                        "_",
+                                                                                        " "
+                                                                                    ),
+                                                                                    file.file
+                                                                                );
+                                                                            }}
                                                                         >
                                                                             Lihat
                                                                         </Button>

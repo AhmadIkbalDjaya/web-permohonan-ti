@@ -6,12 +6,34 @@ import {
     Container,
     IconButton,
     InputBase,
+    Menu,
+    MenuItem,
     Toolbar,
+    Tooltip,
     Typography,
 } from "@mui/material";
 import { FiMenu, FiSearch } from "react-icons/fi";
-export function AppAppBar({ theme, setOpen, open }) {
-     return (
+import { LuLogOut } from "react-icons/lu";
+import { router, usePage } from "@inertiajs/react";
+export function AppAppBar({ setOpen, open }) {
+    const auth = usePage().props.auth;
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+    const handleOpenNavMenu = (event) => {
+        setAnchorElNav(event.currentTarget);
+    };
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
+
+    const handleCloseNavMenu = () => {
+        setAnchorElNav(null);
+    };
+
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
+    return (
         <AppBar
             position="fixed"
             sx={{
@@ -84,34 +106,78 @@ export function AppAppBar({ theme, setOpen, open }) {
                             />
                         </Box>
                     </Box>
-                    <Box display={"flex"} gap={1}>
-                        <Avatar />
-                        <Box
-                            display={{
-                                xs: "none",
-                                md: "block",
+                    <Box>
+                        <Tooltip title="Open settings">
+                            <Box
+                                display={"flex"}
+                                gap={1}
+                                onClick={handleOpenUserMenu}
+                            >
+                                <Avatar />
+                                <Box
+                                    display={{
+                                        xs: "none",
+                                        md: "block",
+                                    }}
+                                >
+                                    <Typography
+                                        color={"#212B36"}
+                                        sx={{
+                                            fontSize: "14px",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {auth.user.name}
+                                    </Typography>
+                                    <Typography
+                                        variant="subtitle2"
+                                        color={"#637381"}
+                                        sx={{
+                                            fontSize: "10px",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        Administrator
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        </Tooltip>
+                        <Menu
+                            sx={{ mt: "45px" }}
+                            id="menu-appbar"
+                            anchorEl={anchorElUser}
+                            anchorOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
                             }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
+                            }}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
                         >
-                            <Typography
-                                color={"#212B36"}
-                                sx={{
-                                    fontSize: "14px",
-                                    fontWeight: "bold",
+                            <MenuItem
+                                onClick={() => {
+                                    router.get(route("logout"));
                                 }}
                             >
-                                Ikbal Djaya
-                            </Typography>
-                            <Typography
-                                variant="subtitle2"
-                                color={"#637381"}
-                                sx={{
-                                    fontSize: "10px",
-                                    fontWeight: "bold",
-                                }}
-                            >
-                                Administrator
-                            </Typography>
-                        </Box>
+                                <Box
+                                    display={"flex"}
+                                    gap={1}
+                                    alignItems={"center"}
+                                >
+                                    <LuLogOut size={20} />
+                                    <Typography
+                                        textAlign="center"
+                                        fontWeight={500}
+                                    >
+                                        Logout
+                                    </Typography>
+                                </Box>
+                            </MenuItem>
+                        </Menu>
                     </Box>
                 </Toolbar>
             </Container>

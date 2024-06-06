@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\FileResource;
 use App\Http\Resources\Admin\ProposalDetailResource;
 use App\Models\FileRequirement;
 use App\Models\Lecturer;
@@ -186,7 +187,7 @@ class ProposalController extends Controller
             "proposal" => $proposal->load(["student", "schedule"]),
             "mentors" => $mentors,
             "testers" => $testers,
-            "files" => $proposal->files,
+            "files" => FileResource::collection($proposal->files),
 
             "lecturers" => $lecturers,
             "statuses" => $statuses,

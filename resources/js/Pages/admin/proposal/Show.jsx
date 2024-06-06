@@ -53,7 +53,6 @@ export default function ShowProposal({ proposal, file_requirements }) {
     });
 
     const handleClickShowPDF = (name, file) => {
-        // setShowPDF(true);
         setShowPDF({
             open: true,
             name,
@@ -61,7 +60,6 @@ export default function ShowProposal({ proposal, file_requirements }) {
         });
     };
     const handleCloseShowPDF = () => {
-        // setShowPDF(false);
         setShowPDF({
             open: false,
             name: "",
@@ -77,7 +75,6 @@ export default function ShowProposal({ proposal, file_requirements }) {
                 name={showPDF.name}
                 file={showPDF.file}
             />
-
             <ConfirmDeleteModal
                 open={confirmDelete}
                 handleClose={handleCloseDelete}

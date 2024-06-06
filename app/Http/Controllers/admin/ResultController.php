@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\FileResource;
 use App\Http\Resources\Admin\ResultDetailResource;
 use App\Models\FileRequirement;
 use App\Models\Lecturer;
@@ -188,7 +189,7 @@ class ResultController extends Controller
             "result" => $result->load(["student", "schedule"]),
             "mentors" => $mentors,
             "testers" => $testers,
-            "files" => $result->files,
+            "files" => FileResource::collection($result->files),
 
             "lecturers" => $lecturers,
             "statuses" => $statuses,

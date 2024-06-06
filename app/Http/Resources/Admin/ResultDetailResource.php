@@ -33,7 +33,7 @@ class ResultDetailResource extends JsonResource
             "schedule" => new ScheduleResource($this->schedule),
             "mentors" => MentorResource::collection($this->mentors),
             "testers" => TesterResource::collection($this->testers),
-            "files" => TesterResource::collection($this->files),
+            "files" => FileResource::collection($this->files),
             "created_at" => $this->created_at,
         ];
     }
