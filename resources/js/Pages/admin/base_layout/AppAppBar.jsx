@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { FiMenu, FiSearch } from "react-icons/fi";
 export function AppAppBar({ theme, setOpen, open }) {
-    return (
+     return (
         <AppBar
             position="fixed"
             sx={{

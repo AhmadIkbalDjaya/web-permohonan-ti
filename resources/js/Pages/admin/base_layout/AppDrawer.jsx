@@ -6,6 +6,7 @@ import { TiHome } from "react-icons/ti";
 import { MdArticle } from "react-icons/md";
 import { RiArticleFill, RiComputerFill } from "react-icons/ri";
 import { HiClipboardDocumentList } from "react-icons/hi2";
+import { IoLogOut } from "react-icons/io5";
 export function AppDrawer({ open }) {
     return (
         <Drawer
@@ -52,6 +53,12 @@ export function AppDrawer({ open }) {
                     toPage={"/admin/ppl"}
                     icon={<RiComputerFill size={24} color="white" />}
                     text={"PPL"}
+                />
+                <DrawerListItem
+                    open={open}
+                    toPage={route("logout")}
+                    icon={<IoLogOut size={24} color="white" />}
+                    text={"Logout"}
                 />
             </List>
         </Drawer>
