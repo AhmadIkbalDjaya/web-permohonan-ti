@@ -11,6 +11,7 @@ use App\Http\Controllers\admin\ProposalController as AdminProposalController;
 use App\Http\Controllers\admin\ResultController as AdminResultController;
 use App\Http\Controllers\admin\ComprehensiveController as AdminComprehensiveController;
 use App\Http\Controllers\admin\PplController as AdminPplController;
+use App\Http\Controllers\public\StatusCheckController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +35,8 @@ Route::get("kompren", [ComprehensiveController::class, "index"])->name("comprehe
 Route::post("kompren", [ComprehensiveController::class, "store"])->name("comprehensive.store");
 Route::get("ppl", [PplController::class, "index"])->name("ppl");
 Route::post("ppl", [PplController::class, "store"])->name("ppl.store");
+Route::get("status-check", [StatusCheckController::class, "index"])->name("status");
+Route::post("status-check", [StatusCheckController::class, "check"])->name("status.check");
 
 Route::prefix('admin')->group(function () {
     Route::controller(AuthenticateController::class)->group(function () {
