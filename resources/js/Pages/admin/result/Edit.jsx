@@ -20,9 +20,7 @@ import { themeTextField } from "../../../theme/TextFieldTheme";
 import AppInputLabel from "../components/elements/input/AppInputLabel";
 import { semesterListItems } from "../components/elements/input/SemesterListItems";
 import ReactSignatureCanvas from "react-signature-canvas";
-import InputFileUpload, {
-    themeFileUploadButton,
-} from "../components/elements/input/InputFileUpload";
+import InputFileUpload from "../components/elements/input/InputFileUpload";
 import { FaFilePdf } from "react-icons/fa";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
@@ -258,623 +256,591 @@ export default function EditResult({
                                 {result.code}
                             </Typography>
                         </Box>
-                        <ThemeProvider theme={themeTextField}>
-                            <Grid container spacing={2} padding={"15px"}>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Status Permohonan" />
-                                    <Select
-                                        id="status_id"
-                                        name="status_id"
-                                        value={formValues.status_id}
-                                        onChange={handleChangeForm}
-                                        displayEmpty
-                                        error={errors.status_id ? true : false}
-                                        fullWidth
-                                        sx={{ textTransform: "capitalize" }}
-                                    >
-                                        <MenuItem value="" disabled>
-                                            <Typography
-                                                variant="body2"
-                                                color="#ababab"
-                                                fontWeight={"600"}
-                                                display={"flex"}
-                                            >
-                                                Status Permohonan
-                                            </Typography>
+                        <Grid container spacing={2} padding={"15px"}>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel label="Status Permohonan" />
+                                <Select
+                                    id="status_id"
+                                    name="status_id"
+                                    value={formValues.status_id}
+                                    onChange={handleChangeForm}
+                                    displayEmpty
+                                    error={errors.status_id ? true : false}
+                                    fullWidth
+                                    sx={{ textTransform: "capitalize" }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Status Permohonan
+                                        </Typography>
+                                    </MenuItem>
+                                    {statuses.map((status, index) => (
+                                        <MenuItem
+                                            key={index}
+                                            value={status.id}
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            {status.name}
                                         </MenuItem>
-                                        {statuses.map((status, index) => (
-                                            <MenuItem
-                                                key={index}
-                                                value={status.id}
-                                                sx={{
-                                                    textTransform: "capitalize",
-                                                }}
-                                            >
-                                                {status.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.status_id && (
-                                        <InputErrorMessage>
-                                            {errors.status_id}
-                                        </InputErrorMessage>
-                                    )}
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Deskripsi Status" />
-                                    <Select
-                                        id="status_description_id"
-                                        name="status_description_id"
-                                        value={formValues.status_description_id}
-                                        onChange={handleChangeForm}
-                                        displayEmpty
-                                        error={
-                                            errors.status_description_id
-                                                ? true
-                                                : false
-                                        }
-                                        fullWidth
-                                    >
-                                        <MenuItem value="" disabled>
-                                            <Typography
-                                                variant="body2"
-                                                color="#ababab"
-                                                fontWeight={"600"}
-                                                display={"flex"}
-                                            >
-                                                Deskripsi Status
-                                            </Typography>
-                                        </MenuItem>
-                                        {status_descriptions.map(
-                                            (description, index) => {
-                                                if (
-                                                    description.status_id ==
-                                                    formValues.status_id
-                                                ) {
-                                                    return (
-                                                        <MenuItem
-                                                            key={index}
-                                                            value={
-                                                                description.id
-                                                            }
-                                                            sx={{
-                                                                textTransform:
-                                                                    "capitalize",
-                                                            }}
-                                                        >
-                                                            {
-                                                                description.description
-                                                            }
-                                                        </MenuItem>
-                                                    );
-                                                }
-                                            }
-                                        )}
-                                    </Select>
-                                    {errors.description_id && (
-                                        <InputErrorMessage>
-                                            {errors.description_id}
-                                        </InputErrorMessage>
-                                    )}
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Nomor Surat" />
-                                    <TextField
-                                        id="letter_number"
-                                        name="letter_number"
-                                        type="string"
-                                        value={formValues.letter_number}
-                                        onChange={handleChangeForm}
-                                        placeholder="Masukkan Nomor Surat"
-                                        fullWidth
-                                        error={
-                                            errors.letter_number ? true : false
-                                        }
-                                        helperText={errors.letter_number ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Tanggal Surat" />
-                                    <TextField
-                                        id="letter_date"
-                                        name="letter_date"
-                                        type="date"
-                                        value={formValues.letter_date}
-                                        onChange={handleChangeForm}
-                                        placeholder="Masukkan Nomor Surat"
-                                        fullWidth
-                                        error={
-                                            errors.letter_date ? true : false
-                                        }
-                                        helperText={errors.letter_date ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Typography
-                                        variant="body2"
-                                        color="initial"
-                                        sx={{ fontWeight: "600" }}
-                                    >
-                                        Data Mahasiswa :
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel
-                                        label="Nama"
-                                        required={true}
-                                    />
-                                    <TextField
-                                        id="name"
-                                        name="name"
-                                        type="string"
-                                        value={formValues.name}
-                                        onChange={handleChangeForm}
-                                        placeholder="Masukkan Nama Mahasiswa"
-                                        fullWidth
-                                        error={errors.name ? true : false}
-                                        helperText={errors.name ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel
-                                        label="NIM"
-                                        required={true}
-                                    />
-                                    <TextField
-                                        id="nim"
-                                        name="nim"
-                                        type="number"
-                                        value={formValues.nim}
-                                        onChange={handleChangeForm}
-                                        placeholder="Masukkan NIM"
-                                        fullWidth
-                                        error={errors.nim ? true : false}
-                                        helperText={errors.nim ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel
-                                        label="Tempat Lahir"
-                                        required={true}
-                                    />
-                                    <TextField
-                                        id="pob"
-                                        name="pob"
-                                        type="string"
-                                        value={formValues.pob}
-                                        onChange={handleChangeForm}
-                                        placeholder="Masukkan Tempat Lahir"
-                                        fullWidth
-                                        error={errors.pob ? true : false}
-                                        helperText={errors.pob ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel
-                                        label="Tanggal Lahir"
-                                        required={true}
-                                    />
-                                    <TextField
-                                        id="dob"
-                                        name="dob"
-                                        type="date"
-                                        value={formValues.dob}
-                                        onChange={handleChangeForm}
-                                        placeholder="Masukkan Tanggal Lahir"
-                                        fullWidth
-                                        error={errors.dob ? true : false}
-                                        helperText={errors.dob ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel
-                                        label="Semester"
-                                        required={true}
-                                    />
-                                    <Select
-                                        id="semester"
-                                        name="semester"
-                                        value={formValues.semester}
-                                        onChange={handleChangeForm}
-                                        fullWidth
-                                        displayEmpty
-                                        error={errors.semester ? true : false}
-                                    >
-                                        <MenuItem value="" disabled>
-                                            <Typography
-                                                variant="body2"
-                                                color="#ababab"
-                                                fontWeight={"600"}
-                                                display={"flex"}
-                                            >
-                                                Semester Saat Ini
-                                            </Typography>
-                                        </MenuItem>
-                                        {semesterListItems.map(
-                                            (semester, i) => {
+                                    ))}
+                                </Select>
+                                {errors.status_id && (
+                                    <InputErrorMessage>
+                                        {errors.status_id}
+                                    </InputErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel label="Deskripsi Status" />
+                                <Select
+                                    id="status_description_id"
+                                    name="status_description_id"
+                                    value={formValues.status_description_id}
+                                    onChange={handleChangeForm}
+                                    displayEmpty
+                                    error={
+                                        errors.status_description_id
+                                            ? true
+                                            : false
+                                    }
+                                    fullWidth
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Deskripsi Status
+                                        </Typography>
+                                    </MenuItem>
+                                    {status_descriptions.map(
+                                        (description, index) => {
+                                            if (
+                                                description.status_id ==
+                                                formValues.status_id
+                                            ) {
                                                 return (
                                                     <MenuItem
-                                                        key={i}
-                                                        value={semester.value}
+                                                        key={index}
+                                                        value={description.id}
+                                                        sx={{
+                                                            textTransform:
+                                                                "capitalize",
+                                                        }}
                                                     >
-                                                        {semester.body}
+                                                        {
+                                                            description.description
+                                                        }
                                                     </MenuItem>
                                                 );
                                             }
-                                        )}
-                                    </Select>
-                                    {errors.semester && (
-                                        <InputErrorMessage>
-                                            {errors.semester}
-                                        </InputErrorMessage>
+                                        }
                                     )}
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel
-                                        label="Nomor Telepon"
-                                        required={true}
-                                    />
-                                    <TextField
-                                        id="phone"
-                                        name="phone"
-                                        type="number"
-                                        value={formValues.phone}
-                                        onChange={handleChangeForm}
-                                        placeholder="Masukkan Nomor Telepon"
-                                        fullWidth
-                                        error={errors.phone ? true : false}
-                                        helperText={errors.phone ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <AppInputLabel
-                                        label="Judul Skripsi"
-                                        required={true}
-                                    />
-                                    <TextField
-                                        id="essay_title"
-                                        name="essay_title"
-                                        type="string"
-                                        value={formValues.essay_title}
-                                        onChange={handleChangeForm}
-                                        placeholder="Masukkan Judul Skripsi"
-                                        fullWidth
-                                        multiline
-                                        rows={2}
-                                        error={
-                                            errors.essay_title ? true : false
-                                        }
-                                        helperText={errors.essay_title ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Typography
-                                        variant="body2"
-                                        color="initial"
-                                        sx={{ fontWeight: "600" }}
-                                    >
-                                        Dewan Penguji dan Pelaksana :
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Typography
-                                        variant="body2"
-                                        color="initial"
-                                        sx={{ fontWeight: "600" }}
-                                    >
-                                        Dewan Penguji dan Pelaksana :
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12} sm={4}>
-                                    <AppInputLabel label="Ketua" />
-                                    <Select
-                                        id="chairman_id"
-                                        name="chairman_id"
-                                        value={formValues.chairman_id}
-                                        onChange={handleChangeForm}
-                                        displayEmpty
-                                        error={
-                                            errors.chairman_id ? true : false
-                                        }
-                                        fullWidth
-                                        sx={{ textTransform: "capitalize" }}
-                                    >
-                                        <MenuItem value="" disabled>
-                                            <Typography
-                                                variant="body2"
-                                                color="#ababab"
-                                                fontWeight={"600"}
-                                                display={"flex"}
-                                            >
-                                                Ketua Seminar
-                                            </Typography>
-                                        </MenuItem>
-                                        {lecturers.map((lecturer, index) => (
-                                            <MenuItem
-                                                key={index}
-                                                value={lecturer.id}
-                                                sx={{
-                                                    textTransform: "capitalize",
-                                                }}
-                                            >
-                                                {lecturer.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.chairman_id && (
-                                        <InputErrorMessage>
-                                            {errors.chairman_id}
-                                        </InputErrorMessage>
-                                    )}
-                                </Grid>
-                                <Grid item xs={12} sm={4}>
-                                    <AppInputLabel label="Sekertaris" />
-                                    <Select
-                                        id="secretary_id"
-                                        name="secretary_id"
-                                        value={formValues.secretary_id}
-                                        onChange={handleChangeForm}
-                                        displayEmpty
-                                        error={
-                                            errors.secretary_id ? true : false
-                                        }
-                                        fullWidth
-                                        sx={{ textTransform: "capitalize" }}
-                                    >
-                                        <MenuItem value="" disabled>
-                                            <Typography
-                                                variant="body2"
-                                                color="#ababab"
-                                                fontWeight={"600"}
-                                                display={"flex"}
-                                            >
-                                                Sekertaris Seminar
-                                            </Typography>
-                                        </MenuItem>
-                                        {lecturers.map((lecturer, index) => (
-                                            <MenuItem
-                                                key={index}
-                                                value={lecturer.id}
-                                                sx={{
-                                                    textTransform: "capitalize",
-                                                }}
-                                            >
-                                                {lecturer.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.secretary_id && (
-                                        <InputErrorMessage>
-                                            {errors.secretary_id}
-                                        </InputErrorMessage>
-                                    )}
-                                </Grid>
-                                <Grid item xs={12} sm={4}>
-                                    <AppInputLabel label="Pelaksana" />
-                                    <Select
-                                        id="executor_id"
-                                        name="executor_id"
-                                        value={formValues.executor_id}
-                                        onChange={handleChangeForm}
-                                        displayEmpty
-                                        error={
-                                            errors.executor_id ? true : false
-                                        }
-                                        fullWidth
-                                        sx={{ textTransform: "capitalize" }}
-                                    >
-                                        <MenuItem value="" disabled>
-                                            <Typography
-                                                variant="body2"
-                                                color="#ababab"
-                                                fontWeight={"600"}
-                                                display={"flex"}
-                                            >
-                                                Pelaksana Seminar
-                                            </Typography>
-                                        </MenuItem>
-                                        {lecturers.map((lecturer, index) => (
-                                            <MenuItem
-                                                key={index}
-                                                value={lecturer.id}
-                                                sx={{
-                                                    textTransform: "capitalize",
-                                                }}
-                                            >
-                                                {lecturer.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.executor_id && (
-                                        <InputErrorMessage>
-                                            {errors.executor_id}
-                                        </InputErrorMessage>
-                                    )}
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel
-                                        label="Pembimbing 1"
-                                        required={true}
-                                    />
-                                    <TextField
-                                        id="mentors1"
-                                        name="mentors"
-                                        type="string"
-                                        placeholder="Nama Pembimbing 1"
-                                        fullWidth
-                                        value={formValues.mentors[0]}
-                                        onChange={(e) => {
-                                            handleChangeForm(e, 0);
-                                        }}
-                                        error={
-                                            errors["mentors.0"] ? true : false
-                                        }
-                                        helperText={errors["mentors.0"] ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel
-                                        label="Pembimbing 2"
-                                        required={true}
-                                    />
-                                    <TextField
-                                        id="mentors2"
-                                        name="mentors"
-                                        type="string"
-                                        placeholder="Nama Pembimbing 2"
-                                        fullWidth
-                                        value={formValues.mentors[1]}
-                                        onChange={(e) => {
-                                            handleChangeForm(e, 1);
-                                        }}
-                                        error={
-                                            errors["mentors.1"] ? true : false
-                                        }
-                                        helperText={errors["mentors.1"] ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Penguji 1" />
-                                    <TextField
-                                        id="testers1"
-                                        name="testers"
-                                        type="string"
-                                        placeholder="Nama Penguji 1"
-                                        fullWidth
-                                        value={formValues.testers[0]}
-                                        onChange={(e) => {
-                                            handleChangeForm(e, 0);
-                                        }}
-                                        error={
-                                            errors["testers.0"] ? true : false
-                                        }
-                                        helperText={errors["testers.0"] ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Penguji 2" />
-                                    <TextField
-                                        id="testers2"
-                                        name="testers"
-                                        type="string"
-                                        placeholder="Nama Penguji 2"
-                                        fullWidth
-                                        value={formValues.testers[1]}
-                                        onChange={(e) => {
-                                            handleChangeForm(e, 1);
-                                        }}
-                                        error={
-                                            errors["testers.1"] ? true : false
-                                        }
-                                        helperText={errors["testers.1"] ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Typography
-                                        variant="body2"
-                                        color="initial"
-                                        sx={{ fontWeight: "600" }}
-                                    >
-                                        Jadwal Pelaksanaan :
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Tanggal" />
-                                    <TextField
-                                        id="date"
-                                        name="date"
-                                        type="date"
-                                        fullWidth
-                                        value={formValues.date}
-                                        onChange={handleChangeForm}
-                                        error={errors.date ? true : false}
-                                        helperText={errors.date ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel
-                                        label="Zona Waktu"
-                                        required={true}
-                                    />
-                                    <Select
-                                        id="time_zone"
-                                        name="time_zone"
-                                        value={formValues.time_zone}
-                                        onChange={handleChangeForm}
-                                        fullWidth
-                                        displayEmpty
-                                        error={errors.time_zone ? true : false}
-                                    >
-                                        <MenuItem value="" disabled>
-                                            <Typography
-                                                variant="body2"
-                                                color="#ababab"
-                                                fontWeight={"600"}
-                                                display={"flex"}
-                                            >
-                                                Zona Waktu
-                                            </Typography>
-                                        </MenuItem>
-                                        <MenuItem value="wib">
-                                            WIB - Waktu Indonesia Barat
-                                        </MenuItem>
-                                        <MenuItem value="wita">
-                                            WITA - Waktu Indonesia Tengah
-                                        </MenuItem>
-                                        <MenuItem value="wit">
-                                            WIT - Waktu Indonesia Timur
-                                        </MenuItem>
-                                    </Select>
-                                    {errors.time_zone && (
-                                        <InputErrorMessage>
-                                            {errors.time_zone}
-                                        </InputErrorMessage>
-                                    )}
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Jam Mulai" />
-                                    <TextField
-                                        id="start_time"
-                                        name="start_time"
-                                        type="time"
-                                        fullWidth
-                                        value={formValues.start_time}
-                                        onChange={handleChangeForm}
-                                        error={errors.start_time ? true : false}
-                                        helperText={errors.start_time ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Jam Selesai" />
-                                    <TextField
-                                        id="end_time"
-                                        name="end_time"
-                                        type="time"
-                                        fullWidth
-                                        value={formValues.end_time}
-                                        onChange={handleChangeForm}
-                                        error={errors.end_time ? true : false}
-                                        helperText={errors.end_time ?? ""}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <AppInputLabel label="Lokasi Seminar" />
-                                    <TextField
-                                        id="location"
-                                        name="location"
-                                        type="string"
-                                        placeholder="Masukkan Lokasi Seminar"
-                                        fullWidth
-                                        multiline
-                                        rows={2}
-                                        value={formValues.location}
-                                        onChange={handleChangeForm}
-                                        error={errors.location ? true : false}
-                                        helperText={errors.location ?? ""}
-                                    />
-                                </Grid>
+                                </Select>
+                                {errors.description_id && (
+                                    <InputErrorMessage>
+                                        {errors.description_id}
+                                    </InputErrorMessage>
+                                )}
                             </Grid>
-                        </ThemeProvider>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel label="Nomor Surat" />
+                                <TextField
+                                    id="letter_number"
+                                    name="letter_number"
+                                    type="string"
+                                    value={formValues.letter_number}
+                                    onChange={handleChangeForm}
+                                    placeholder="Masukkan Nomor Surat"
+                                    fullWidth
+                                    error={errors.letter_number ? true : false}
+                                    helperText={errors.letter_number ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel label="Tanggal Surat" />
+                                <TextField
+                                    id="letter_date"
+                                    name="letter_date"
+                                    type="date"
+                                    value={formValues.letter_date}
+                                    onChange={handleChangeForm}
+                                    placeholder="Masukkan Nomor Surat"
+                                    fullWidth
+                                    error={errors.letter_date ? true : false}
+                                    helperText={errors.letter_date ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography
+                                    variant="body2"
+                                    color="initial"
+                                    sx={{ fontWeight: "600" }}
+                                >
+                                    Data Mahasiswa :
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel label="Nama" required={true} />
+                                <TextField
+                                    id="name"
+                                    name="name"
+                                    type="string"
+                                    value={formValues.name}
+                                    onChange={handleChangeForm}
+                                    placeholder="Masukkan Nama Mahasiswa"
+                                    fullWidth
+                                    error={errors.name ? true : false}
+                                    helperText={errors.name ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel label="NIM" required={true} />
+                                <TextField
+                                    id="nim"
+                                    name="nim"
+                                    type="number"
+                                    value={formValues.nim}
+                                    onChange={handleChangeForm}
+                                    placeholder="Masukkan NIM"
+                                    fullWidth
+                                    error={errors.nim ? true : false}
+                                    helperText={errors.nim ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel
+                                    label="Tempat Lahir"
+                                    required={true}
+                                />
+                                <TextField
+                                    id="pob"
+                                    name="pob"
+                                    type="string"
+                                    value={formValues.pob}
+                                    onChange={handleChangeForm}
+                                    placeholder="Masukkan Tempat Lahir"
+                                    fullWidth
+                                    error={errors.pob ? true : false}
+                                    helperText={errors.pob ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel
+                                    label="Tanggal Lahir"
+                                    required={true}
+                                />
+                                <TextField
+                                    id="dob"
+                                    name="dob"
+                                    type="date"
+                                    value={formValues.dob}
+                                    onChange={handleChangeForm}
+                                    placeholder="Masukkan Tanggal Lahir"
+                                    fullWidth
+                                    error={errors.dob ? true : false}
+                                    helperText={errors.dob ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel
+                                    label="Semester"
+                                    required={true}
+                                />
+                                <Select
+                                    id="semester"
+                                    name="semester"
+                                    value={formValues.semester}
+                                    onChange={handleChangeForm}
+                                    fullWidth
+                                    displayEmpty
+                                    error={errors.semester ? true : false}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Semester Saat Ini
+                                        </Typography>
+                                    </MenuItem>
+                                    {semesterListItems.map((semester, i) => {
+                                        return (
+                                            <MenuItem
+                                                key={i}
+                                                value={semester.value}
+                                            >
+                                                {semester.body}
+                                            </MenuItem>
+                                        );
+                                    })}
+                                </Select>
+                                {errors.semester && (
+                                    <InputErrorMessage>
+                                        {errors.semester}
+                                    </InputErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel
+                                    label="Nomor Telepon"
+                                    required={true}
+                                />
+                                <TextField
+                                    id="phone"
+                                    name="phone"
+                                    type="number"
+                                    value={formValues.phone}
+                                    onChange={handleChangeForm}
+                                    placeholder="Masukkan Nomor Telepon"
+                                    fullWidth
+                                    error={errors.phone ? true : false}
+                                    helperText={errors.phone ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <AppInputLabel
+                                    label="Judul Skripsi"
+                                    required={true}
+                                />
+                                <TextField
+                                    id="essay_title"
+                                    name="essay_title"
+                                    type="string"
+                                    value={formValues.essay_title}
+                                    onChange={handleChangeForm}
+                                    placeholder="Masukkan Judul Skripsi"
+                                    fullWidth
+                                    multiline
+                                    rows={2}
+                                    error={errors.essay_title ? true : false}
+                                    helperText={errors.essay_title ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography
+                                    variant="body2"
+                                    color="initial"
+                                    sx={{ fontWeight: "600" }}
+                                >
+                                    Dewan Penguji dan Pelaksana :
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography
+                                    variant="body2"
+                                    color="initial"
+                                    sx={{ fontWeight: "600" }}
+                                >
+                                    Dewan Penguji dan Pelaksana :
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <AppInputLabel label="Ketua" />
+                                <Select
+                                    id="chairman_id"
+                                    name="chairman_id"
+                                    value={formValues.chairman_id}
+                                    onChange={handleChangeForm}
+                                    displayEmpty
+                                    error={errors.chairman_id ? true : false}
+                                    fullWidth
+                                    sx={{ textTransform: "capitalize" }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Ketua Seminar
+                                        </Typography>
+                                    </MenuItem>
+                                    {lecturers.map((lecturer, index) => (
+                                        <MenuItem
+                                            key={index}
+                                            value={lecturer.id}
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            {lecturer.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {errors.chairman_id && (
+                                    <InputErrorMessage>
+                                        {errors.chairman_id}
+                                    </InputErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <AppInputLabel label="Sekertaris" />
+                                <Select
+                                    id="secretary_id"
+                                    name="secretary_id"
+                                    value={formValues.secretary_id}
+                                    onChange={handleChangeForm}
+                                    displayEmpty
+                                    error={errors.secretary_id ? true : false}
+                                    fullWidth
+                                    sx={{ textTransform: "capitalize" }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Sekertaris Seminar
+                                        </Typography>
+                                    </MenuItem>
+                                    {lecturers.map((lecturer, index) => (
+                                        <MenuItem
+                                            key={index}
+                                            value={lecturer.id}
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            {lecturer.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {errors.secretary_id && (
+                                    <InputErrorMessage>
+                                        {errors.secretary_id}
+                                    </InputErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <AppInputLabel label="Pelaksana" />
+                                <Select
+                                    id="executor_id"
+                                    name="executor_id"
+                                    value={formValues.executor_id}
+                                    onChange={handleChangeForm}
+                                    displayEmpty
+                                    error={errors.executor_id ? true : false}
+                                    fullWidth
+                                    sx={{ textTransform: "capitalize" }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Pelaksana Seminar
+                                        </Typography>
+                                    </MenuItem>
+                                    {lecturers.map((lecturer, index) => (
+                                        <MenuItem
+                                            key={index}
+                                            value={lecturer.id}
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            {lecturer.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {errors.executor_id && (
+                                    <InputErrorMessage>
+                                        {errors.executor_id}
+                                    </InputErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel
+                                    label="Pembimbing 1"
+                                    required={true}
+                                />
+                                <TextField
+                                    id="mentors1"
+                                    name="mentors"
+                                    type="string"
+                                    placeholder="Nama Pembimbing 1"
+                                    fullWidth
+                                    value={formValues.mentors[0]}
+                                    onChange={(e) => {
+                                        handleChangeForm(e, 0);
+                                    }}
+                                    error={errors["mentors.0"] ? true : false}
+                                    helperText={errors["mentors.0"] ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel
+                                    label="Pembimbing 2"
+                                    required={true}
+                                />
+                                <TextField
+                                    id="mentors2"
+                                    name="mentors"
+                                    type="string"
+                                    placeholder="Nama Pembimbing 2"
+                                    fullWidth
+                                    value={formValues.mentors[1]}
+                                    onChange={(e) => {
+                                        handleChangeForm(e, 1);
+                                    }}
+                                    error={errors["mentors.1"] ? true : false}
+                                    helperText={errors["mentors.1"] ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel label="Penguji 1" />
+                                <TextField
+                                    id="testers1"
+                                    name="testers"
+                                    type="string"
+                                    placeholder="Nama Penguji 1"
+                                    fullWidth
+                                    value={formValues.testers[0]}
+                                    onChange={(e) => {
+                                        handleChangeForm(e, 0);
+                                    }}
+                                    error={errors["testers.0"] ? true : false}
+                                    helperText={errors["testers.0"] ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel label="Penguji 2" />
+                                <TextField
+                                    id="testers2"
+                                    name="testers"
+                                    type="string"
+                                    placeholder="Nama Penguji 2"
+                                    fullWidth
+                                    value={formValues.testers[1]}
+                                    onChange={(e) => {
+                                        handleChangeForm(e, 1);
+                                    }}
+                                    error={errors["testers.1"] ? true : false}
+                                    helperText={errors["testers.1"] ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography
+                                    variant="body2"
+                                    color="initial"
+                                    sx={{ fontWeight: "600" }}
+                                >
+                                    Jadwal Pelaksanaan :
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel label="Tanggal" />
+                                <TextField
+                                    id="date"
+                                    name="date"
+                                    type="date"
+                                    fullWidth
+                                    value={formValues.date}
+                                    onChange={handleChangeForm}
+                                    error={errors.date ? true : false}
+                                    helperText={errors.date ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel
+                                    label="Zona Waktu"
+                                    required={true}
+                                />
+                                <Select
+                                    id="time_zone"
+                                    name="time_zone"
+                                    value={formValues.time_zone}
+                                    onChange={handleChangeForm}
+                                    fullWidth
+                                    displayEmpty
+                                    error={errors.time_zone ? true : false}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Zona Waktu
+                                        </Typography>
+                                    </MenuItem>
+                                    <MenuItem value="wib">
+                                        WIB - Waktu Indonesia Barat
+                                    </MenuItem>
+                                    <MenuItem value="wita">
+                                        WITA - Waktu Indonesia Tengah
+                                    </MenuItem>
+                                    <MenuItem value="wit">
+                                        WIT - Waktu Indonesia Timur
+                                    </MenuItem>
+                                </Select>
+                                {errors.time_zone && (
+                                    <InputErrorMessage>
+                                        {errors.time_zone}
+                                    </InputErrorMessage>
+                                )}
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel label="Jam Mulai" />
+                                <TextField
+                                    id="start_time"
+                                    name="start_time"
+                                    type="time"
+                                    fullWidth
+                                    value={formValues.start_time}
+                                    onChange={handleChangeForm}
+                                    error={errors.start_time ? true : false}
+                                    helperText={errors.start_time ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <AppInputLabel label="Jam Selesai" />
+                                <TextField
+                                    id="end_time"
+                                    name="end_time"
+                                    type="time"
+                                    fullWidth
+                                    value={formValues.end_time}
+                                    onChange={handleChangeForm}
+                                    error={errors.end_time ? true : false}
+                                    helperText={errors.end_time ?? ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <AppInputLabel label="Lokasi Seminar" />
+                                <TextField
+                                    id="location"
+                                    name="location"
+                                    type="string"
+                                    placeholder="Masukkan Lokasi Seminar"
+                                    fullWidth
+                                    multiline
+                                    rows={2}
+                                    value={formValues.location}
+                                    onChange={handleChangeForm}
+                                    error={errors.location ? true : false}
+                                    helperText={errors.location ?? ""}
+                                />
+                            </Grid>
+                        </Grid>
                     </Box>
                     <Box
                         flex={{
@@ -938,36 +904,30 @@ export default function EditResult({
                                                                     key={index}
                                                                     flexGrow={1}
                                                                 >
-                                                                    <ThemeProvider
-                                                                        theme={
-                                                                            themeFileUploadButton
+                                                                    <Button
+                                                                        variant="contained"
+                                                                        color="gray-100"
+                                                                        startIcon={
+                                                                            <FaFilePdf />
                                                                         }
+                                                                        sx={{
+                                                                            height: "33px",
+                                                                            textTransform:
+                                                                                "capitalize",
+                                                                        }}
+                                                                        fullWidth
+                                                                        onClick={() => {
+                                                                            handleClickShowPDF(
+                                                                                file.name.replaceAll(
+                                                                                    "_",
+                                                                                    " "
+                                                                                ),
+                                                                                file.file
+                                                                            );
+                                                                        }}
                                                                     >
-                                                                        <Button
-                                                                            variant="contained"
-                                                                            color="gray-100"
-                                                                            startIcon={
-                                                                                <FaFilePdf />
-                                                                            }
-                                                                            sx={{
-                                                                                height: "33px",
-                                                                                textTransform:
-                                                                                    "capitalize",
-                                                                            }}
-                                                                            fullWidth
-                                                                            onClick={() => {
-                                                                                handleClickShowPDF(
-                                                                                    file.name.replaceAll(
-                                                                                        "_",
-                                                                                        " "
-                                                                                    ),
-                                                                                    file.file
-                                                                                );
-                                                                            }}
-                                                                        >
-                                                                            Lihat
-                                                                        </Button>
-                                                                    </ThemeProvider>
+                                                                        Lihat
+                                                                    </Button>
                                                                 </Box>
                                                             ) : (
                                                                 ""

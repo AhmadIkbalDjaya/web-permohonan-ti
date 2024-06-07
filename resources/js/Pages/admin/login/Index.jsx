@@ -7,10 +7,10 @@ import {
     TextField,
     Button,
 } from "@mui/material";
-import { themeColor } from "../../../theme/ColorTheme";
 import AppInputLabel from "../components/elements/input/AppInputLabel";
 import React, { useState } from "react";
 import { Head, router, usePage } from "@inertiajs/react";
+import appTheme from "../../../theme/AppTheme";
 
 export default function Login() {
     const { errors, flash } = usePage().props;
@@ -34,7 +34,7 @@ export default function Login() {
     return (
         <>
             <Head title={"Login"} />
-            <ThemeProvider theme={themeColor}>
+            <ThemeProvider theme={appTheme}>
                 <CssBaseline />
                 <Grid
                     container

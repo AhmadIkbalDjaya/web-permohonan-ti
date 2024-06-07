@@ -5,7 +5,7 @@ import React, { useContext } from "react";
 import MuiAppBar from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
 import { DrawerOpen } from "../../../context/DrawerOpen";
-import { themeColor } from "../../../theme/ColorTheme";
+import appTheme from "../../../theme/AppTheme";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -78,7 +78,7 @@ export default function BaseLayout(props) {
     const { children } = props;
     return (
         <>
-            <ThemeProvider theme={themeColor}>
+            <ThemeProvider theme={appTheme}>
                 <Box sx={{ display: "flex" }}>
                     <CssBaseline />
                     <AppAppBar setOpen={setOpen} open={open} />

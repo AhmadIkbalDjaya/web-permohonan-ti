@@ -22,14 +22,12 @@ import {
 } from "@mui/material";
 import ReactSignatureCanvas from "react-signature-canvas";
 import { FaPlus } from "react-icons/fa";
-import AppInputLabel from "../component/AppInputLabel";
-import InputFileUpload from "../component/InputFileComponent";
 import FooterComponent from "../component/footerComponent";
-import { themeTextField } from "../../../theme/TextFieldTheme";
 import { semesterListItems } from "../../admin/components/elements/input/SemesterListItems";
 import InputErrorMessage from "../../admin/components/elements/input/InputErrorMessage";
-import { themeColor } from "../../../theme/ColorTheme";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
+import appTheme from "../../../theme/AppTheme";
+import AppInputLabel from "../../admin/components/elements/input/AppInputLabel";
 
 export default function Kompren({ file_requirements }) {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -128,252 +126,256 @@ export default function Kompren({ file_requirements }) {
     return (
         <>
             <Head title="Komprehensif" />
-            <AppBar position="static">
-                <Container maxWidth="xl">
-                    <Toolbar disableGutters>
-                        <Typography
-                            variant="h6"
-                            noWrap
-                            component="a"
-                            href="#app-bar-with-responsive-menu"
-                            sx={{
-                                mr: 2,
-                                display: { xs: "none", md: "flex" },
-                                fontFamily: "monospace",
-                                fontWeight: 700,
-                                letterSpacing: ".3rem",
-                                color: "inherit",
-                                textDecoration: "none",
-                            }}
-                        >
-                            TI-UINAM
-                        </Typography>
-
-                        <Box
-                            sx={{
-                                flexGrow: 1,
-                                display: { xs: "flex", md: "none" },
-                            }}
-                        >
-                            <IconButton
-                                size="large"
-                                aria-label="account of current user"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleOpenNavMenu}
-                                color="inherit"
-                            >
-                                <MenuIcon />
-                            </IconButton>
-                            <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorElNav}
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "left",
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "left",
-                                }}
-                                open={Boolean(anchorElNav)}
-                                onClose={handleCloseNavMenu}
+            <ThemeProvider theme={appTheme}>
+                <AppBar position="static">
+                    <Container maxWidth="xl">
+                        <Toolbar disableGutters>
+                            <Typography
+                                variant="h6"
+                                noWrap
+                                component="a"
+                                href="#app-bar-with-responsive-menu"
                                 sx={{
-                                    display: { xs: "block", md: "none" },
-                                }}
-                            >
-                                <MenuItem
-                                    key="Home"
-                                    onClick={handleCloseNavMenu}
-                                >
-                                    <Link
-                                        key="Home"
-                                        onClick={handleCloseNavMenu}
-                                        style={{
-                                            marginRight: 10,
-                                            textDecoration: "none",
-                                        }}
-                                        href="/"
-                                        className="link-head-mobile"
-                                    >
-                                        Home
-                                    </Link>
-                                </MenuItem>
-                                <MenuItem
-                                    key="Daftar"
-                                    onClick={handleCloseNavMenu}
-                                >
-                                    <Link
-                                        key="Daftar"
-                                        onClick={handleCloseNavMenu}
-                                        style={{
-                                            marginRight: 10,
-                                            textDecoration: "none",
-                                        }}
-                                        href="/"
-                                        className="link-head-mobile"
-                                    >
-                                        Daftar
-                                    </Link>
-                                </MenuItem>
-                                <MenuItem
-                                    key="Tentang Kami"
-                                    onClick={handleCloseNavMenu}
-                                >
-                                    <Link
-                                        key="Tentang Kami"
-                                        onClick={handleCloseNavMenu}
-                                        style={{
-                                            marginRight: 10,
-                                            textDecoration: "none",
-                                        }}
-                                        href="/"
-                                        className="link-head-mobile"
-                                    >
-                                        Tentang Kami
-                                    </Link>
-                                </MenuItem>
-                            </Menu>
-                        </Box>
-                        <Typography
-                            variant="h5"
-                            noWrap
-                            component="a"
-                            href="#app-bar-with-responsive-menu"
-                            sx={{
-                                mr: 2,
-                                display: { xs: "flex", md: "none" },
-                                flexGrow: 1,
-                                fontFamily: "monospace",
-                                fontWeight: 700,
-                                letterSpacing: ".3rem",
-                                color: "inherit",
-                                textDecoration: "none",
-                            }}
-                        >
-                            TI-UINAM
-                        </Typography>
-                        <Box
-                            sx={{
-                                flexGrow: 1,
-                                display: { xs: "none", md: "flex" },
-                                justifyContent: "end",
-                            }}
-                        >
-                            <Link
-                                key="Home"
-                                onClick={handleCloseNavMenu}
-                                style={{
-                                    marginRight: 10,
+                                    mr: 2,
+                                    display: { xs: "none", md: "flex" },
+                                    fontFamily: "monospace",
+                                    fontWeight: 700,
+                                    letterSpacing: ".3rem",
+                                    color: "inherit",
                                     textDecoration: "none",
                                 }}
-                                href="/"
-                                className="link-head"
                             >
+                                TI-UINAM
+                            </Typography>
+
+                            <Box
+                                sx={{
+                                    flexGrow: 1,
+                                    display: { xs: "flex", md: "none" },
+                                }}
+                            >
+                                <IconButton
+                                    size="large"
+                                    aria-label="account of current user"
+                                    aria-controls="menu-appbar"
+                                    aria-haspopup="true"
+                                    onClick={handleOpenNavMenu}
+                                    color="inherit"
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                                <Menu
+                                    id="menu-appbar"
+                                    anchorEl={anchorElNav}
+                                    anchorOrigin={{
+                                        vertical: "bottom",
+                                        horizontal: "left",
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: "top",
+                                        horizontal: "left",
+                                    }}
+                                    open={Boolean(anchorElNav)}
+                                    onClose={handleCloseNavMenu}
+                                    sx={{
+                                        display: { xs: "block", md: "none" },
+                                    }}
+                                >
+                                    <MenuItem
+                                        key="Home"
+                                        onClick={handleCloseNavMenu}
+                                    >
+                                        <Link
+                                            key="Home"
+                                            onClick={handleCloseNavMenu}
+                                            style={{
+                                                marginRight: 10,
+                                                textDecoration: "none",
+                                            }}
+                                            href="/"
+                                            className="link-head-mobile"
+                                        >
+                                            Home
+                                        </Link>
+                                    </MenuItem>
+                                    <MenuItem
+                                        key="Daftar"
+                                        onClick={handleCloseNavMenu}
+                                    >
+                                        <Link
+                                            key="Daftar"
+                                            onClick={handleCloseNavMenu}
+                                            style={{
+                                                marginRight: 10,
+                                                textDecoration: "none",
+                                            }}
+                                            href="/"
+                                            className="link-head-mobile"
+                                        >
+                                            Daftar
+                                        </Link>
+                                    </MenuItem>
+                                    <MenuItem
+                                        key="Tentang Kami"
+                                        onClick={handleCloseNavMenu}
+                                    >
+                                        <Link
+                                            key="Tentang Kami"
+                                            onClick={handleCloseNavMenu}
+                                            style={{
+                                                marginRight: 10,
+                                                textDecoration: "none",
+                                            }}
+                                            href="/"
+                                            className="link-head-mobile"
+                                        >
+                                            Tentang Kami
+                                        </Link>
+                                    </MenuItem>
+                                </Menu>
+                            </Box>
+                            <Typography
+                                variant="h5"
+                                noWrap
+                                component="a"
+                                href="#app-bar-with-responsive-menu"
+                                sx={{
+                                    mr: 2,
+                                    display: { xs: "flex", md: "none" },
+                                    flexGrow: 1,
+                                    fontFamily: "monospace",
+                                    fontWeight: 700,
+                                    letterSpacing: ".3rem",
+                                    color: "inherit",
+                                    textDecoration: "none",
+                                }}
+                            >
+                                TI-UINAM
+                            </Typography>
+                            <Box
+                                sx={{
+                                    flexGrow: 1,
+                                    display: { xs: "none", md: "flex" },
+                                    justifyContent: "end",
+                                }}
+                            >
+                                <Link
+                                    key="Home"
+                                    onClick={handleCloseNavMenu}
+                                    style={{
+                                        marginRight: 10,
+                                        textDecoration: "none",
+                                    }}
+                                    href="/"
+                                    className="link-head"
+                                >
+                                    Home
+                                </Link>
+                                <Link
+                                    key="daftar"
+                                    onClick={handleCloseNavMenu}
+                                    style={{
+                                        textDecoration: "none",
+                                        marginRight: 10,
+                                    }}
+                                    href="/proposal"
+                                    className="link-head"
+                                >
+                                    Daftar
+                                </Link>
+                                <Link
+                                    key="tentang-kami"
+                                    onClick={handleCloseNavMenu}
+                                    style={{
+                                        textDecoration: "none",
+                                        marginRight: 10,
+                                    }}
+                                    href="#tentang"
+                                    className="link-head"
+                                >
+                                    Tentang Kami
+                                </Link>
+                            </Box>
+                        </Toolbar>
+                    </Container>
+                </AppBar>
+                <Box
+                    justifyContent={"space-between"}
+                    display={"flex"}
+                    sx={{ marginTop: 3, width: "97%" }}
+                >
+                    <Box sx={{ marginLeft: { xs: 3, md: 5 } }}>
+                        <Breadcrumbs aria-label="breadcrumb">
+                            <Link underline="hover" color="inherit" href="/">
                                 Home
                             </Link>
                             <Link
-                                key="daftar"
-                                onClick={handleCloseNavMenu}
-                                style={{
-                                    textDecoration: "none",
-                                    marginRight: 10,
-                                }}
-                                href="/proposal"
-                                className="link-head"
+                                underline="hover"
+                                color="inherit"
+                                href="/kompren"
                             >
-                                Daftar
+                                <Typography color="text.primary">
+                                    Ujian Komprehensif
+                                </Typography>
                             </Link>
-                            <Link
-                                key="tentang-kami"
-                                onClick={handleCloseNavMenu}
-                                style={{
-                                    textDecoration: "none",
-                                    marginRight: 10,
-                                }}
-                                href="#tentang"
-                                className="link-head"
-                            >
-                                Tentang Kami
-                            </Link>
-                        </Box>
-                    </Toolbar>
-                </Container>
-            </AppBar>
-            <Box
-                justifyContent={"space-between"}
-                display={"flex"}
-                sx={{ marginTop: 3, width: "97%" }}
-            >
-                <Box sx={{ marginLeft: { xs: 3, md: 5 } }}>
-                    <Breadcrumbs aria-label="breadcrumb">
-                        <Link underline="hover" color="inherit" href="/">
-                            Home
-                        </Link>
-                        <Link underline="hover" color="inherit" href="/kompren">
-                            <Typography color="text.primary">
-                                Ujian Komprehensif
-                            </Typography>
-                        </Link>
-                    </Breadcrumbs>
-                    <Typography variant="h5" component="h1">
-                        Ujian Komprehensif
-                    </Typography>
+                        </Breadcrumbs>
+                        <Typography variant="h5" component="h1">
+                            Ujian Komprehensif
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Button
+                            onClick={handleSubmitForm}
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            // startIcon={}
+                            sx={{
+                                background: "#1976d2",
+                                textTransform: "none",
+                                display: {
+                                    // xs: "none",
+                                    sm: "inherit",
+                                },
+                            }}
+                        >
+                            <FaPlus /> Simpan
+                        </Button>
+                    </Box>
                 </Box>
-                <Box>
-                    <Button
-                        onClick={handleSubmitForm}
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        // startIcon={}
-                        sx={{
-                            background: "#1976d2",
-                            textTransform: "none",
-                            display: {
-                                // xs: "none",
-                                sm: "inherit",
-                            },
-                        }}
-                    >
-                        <FaPlus /> Simpan
-                    </Button>
-                </Box>
-            </Box>
-            <Box
-                display={"flex"}
-                alignItems={"flex-start"}
-                gap={3}
-                sx={{
-                    flexWrap: {
-                        xs: "wrap",
-                        md: "nowrap",
-                    },
-                }}
-            >
                 <Box
-                    flex={{
-                        xs: "100%",
-                        md: 8,
-                    }}
+                    display={"flex"}
+                    alignItems={"flex-start"}
+                    gap={3}
                     sx={{
-                        background: "white",
-                        border: ".5px solid",
-                        borderColor: "slate-300",
-                        borderRadius: "4px",
+                        flexWrap: {
+                            xs: "wrap",
+                            md: "nowrap",
+                        },
                     }}
                 >
-                    <Typography
-                        variant="body2"
-                        color="initial"
-                        sx={{ p: "15px", fontWeight: "600" }}
-                        borderBottom={"1px solid"}
-                        borderColor={"slate-300"}
+                    <Box
+                        flex={{
+                            xs: "100%",
+                            md: 8,
+                        }}
+                        sx={{
+                            background: "white",
+                            border: ".5px solid",
+                            borderColor: "slate-300",
+                            borderRadius: "4px",
+                        }}
                     >
-                        Data Mahasiswa
-                    </Typography>
-                    <ThemeProvider theme={themeTextField}>
+                        <Typography
+                            variant="body2"
+                            color="initial"
+                            sx={{ p: "15px", fontWeight: "600" }}
+                            borderBottom={"1px solid"}
+                            borderColor={"slate-300"}
+                        >
+                            Data Mahasiswa
+                        </Typography>
                         <Grid container spacing={2} padding={"15px"}>
                             <Grid item xs={12} sm={6}>
                                 <AppInputLabel label="Nama" required={true} />
@@ -515,9 +517,7 @@ export default function Kompren({ file_requirements }) {
                                 />
                             </Grid>
                         </Grid>
-                    </ThemeProvider>
-                </Box>
-                <ThemeProvider theme={themeColor}>
+                    </Box>
                     <Box
                         flex={{
                             xs: "100%",
@@ -699,26 +699,26 @@ export default function Kompren({ file_requirements }) {
                             </Box>
                         </Box>
                     </Box>
-                </ThemeProvider>
-                <Box
-                    flex={"100%"}
-                    display={{
-                        sx: "inherit",
-                        md: "none",
-                    }}
-                >
-                    <Button
-                        variant="contained"
-                        startIcon={<FaPlus />}
-                        fullWidth
-                        color="primary"
-                        onClick={handleSubmitForm}
+                    <Box
+                        flex={"100%"}
+                        display={{
+                            sx: "inherit",
+                            md: "none",
+                        }}
                     >
-                        Simpan
-                    </Button>
+                        <Button
+                            variant="contained"
+                            startIcon={<FaPlus />}
+                            fullWidth
+                            color="primary"
+                            onClick={handleSubmitForm}
+                        >
+                            Simpan
+                        </Button>
+                    </Box>
                 </Box>
-            </Box>
-            <FooterComponent sx={{ marginTop: "100px" }} />
+                <FooterComponent sx={{ marginTop: "100px" }} />
+            </ThemeProvider>
         </>
     );
 }

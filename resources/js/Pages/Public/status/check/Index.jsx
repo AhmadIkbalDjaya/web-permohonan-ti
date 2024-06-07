@@ -2,13 +2,13 @@ import { Head, router, usePage } from "@inertiajs/react";
 import {
     Grid,
     TextField,
-    ThemeProvider,
     Button,
     Typography,
+    ThemeProvider,
 } from "@mui/material";
 import React, { useState } from "react";
-import { themeColor } from "../../../../theme/ColorTheme";
-import AppInputLabel from "../../component/AppInputLabel";
+import AppInputLabel from "../../../admin/components/elements/input/AppInputLabel";
+import appTheme from "../../../../theme/AppTheme";
 
 export default function Index() {
     const { errors } = usePage().props;
@@ -27,11 +27,10 @@ export default function Index() {
         router.post(route("status.check"), formValues);
     };
     const { message } = usePage().props.flash;
-    console.log(message);
     return (
         <>
             <Head title="Cek Status Permohonan" />
-            <ThemeProvider theme={themeColor}>
+            <ThemeProvider theme={appTheme}>
                 <Grid container spacing={2} padding={"15px"}>
                     <Grid item xs={12}>
                         <AppInputLabel

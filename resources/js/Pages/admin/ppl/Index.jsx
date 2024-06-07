@@ -322,15 +322,13 @@ export default function Ppl({ ppls, meta }) {
                             Data
                         </Typography>
                     </Box>
-                    <ThemeProvider theme={themePagination}>
-                        <Pagination
-                            count={meta.total_page}
-                            page={page.current}
-                            onChange={handleChangePage}
-                            size="small"
-                            shape="rounded"
-                        ></Pagination>
-                    </ThemeProvider>
+                    <Pagination
+                        count={meta.total_page}
+                        page={page.current}
+                        onChange={handleChangePage}
+                        size="small"
+                        shape="rounded"
+                    ></Pagination>
                 </Box>
             </BaseLayout>
             ;

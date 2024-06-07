@@ -45,6 +45,9 @@ class StatusCheckController extends Controller
                 "status" => fn($query) => $query->select("id", "name"),
                 "status_description" => fn($query) => $query->select("id", "description"),
             ])->first();
+        if (!$result) {
+            return throw ValidationException::withMessages(["code" => "Data tidak ditemukan"]);
+        }
         $status = [
             "status_id" => $result->status_id,
             "name" => $result->status->name,
