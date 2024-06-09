@@ -11,11 +11,9 @@ import {
     MenuItem,
     Select,
     TextField,
-    ThemeProvider,
     Typography,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
-import { themeTextField } from "../../../theme/TextFieldTheme";
 import AppInputLabel from "../components/elements/input/AppInputLabel";
 import { semesterListItems } from "../components/elements/input/SemesterListItems";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
@@ -44,13 +42,13 @@ export default function CreateComprehensive({
         semester: "",
         phone: "",
         essay_title: "",
-        testers: ["", "", ""],
+        tester_ids: ["", "", ""],
     });
 
     function handleChangeForm(e, index = null) {
         const name = e.target.name;
         const value = e.target.value;
-        if (["mentors", "testers"].includes(name) && index != null) {
+        if (["tester_ids"].includes(name) && index != null) {
             setFormValues((values) => {
                 const updateArray = [...values[name]];
                 updateArray[index] = value;
@@ -564,57 +562,141 @@ export default function CreateComprehensive({
                                     label="Penguji Jarkom"
                                     required={true}
                                 />
-                                <TextField
-                                    id="testers1"
-                                    name="testers"
-                                    type="string"
-                                    placeholder="Jarkom"
-                                    fullWidth
-                                    value={formValues.testers[0]}
+                                <Select
+                                    id="tester_ids0"
+                                    name="tester_ids"
+                                    value={formValues.tester_ids[0]}
                                     onChange={(e) => {
                                         handleChangeForm(e, 0);
                                     }}
-                                    error={errors["testers.0"] ? true : false}
-                                    helperText={errors["testers.0"] ?? ""}
-                                />
+                                    displayEmpty
+                                    error={
+                                        errors["tester_ids.0"] ? true : false
+                                    }
+                                    fullWidth
+                                    sx={{ textTransform: "capitalize" }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Jarkom
+                                        </Typography>
+                                    </MenuItem>
+                                    {lecturers.map((lecturer, index) => (
+                                        <MenuItem
+                                            key={index}
+                                            value={lecturer.id}
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            {lecturer.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {errors["tester_ids.0"] && (
+                                    <InputErrorMessage>
+                                        {errors["tester_ids.0"]}
+                                    </InputErrorMessage>
+                                )}
                             </Grid>
                             <Grid item xs={12} md={4}>
                                 <AppInputLabel
                                     label="Penguji RPL"
                                     required={true}
                                 />
-                                <TextField
-                                    id="testers2"
-                                    name="testers"
-                                    type="string"
-                                    placeholder="RPL"
-                                    fullWidth
-                                    value={formValues.testers[1]}
+                                <Select
+                                    id="tester_ids1"
+                                    name="tester_ids"
+                                    value={formValues.tester_ids[1]}
                                     onChange={(e) => {
                                         handleChangeForm(e, 1);
                                     }}
-                                    error={errors["testers.1"] ? true : false}
-                                    helperText={errors["testers.1"] ?? ""}
-                                />
+                                    displayEmpty
+                                    error={
+                                        errors["tester_ids.0"] ? true : false
+                                    }
+                                    fullWidth
+                                    sx={{ textTransform: "capitalize" }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            RPL
+                                        </Typography>
+                                    </MenuItem>
+                                    {lecturers.map((lecturer, index) => (
+                                        <MenuItem
+                                            key={index}
+                                            value={lecturer.id}
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            {lecturer.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {errors["tester_ids.1"] && (
+                                    <InputErrorMessage>
+                                        {errors["tester_ids.1"]}
+                                    </InputErrorMessage>
+                                )}
                             </Grid>
                             <Grid item xs={12} md={4}>
                                 <AppInputLabel
                                     label="Penguji Agama"
                                     required={true}
                                 />
-                                <TextField
-                                    id="testers3"
-                                    name="testers"
-                                    type="string"
-                                    placeholder="Agama"
-                                    fullWidth
-                                    value={formValues.testers[2]}
+                                <Select
+                                    id="tester_ids0"
+                                    name="tester_ids"
+                                    value={formValues.tester_ids[2]}
                                     onChange={(e) => {
                                         handleChangeForm(e, 2);
                                     }}
-                                    error={errors["testers.2"] ? true : false}
-                                    helperText={errors["testers.2"] ?? ""}
-                                />
+                                    displayEmpty
+                                    error={
+                                        errors["tester_ids.2"] ? true : false
+                                    }
+                                    fullWidth
+                                    sx={{ textTransform: "capitalize" }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Agama
+                                        </Typography>
+                                    </MenuItem>
+                                    {lecturers.map((lecturer, index) => (
+                                        <MenuItem
+                                            key={index}
+                                            value={lecturer.id}
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            {lecturer.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {errors["tester_ids.2"] && (
+                                    <InputErrorMessage>
+                                        {errors["tester_ids.2"]}
+                                    </InputErrorMessage>
+                                )}
                             </Grid>
                         </Grid>
                     </Box>

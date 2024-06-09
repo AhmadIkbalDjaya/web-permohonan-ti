@@ -12,12 +12,10 @@ import {
     MenuItem,
     Select,
     TextField,
-    ThemeProvider,
     Typography,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
 import AppInputLabel from "../components/elements/input/AppInputLabel";
-import { themeTextField } from "../../../theme/TextFieldTheme";
 import { semesterListItems } from "../components/elements/input/SemesterListItems";
 import ReactSignatureCanvas from "react-signature-canvas";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
@@ -32,13 +30,15 @@ export default function EditPpl({
 }) {
     const { errors } = usePage().props;
     const [formValues, setFormValues] = useState({
-        status_id: ppl.status_id || "",
-        status_description_id: ppl.status_description_id || "",
+        status_id: ppl.status ? ppl.status.id : "",
+        status_description_id: ppl.status_description
+            ? ppl.status_description.id
+            : "",
         letter_number_mentor: ppl.letter_number_mentor || "",
         letter_number_introduction: ppl.letter_number_introduction || "",
         letter_date: ppl.letter_date || "",
         addressed_to: ppl.addressed_to || "",
-        mentor_id: ppl.mentor_id || "",
+        mentor_id: ppl.mentor ? ppl.mentor.id : "",
 
         start_date: ppl.start_date,
         end_date: ppl.end_date,

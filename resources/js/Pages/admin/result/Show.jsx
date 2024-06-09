@@ -186,9 +186,14 @@ export default function ShowResult({ result, file_requirements }) {
                                 name={"Status Permohonan"}
                                 value={
                                     <>
-                                        <StatusBox status={result.status} />
+                                        <StatusBox
+                                            status={result.status.name}
+                                        />
                                         <br />
-                                        {result.status_description}
+                                        {result.status_description
+                                            ? result.status_description
+                                                  .description
+                                            : ""}
                                     </>
                                 }
                             />
@@ -256,31 +261,39 @@ export default function ShowResult({ result, file_requirements }) {
                             </Grid>
                             <ShowRowData
                                 name={"Ketua"}
-                                value={result.chairman}
+                                value={result.chairman && result.chairman.name}
                             />
                             <ShowRowData
                                 name={"Sekertaris"}
-                                value={result.secretary}
+                                value={
+                                    result.secretary && result.secretary.name
+                                }
                             />
                             <Grid item xs={12} container spacing={1}>
                                 {result.mentors.map((mentor, index) => (
                                     <ShowRowData
                                         key={`mentor${index}`}
                                         name={`Pembimbing ${index + 1}`}
-                                        value={mentor.name}
+                                        value={
+                                            mentor.lecturer &&
+                                            mentor.lecturer.name
+                                        }
                                     />
                                 ))}
                                 {result.testers.map((tester, index) => (
                                     <ShowRowData
                                         key={`tester${index}`}
                                         name={`Penguji ${index + 1}`}
-                                        value={tester.name}
+                                        value={
+                                            tester.lecturer &&
+                                            tester.lecturer.name
+                                        }
                                     />
                                 ))}
                             </Grid>
                             <ShowRowData
                                 name={"Pelaksana"}
-                                value={result.executor}
+                                value={result.executor && result.executor.name}
                             />
                             <Grid item xs={12} marginTop={"15px"}>
                                 <Typography
@@ -300,7 +313,8 @@ export default function ShowResult({ result, file_requirements }) {
                             <ShowRowData
                                 name={"Waktu"}
                                 value={
-                                    result.schedule.start_time
+                                    result.schedule.start_time &&
+                                    result.schedule.end_time
                                         ? `${convertToHHMM(
                                               result.schedule.start_time
                                           )} - ${convertToHHMM(
@@ -343,68 +357,78 @@ export default function ShowResult({ result, file_requirements }) {
                             </Typography>
                             <Grid container spacing={2} padding={"15px"}>
                                 {file_requirements.map(
-                                    (file_requirement, index) => (
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            container
-                                            key={index}
-                                        >
-                                            <Grid item xs={12}>
-                                                <Typography
-                                                    variant="body2"
-                                                    color="initial"
-                                                    fontWeight={"600"}
-                                                    display={"flex"}
-                                                    sx={{
-                                                        textTransform:
-                                                            "capitalize",
-                                                    }}
-                                                >
-                                                    {file_requirement.name.replaceAll(
-                                                        "_",
-                                                        " "
-                                                    )}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                {result.files.some(
-                                                    (file) =>
-                                                        file.name ==
-                                                        file_requirement.name
-                                                ) ? (
-                                                    <Button
-                                                        variant="contained"
-                                                        color="gray-100"
-                                                        startIcon={
-                                                            <FaFilePdf />
-                                                        }
+                                    (file_requirement, index) => {
+                                        const anyFileMatches =
+                                            result.files.some(
+                                                (file) =>
+                                                    file.name ===
+                                                    file_requirement.name
+                                            );
+                                        return (
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                container
+                                                key={index}
+                                            >
+                                                <Grid item xs={12}>
+                                                    <Typography
+                                                        variant="body2"
+                                                        color="initial"
+                                                        fontWeight={"600"}
+                                                        display={"flex"}
                                                         sx={{
-                                                            height: "33px",
                                                             textTransform:
                                                                 "capitalize",
                                                         }}
-                                                        fullWidth
-                                                        onClick={() => {
-                                                            handleClickShowPDF(
-                                                                file.name.replaceAll(
-                                                                    "_",
-                                                                    " "
-                                                                ),
-                                                                file.file
-                                                            );
-                                                        }}
                                                     >
-                                                        Lihat
-                                                    </Button>
-                                                ) : (
-                                                    <Typography variant="body2">
-                                                        Tidak Ada Berkas
+                                                        {file_requirement.name.replaceAll(
+                                                            "_",
+                                                            " "
+                                                        )}
                                                     </Typography>
-                                                )}
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    {result.files.map(
+                                                        (file, index) =>
+                                                            file.name ==
+                                                                file_requirement.name && (
+                                                                <Button
+                                                                    key={index}
+                                                                    variant="contained"
+                                                                    color="gray-100"
+                                                                    startIcon={
+                                                                        <FaFilePdf />
+                                                                    }
+                                                                    sx={{
+                                                                        height: "33px",
+                                                                        textTransform:
+                                                                            "capitalize",
+                                                                    }}
+                                                                    fullWidth
+                                                                    onClick={() => {
+                                                                        handleClickShowPDF(
+                                                                            file.name.replaceAll(
+                                                                                "_",
+                                                                                " "
+                                                                            ),
+                                                                            file.file
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    Lihat
+                                                                </Button>
+                                                            )
+                                                    )}
+                                                    {!anyFileMatches && (
+                                                        <Typography variant="body2">
+                                                            Tidak Ada Berkas
+                                                        </Typography>
+                                                    )}
+                                                </Grid>
                                             </Grid>
-                                        </Grid>
-                                    )
+                                        );
+                                    }
                                 )}
                             </Grid>
                         </Box>

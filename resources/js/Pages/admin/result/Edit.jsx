@@ -28,9 +28,6 @@ import ShowPDFModal from "../components/ShowPDFModal";
 
 export default function EditResult({
     result,
-    mentors,
-    testers,
-    files,
 
     file_requirements,
     lecturers,
@@ -38,16 +35,16 @@ export default function EditResult({
     status_descriptions,
 }) {
     const { errors } = usePage().props;
-    testers = testers.map((tester) => tester || "");
     const [formValues, setFormValues] = useState({
-        status_id: result.status_id || "",
-        status_description_id: result.status_description_id || "",
-        status_description_id: result.status_description_id || "",
+        status_id: result.status ? result.status.id : "",
+        status_description_id: result.status_description
+            ? result.status_description.id
+            : "",
         letter_number: result.letter_number || "",
         letter_date: result.letter_date || "",
-        chairman_id: result.chairman_id || "",
-        secretary_id: result.secretary_id || "",
-        executor_id: result.executor_id || "",
+        chairman_id: result.chairman ? result.chairman.id : "",
+        secretary_id: result.secretary ? result.secretary.id : "",
+        executor_id: result.executor ? result.executor.id : "",
 
         name: result.student.name,
         nim: result.student.nim,
@@ -56,8 +53,8 @@ export default function EditResult({
         semester: result.student.semester,
         phone: result.student.phone,
         essay_title: result.essay_title,
-        mentors: mentors,
-        testers: testers,
+        mentor_ids: result.mentors.map((mentor) => mentor.lecturer_id || ""),
+        tester_ids: result.testers.map((tester) => tester.lecturer_id || ""),
         date: result.schedule.date || "",
         time_zone: result.schedule.time_zone,
         start_time: result.schedule.start_time
@@ -671,70 +668,182 @@ export default function EditResult({
                                     label="Pembimbing 1"
                                     required={true}
                                 />
-                                <TextField
-                                    id="mentors1"
-                                    name="mentors"
-                                    type="string"
-                                    placeholder="Nama Pembimbing 1"
-                                    fullWidth
-                                    value={formValues.mentors[0]}
+                                <Select
+                                    id="mentor_ids0"
+                                    name="mentor_ids"
+                                    value={formValues.mentor_ids[0]}
                                     onChange={(e) => {
                                         handleChangeForm(e, 0);
                                     }}
-                                    error={errors["mentors.0"] ? true : false}
-                                    helperText={errors["mentors.0"] ?? ""}
-                                />
+                                    displayEmpty
+                                    error={
+                                        errors["mentor_ids.0"] ? true : false
+                                    }
+                                    fullWidth
+                                    sx={{ textTransform: "capitalize" }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Nama Pembimbing 1
+                                        </Typography>
+                                    </MenuItem>
+                                    {lecturers.map((lecturer, index) => (
+                                        <MenuItem
+                                            key={index}
+                                            value={lecturer.id}
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            {lecturer.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {errors["mentor_ids.0"] && (
+                                    <InputErrorMessage>
+                                        {errors["mentor_ids.0"]}
+                                    </InputErrorMessage>
+                                )}
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <AppInputLabel
                                     label="Pembimbing 2"
                                     required={true}
                                 />
-                                <TextField
-                                    id="mentors2"
-                                    name="mentors"
-                                    type="string"
-                                    placeholder="Nama Pembimbing 2"
-                                    fullWidth
-                                    value={formValues.mentors[1]}
+                                <Select
+                                    id="mentor_ids1"
+                                    name="mentor_ids"
+                                    value={formValues.mentor_ids[1]}
                                     onChange={(e) => {
                                         handleChangeForm(e, 1);
                                     }}
-                                    error={errors["mentors.1"] ? true : false}
-                                    helperText={errors["mentors.1"] ?? ""}
-                                />
+                                    displayEmpty
+                                    error={
+                                        errors["mentor_ids.1"] ? true : false
+                                    }
+                                    fullWidth
+                                    sx={{ textTransform: "capitalize" }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Nama Pembimbing 1
+                                        </Typography>
+                                    </MenuItem>
+                                    {lecturers.map((lecturer, index) => (
+                                        <MenuItem
+                                            key={index}
+                                            value={lecturer.id}
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            {lecturer.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {errors["mentor_ids.1"] && (
+                                    <InputErrorMessage>
+                                        {errors["mentor_ids.1"]}
+                                    </InputErrorMessage>
+                                )}
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <AppInputLabel label="Penguji 1" />
-                                <TextField
-                                    id="testers1"
-                                    name="testers"
-                                    type="string"
-                                    placeholder="Nama Penguji 1"
-                                    fullWidth
-                                    value={formValues.testers[0]}
+                                <Select
+                                    id="tester_ids0"
+                                    name="tester_ids"
+                                    value={formValues.tester_ids[0]}
                                     onChange={(e) => {
                                         handleChangeForm(e, 0);
                                     }}
-                                    error={errors["testers.0"] ? true : false}
-                                    helperText={errors["testers.0"] ?? ""}
-                                />
+                                    displayEmpty
+                                    error={
+                                        errors["tester_ids.0"] ? true : false
+                                    }
+                                    fullWidth
+                                    sx={{ textTransform: "capitalize" }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Nama Pembimbing 1
+                                        </Typography>
+                                    </MenuItem>
+                                    {lecturers.map((lecturer, index) => (
+                                        <MenuItem
+                                            key={index}
+                                            value={lecturer.id}
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            {lecturer.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {errors["tester_ids.0"] && (
+                                    <InputErrorMessage>
+                                        {errors["tester_ids.0"]}
+                                    </InputErrorMessage>
+                                )}
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <AppInputLabel label="Penguji 2" />
-                                <TextField
-                                    id="testers2"
-                                    name="testers"
-                                    type="string"
-                                    placeholder="Nama Penguji 2"
-                                    fullWidth
-                                    value={formValues.testers[1]}
+                                <Select
+                                    id="tester_ids1"
+                                    name="tester_ids"
+                                    value={formValues.tester_ids[1]}
                                     onChange={(e) => {
                                         handleChangeForm(e, 1);
                                     }}
-                                    error={errors["testers.1"] ? true : false}
-                                    helperText={errors["testers.1"] ?? ""}
-                                />
+                                    displayEmpty
+                                    error={
+                                        errors["tester_ids.1"] ? true : false
+                                    }
+                                    fullWidth
+                                    sx={{ textTransform: "capitalize" }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        <Typography
+                                            variant="body2"
+                                            color="#ababab"
+                                            fontWeight={"600"}
+                                            display={"flex"}
+                                        >
+                                            Nama Pembimbing 1
+                                        </Typography>
+                                    </MenuItem>
+                                    {lecturers.map((lecturer, index) => (
+                                        <MenuItem
+                                            key={index}
+                                            value={lecturer.id}
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            {lecturer.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {errors["tester_ids.1"] && (
+                                    <InputErrorMessage>
+                                        {errors["tester_ids.1"]}
+                                    </InputErrorMessage>
+                                )}
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography
@@ -896,7 +1005,7 @@ export default function EditResult({
                                                             }
                                                         />
                                                     </Box>
-                                                    {files.map(
+                                                    {result.files.map(
                                                         (file, index) => {
                                                             return file.name ==
                                                                 file_requirement.name ? (

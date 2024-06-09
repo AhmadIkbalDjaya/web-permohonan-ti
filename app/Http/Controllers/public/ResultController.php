@@ -20,7 +20,7 @@ class ResultController extends Controller
     public function index()
     {
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
-        $file_requirements = FileRequirement::where("request_type", "proposals")->get();
+        $file_requirements = FileRequirement::where("request_type", "results")->get();
         return Inertia::render("public/result/Index", [
             "file_requirements" => $file_requirements,
             "lecturers" => $lecturers,
@@ -38,10 +38,10 @@ class ResultController extends Controller
             "phone" => "required|phone:ID",
             "essay_title" => "required",
             "applicant_sign" => "required|image",
-            "mentors" => "array|min:2",
-            "mentors.*" => "required|string",
-            "testers" => "array|min:2",
-            "testers.*" => "required|string",
+            "mentor_ids" => "array|min:2",
+            "mentor_ids.*" => "required|string|exists:lecturers,id",
+            "tester_ids" => "required|min:2",
+            "tester_ids.*" => "required|string|exists:lecturers,id",
         ];
         $file_requirements = FileRequirement::where("request_type", "results")->get();
         foreach ($file_requirements as $file_requirement) {
@@ -79,16 +79,17 @@ class ResultController extends Controller
                     "result_id" => $newResult->id,
                 ]);
             }
-            foreach ($validated["mentors"] as $index => $mentor) {
+            foreach ($validated["mentor_ids"] as $index => $mentor) {
                 Mentor::create([
-                    "name" => $mentor,
+                    "lecturer_id" => $mentor,
                     "order" => $index,
                     "result_id" => $newResult->id,
                 ]);
             }
-            for ($i = 0; $i < 2; $i++) {
-                Tester::create([ 
-                    "order" => $i,
+            foreach ($validated["tester_ids"] as $index => $tester) {
+                Tester::create([
+                    "lecturer_id" => $tester,
+                    "order" => $index,
                     "result_id" => $newResult->id,
                 ]);
             }

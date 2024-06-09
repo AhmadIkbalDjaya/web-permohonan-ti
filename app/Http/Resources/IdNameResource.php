@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Admin;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MentorResource extends JsonResource
+class IdNameResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,7 @@ class MentorResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "lecturer_id" => $this->lecturer_id ?? null,
-            "lecturer" => new LecturerResource($this->lecturer),
-            "order" => $this->order,
-            "description" => $this->description,
+            "name" => $this->name,
         ];
     }
 }

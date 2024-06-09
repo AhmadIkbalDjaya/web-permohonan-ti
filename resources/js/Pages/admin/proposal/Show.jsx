@@ -189,9 +189,14 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                 name={"Status Permohonan"}
                                 value={
                                     <>
-                                        <StatusBox status={proposal.status} />
+                                        <StatusBox
+                                            status={proposal.status.name}
+                                        />
                                         <br />
-                                        {proposal.status_description}
+                                        {proposal.status_description
+                                            ? proposal.status_description
+                                                  .description
+                                            : ""}
                                     </>
                                 }
                             />
@@ -251,31 +256,44 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             </Grid>
                             <ShowRowData
                                 name={"Ketua"}
-                                value={proposal.chairman}
+                                value={
+                                    proposal.chairman && proposal.chairman.name
+                                }
                             />
                             <ShowRowData
                                 name={"Sekertaris"}
-                                value={proposal.secretary}
+                                value={
+                                    proposal.secretary &&
+                                    proposal.secretary.name
+                                }
                             />
                             <Grid item xs={12} container spacing={1}>
                                 {proposal.mentors.map((mentor, index) => (
                                     <ShowRowData
                                         key={`mentor${index}`}
                                         name={`Pembimbing ${index + 1}`}
-                                        value={mentor.name}
+                                        value={
+                                            mentor.lecturer &&
+                                            mentor.lecturer.name
+                                        }
                                     />
                                 ))}
                                 {proposal.testers.map((tester, index) => (
                                     <ShowRowData
                                         key={`tester${index}`}
                                         name={`Penguji ${index + 1}`}
-                                        value={tester.name}
+                                        value={
+                                            tester.lecturer &&
+                                            tester.lecturer.name
+                                        }
                                     />
                                 ))}
                             </Grid>
                             <ShowRowData
                                 name={"Pelaksana"}
-                                value={proposal.executor}
+                                value={
+                                    proposal.executor && proposal.executor.name
+                                }
                             />
                             <Grid item xs={12} marginTop={"15px"}>
                                 <Typography
@@ -295,7 +313,8 @@ export default function ShowProposal({ proposal, file_requirements }) {
                             <ShowRowData
                                 name={"Waktu"}
                                 value={
-                                    proposal.schedule.start_time
+                                    proposal.schedule.start_time &&
+                                    proposal.schedule.end_time
                                         ? `${convertToHHMM(
                                               proposal.schedule.start_time
                                           )} - ${convertToHHMM(

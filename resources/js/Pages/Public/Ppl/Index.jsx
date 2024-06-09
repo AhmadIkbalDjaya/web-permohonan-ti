@@ -24,11 +24,9 @@ import { FaPlus } from "react-icons/fa";
 import FooterComponent from "../component/footerComponent";
 import ReactSignatureCanvas from "react-signature-canvas";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
-import { themeTextField } from "../../../theme/TextFieldTheme";
 import AppInputLabel from "../../admin/components/elements/input/AppInputLabel";
 import { semesterListItems } from "../../admin/components/elements/input/SemesterListItems";
 import InputErrorMessage from "../../admin/components/elements/input/InputErrorMessage";
-import { themeColor } from "../../../theme/ColorTheme";
 import appTheme from "../../../theme/AppTheme";
 
 export default function Ppl({ lecturers }) {
@@ -72,7 +70,6 @@ export default function Ppl({ lecturers }) {
         location: "",
         location_address: "",
         student_count: 1,
-        mentor_id: "",
 
         names: [""],
         nims: [""],
@@ -469,47 +466,7 @@ export default function Ppl({ lecturers }) {
                                         helperText={errors.end_date ?? ""}
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <AppInputLabel label="Pembimbing PPL" />
-                                    <Select
-                                        id="mentor_id"
-                                        name="mentor_id"
-                                        value={formValues.mentor_id}
-                                        onChange={handleChangeForm}
-                                        displayEmpty
-                                        error={errors.mentor_id ? true : false}
-                                        fullWidth
-                                        sx={{ textTransform: "capitalize" }}
-                                    >
-                                        <MenuItem value="" disabled>
-                                            <Typography
-                                                variant="body2"
-                                                color="#ababab"
-                                                fontWeight={"600"}
-                                                display={"flex"}
-                                            >
-                                                Pembimbing
-                                            </Typography>
-                                        </MenuItem>
-                                        {lecturers.map((lecturer, index) => (
-                                            <MenuItem
-                                                key={index}
-                                                value={lecturer.id}
-                                                sx={{
-                                                    textTransform: "capitalize",
-                                                }}
-                                            >
-                                                {lecturer.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    {errors.mentor_id && (
-                                        <InputErrorMessage>
-                                            {errors.mentor_id}
-                                        </InputErrorMessage>
-                                    )}
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs={12}>
                                     <AppInputLabel
                                         label="Jumlah Mahasiswa PPL"
                                         required={true}

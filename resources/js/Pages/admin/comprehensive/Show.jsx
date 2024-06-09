@@ -160,10 +160,13 @@ export default function ShowComprehensive({
                                 value={
                                     <>
                                         <StatusBox
-                                            status={comprehensive.status}
+                                            status={comprehensive.status.name}
                                         />
                                         <br />
-                                        {comprehensive.status_description}
+                                        {comprehensive.status_description
+                                            ? comprehensive.status_description
+                                                  .description
+                                            : ""}
                                     </>
                                 }
                             />
@@ -224,11 +227,17 @@ export default function ShowComprehensive({
                             </Grid>
                             <ShowRowData
                                 name={"Ketua"}
-                                value={comprehensive.chairman}
+                                value={
+                                    comprehensive.chairman &&
+                                    comprehensive.chairman.name
+                                }
                             />
                             <ShowRowData
                                 name={"Sekertaris"}
-                                value={comprehensive.secretary}
+                                value={
+                                    comprehensive.secretary &&
+                                    comprehensive.secretary.name
+                                }
                             />
                             <Grid item xs={12} container spacing={1}>
                                 {comprehensive.testers.map((tester, index) => (
@@ -237,7 +246,10 @@ export default function ShowComprehensive({
                                         name={`Penguji ${index + 1} (${
                                             tester.description
                                         })`}
-                                        value={tester.name}
+                                        value={
+                                            tester.lecturer &&
+                                            tester.lecturer.name
+                                        }
                                     />
                                 ))}
                             </Grid>
@@ -350,7 +362,7 @@ export default function ShowComprehensive({
                             }}
                         />
                         <Box sx={{ display: "none" }}>
-                            {/* <CetakProposal ref={componentRef} /> */}
+                            {/* <Cetakcomprehensive ref={componentRef} /> */}
                         </Box>
                     </Box>
                 </Box>

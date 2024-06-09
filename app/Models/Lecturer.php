@@ -62,4 +62,12 @@ class Lecturer extends Model
     {
         return $this->hasMany(PPL::class, "mentor_id");
     }
+    public function mentors(): HasMany
+    {
+        return $this->hasMany(Mentor::class);
+    }
+    public function testers(): HasMany
+    {
+        return $this->hasMany(Tester::class);
+    }
 }

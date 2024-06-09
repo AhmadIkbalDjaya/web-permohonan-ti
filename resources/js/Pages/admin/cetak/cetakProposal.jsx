@@ -261,37 +261,49 @@ const CetakProposal = forwardRef((props, ref) => {
                                 <tr>
                                     <td style={{ width: 150 }}>Ketua</td>
                                     <td>:</td>
-                                    <td>{proposal.chairman ?? "-"}</td>
+                                    <td>
+                                        {proposal.chairman
+                                            ? proposal.chairman.name
+                                            : "-"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Sekretaris</td>
                                     <td>:</td>
-                                    <td>{proposal.secretary ?? "-"}</td>
+                                    <td>
+                                        {proposal.secretary
+                                            ? proposal.secretary.name
+                                            : "-"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Pembimbing I</td>
                                     <td>:</td>
-                                    <td>{proposal.mentors[0].name ?? "-"}</td>
+                                    <td>{proposal.mentors[0].lecturer ? proposal.mentors[0].lecturer.name : "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Pembimbing II</td>
                                     <td>:</td>
-                                    <td>{proposal.mentors[0].name ?? "-"}</td>
+                                    <td>{proposal.mentors[0].lecturer ? proposal.mentors[0].lecturer.name : "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Penguji I</td>
                                     <td>:</td>
-                                    <td>{proposal.testers[0].name ?? "-"}</td>
+                                    <td>{proposal.testers[0].lecturer ? proposal.testers[0].lecturer.name : "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Penguji II</td>
                                     <td>:</td>
-                                    <td>{proposal.testers[0].name ?? "-"}</td>
+                                    <td>{proposal.testers[0].lecturer ? proposal.testers[0].lecturer.name : "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Pelaksana</td>
                                     <td>:</td>
-                                    <td>{proposal.executor ?? "-"}</td>
+                                    <td>
+                                        {proposal.executor
+                                            ? proposal.executor.name
+                                            : "-"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Hari dan Tanggal</td>

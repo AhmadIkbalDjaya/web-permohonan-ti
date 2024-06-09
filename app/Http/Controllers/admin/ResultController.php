@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\FileResource;
 use App\Http\Resources\Admin\ResultDetailResource;
 use App\Models\FileRequirement;
 use App\Models\Lecturer;
@@ -96,10 +95,10 @@ class ResultController extends Controller
             "phone" => "required|phone:ID",
             "essay_title" => "required",
             "applicant_sign" => "required|image",
-            "mentors" => "array|min:2",
-            "mentors.*" => "required|string",
-            "testers" => "nullable|array",
-            "testers.*" => "nullable|string",
+            "mentor_ids" => "array|min:2",
+            "mentor_ids.*" => "required|string|exists:lecturers,id",
+            "tester_ids" => "nullable|array",
+            "tester_ids.*" => "nullable|string|exists:lecturers,id",
             "date" => "nullable|date",
             "time_zone" => "required|in:wib,wita,wit",
             "start_time" => "nullable|date_format:H:i",
@@ -117,12 +116,11 @@ class ResultController extends Controller
             if ($request->file($file_requirement->name)) {
                 $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("result/file", "public");
             } else {
-                // $validated[$file_requirement->name] = null;
                 unset($validated[$file_requirement->name]);
             }
         }
         DB::transaction(function () use ($validated, $file_requirements) {
-            $student = Student::create([
+            $newStudent = Student::create([
                 "name" => $validated["name"],
                 "nim" => $validated["nim"],
                 "pob" => $validated["pob"],
@@ -130,18 +128,18 @@ class ResultController extends Controller
                 "semester" => $validated["semester"],
                 "phone" => $validated["phone"],
             ]);
-            $schedule = Schedule::create([
+            $newSchedule = Schedule::create([
                 "date" => $validated["date"],
                 "time_zone" => $validated["time_zone"],
                 "start_time" => $validated["start_time"],
                 "end_time" => $validated["end_time"],
                 "location" => $validated["location"],
             ]);
-            $result = Result::create([
-                "student_id" => $student->id,
+            $newResult = Result::create([
+                "student_id" => $newStudent->id,
                 "essay_title" => $validated["essay_title"],
                 "applicant_sign" => $validated["applicant_sign"],
-                "schedule_id" => $schedule->id,
+                "schedule_id" => $newSchedule->id,
 
                 "status_id" => $validated["status_id"],
                 "status_description_id" => $validated["status_description_id"],
@@ -155,21 +153,21 @@ class ResultController extends Controller
                 File::create([
                     "file" => $validated[$file_requirement->name],
                     "name" => $file_requirement->name,
-                    "result_id" => $result->id,
+                    "result_id" => $newResult->id,
                 ]);
             }
-            foreach ($validated["mentors"] as $index => $mentor) {
+            foreach ($validated["mentor_ids"] as $index => $mentor) {
                 Mentor::create([
-                    "name" => $mentor,
+                    "lecturer_id" => $mentor,
                     "order" => $index,
-                    "result_id" => $result->id,
+                    "result_id" => $newResult->id,
                 ]);
             }
-            foreach ($validated["testers"] as $index => $tester) {
+            foreach ($validated["tester_ids"] as $index => $tester) {
                 Tester::create([
-                    "name" => $tester,
+                    "lecturer_id" => $tester,
                     "order" => $index,
-                    "result_id" => $result->id,
+                    "result_id" => $newResult->id,
                 ]);
             }
         });
@@ -182,14 +180,9 @@ class ResultController extends Controller
         $status_descriptions = StatusDescription::select("id", "status_id", "description")->get();
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
 
-        $mentors = $result->mentors->sortBy('order')->pluck('name');
-        $testers = $result->testers->sortBy('order')->pluck('name');
         $file_requirements = FileRequirement::where("request_type", "results")->get();
         return Inertia::render("admin/result/Edit", [
-            "result" => $result->load(["student", "schedule"]),
-            "mentors" => $mentors,
-            "testers" => $testers,
-            "files" => FileResource::collection($result->files),
+            "result" => new ResultDetailResource($result),
 
             "lecturers" => $lecturers,
             "statuses" => $statuses,
@@ -217,10 +210,10 @@ class ResultController extends Controller
             "phone" => "required|phone:ID",
             "essay_title" => "required",
             "applicant_sign" => "nullable|image",
-            "mentors" => "array|min:2",
-            "mentors.*" => "required|string",
-            "testers" => "nullable|array",
-            "testers.*" => "nullable|string",
+            "mentor_ids" => "array|min:2",
+            "mentor_ids.*" => "required|string|exists:lecturers,id",
+            "tester_ids" => "nullable|array",
+            "tester_ids.*" => "nullable|string|exists:lecturers,id",
             "date" => "nullable|date",
             "time_zone" => "required|in:wib,wita,wit",
             "start_time" => "nullable|date_format:H:i",
@@ -284,12 +277,12 @@ class ResultController extends Controller
             ]);
             foreach ($result->mentors as $index => $mentor) {
                 $mentor->update([
-                    "name" => $validated["mentors"][$index],
+                    "lecturer_id" => $validated["mentor_ids"][$index],
                 ]);
             }
             foreach ($result->testers as $index => $mentor) {
                 $mentor->update([
-                    "name" => $validated["testers"][$index],
+                    "lecturer_id" => $validated["tester_ids"][$index],
                 ]);
             }
             // tambahkan logic simpan path file di db jika belum ada sebelumnya

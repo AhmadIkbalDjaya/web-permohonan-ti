@@ -5,7 +5,6 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\PPLDetailResource;
 use App\Models\Lecturer;
-use App\Models\Mentor;
 use App\Models\PPL;
 use App\Models\PplStudent;
 use App\Models\Status;
@@ -142,7 +141,8 @@ class PplController extends Controller
         $status_descriptions = StatusDescription::select("id", "status_id", "description")->get();
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
         return Inertia::render("admin/ppl/Edit", [
-            "ppl" => $ppl->load(["mentor", "students"]),
+            "ppl" => new PPLDetailResource($ppl),
+
             "lecturers" => $lecturers,
             "statuses" => $statuses,
             "status_descriptions" => $status_descriptions,

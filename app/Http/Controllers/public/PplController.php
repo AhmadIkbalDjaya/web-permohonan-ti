@@ -4,7 +4,6 @@ namespace App\Http\Controllers\public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lecturer;
-use App\Models\Mentor;
 use App\Models\PPL;
 use App\Models\PplStudent;
 use App\Models\Student;
@@ -30,7 +29,6 @@ class PplController extends Controller
             "location" => "required",
             "location_address" => "required",
             "applicant_sign" => "required|image",
-            "mentor_id" => "nullable|exists:lecturers,id",
             "student_count" => "required|numeric|min:1",
 
             "names" => "required|array|size:" . $request->student_count,
@@ -54,7 +52,6 @@ class PplController extends Controller
                 "location" => $validated["location"],
                 "location_address" => $validated["location_address"],
                 "applicant_sign" => $validated["applicant_sign"],
-                "mentor_id" => $validated["mentor_id"],
             ]);
             for ($i = 0; $i < $validated["student_count"]; $i++) {
                 $newStudent = Student::create([

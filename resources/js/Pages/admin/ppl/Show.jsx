@@ -155,9 +155,11 @@ export default function ShowPPL({ ppl }) {
                                 name={"Status Permohonan"}
                                 value={
                                     <>
-                                        <StatusBox status={ppl.status} />
+                                        <StatusBox status={ppl.status.name} />
                                         <br />
-                                        {ppl.status_description}
+                                        {ppl.status_description
+                                            ? ppl.status_description.description
+                                            : ""}
                                     </>
                                 }
                             />
@@ -197,7 +199,7 @@ export default function ShowPPL({ ppl }) {
                             />
                             <ShowRowData
                                 name={"Pembimbing"}
-                                value={ppl.mentor}
+                                value={ppl.mentor && ppl.mentor.name}
                             />
                             {ppl.students.map((student, index) => (
                                 <Grid

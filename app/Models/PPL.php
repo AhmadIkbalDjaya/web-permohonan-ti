@@ -50,11 +50,6 @@ class PPL extends Model
     {
         return $this->belongsToMany(Student::class, "ppl_students", "student_id", "ppl_id")->limit(1);
     }
-
-    // public function mentor(): BelongsTo
-    // {
-    //     return $this->BelongsTo(Mentor::class);
-    // }
     public function head_of_department(): BelongsTo
     {
         return $this->belongsTo(Lecturer::class, "hod_id");

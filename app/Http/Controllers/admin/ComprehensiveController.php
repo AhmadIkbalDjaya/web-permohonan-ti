@@ -90,8 +90,8 @@ class ComprehensiveController extends Controller
             "phone" => "required|phone:ID",
             "essay_title" => "required",
             "applicant_sign" => "required|image",
-            "testers" => "nullable|array",
-            "testers.*" => "nullable|string",
+            "tester_ids" => "nullable|array",
+            "tester_ids.*" => "nullable|string|exists:lecturers,id",
         ]);
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("comprehensive/applicant_signs", "public");
         DB::transaction(function () use ($validated) {
@@ -117,7 +117,7 @@ class ComprehensiveController extends Controller
             $testerSectors = ["JARKOM", "RPL", "Agama"];
             foreach ($testerSectors as $index => $sector) {
                 Tester::create([
-                    "name" => $validated["testers"][$index],
+                    "lecturer_id" => $validated["tester_ids"][$index],
                     "description" => $sector,
                     "order" => $index,
                     "comprehensive_id" => $newComprehensive->id,
@@ -133,10 +133,9 @@ class ComprehensiveController extends Controller
         $status_descriptions = StatusDescription::select("id", "status_id", "description")->get();
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
 
-        $testers = $comprehensive->testers->sortBy("order")->pluck("name");
         return Inertia::render("admin/comprehensive/Edit", [
-            "comprehensive" => $comprehensive->load(["student"]),
-            "testers" => $testers,
+            "comprehensive" => new ComprehensiveDetailResource($comprehensive),
+
             "lecturers" => $lecturers,
             "statuses" => $statuses,
             "status_descriptions" => $status_descriptions,
@@ -162,8 +161,8 @@ class ComprehensiveController extends Controller
             "phone" => "required|phone:ID",
             "essay_title" => "required",
             "applicant_sign" => "nullable|image",
-            "testers" => "nullable|array",
-            "testers.*" => "nullable|string",
+            "tester_ids" => "nullable|array",
+            "tester_ids.*" => "nullable|string|exists:lecturers,id",
         ]);
         $updateComprehensive = [
             "essay_title" => $validated["essay_title"],
@@ -195,7 +194,7 @@ class ComprehensiveController extends Controller
             foreach ($comprehensive->testers as $index => $tester) {
                 if ($tester->description == $testerSectors[$index]) {
                     $tester->update([
-                        "name" => $validated["testers"][$index],
+                        "lecturer_id" => $validated["tester_ids"][$index],
                     ]);
                 }
             }

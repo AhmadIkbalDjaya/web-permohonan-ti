@@ -64,15 +64,14 @@ class ComprehensiveController extends Controller
                 "essay_title" => $validated["essay_title"],
                 "applicant_sign" => $validated["applicant_sign"],
             ]);
-            // $testerSectors = ["JARKOM", "RPL", "Agama"];
-            // foreach ($testerSectors as $index => $sector) {
-            //     Tester::create([
-            //         "name" => $validated["testers"][$index] || null,
-            //         "description" => $sector,
-            //         "order" => $index,
-            //         "comprehensive_id" => $newComprehensive->id,
-            //     ]);
-            // }
+            $testerSectors = ["JARKOM", "RPL", "Agama"];
+            foreach ($testerSectors as $index => $sector) {
+                Tester::create([
+                    "description" => $sector,
+                    "order" => $index,
+                    "comprehensive_id" => $newComprehensive->id,
+                ]);
+            }
             foreach ($file_requirements as $index => $file_requirement) {
                 File::create([
                     "file" => $validated[$file_requirement->name],

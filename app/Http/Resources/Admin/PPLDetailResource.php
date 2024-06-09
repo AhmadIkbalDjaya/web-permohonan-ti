@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Admin;
 
+use App\Http\Resources\IdNameResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,14 +19,14 @@ class PPLDetailResource extends JsonResource
         return [
             "id" => $this->id,
             "code" => $this->code,
-            "status" => $this->status ? $this->status->name : null,
-            "status_description" => $this->status_description ? $this->status_description->description : null,
+            "status" => new IdNameResource($this->status),
+            "status_description" => new StatusDescriptionResource($this->status_description),
             "letter_number_mentor" => $this->letter_number_mentor ?? null,
             "letter_number_introduction" => $this->letter_number_introduction ?? null,
             "letter_date" => $this->letter_date ?? null,
             "addressed_to" => $this->addressed_to ?? null,
             "hod" => new LecturerResource($this->head_of_department),
-            "mentor" => $this->mentor ? $this->mentor->name : null,
+            "mentor" => new LecturerResource($this->mentor),
 
             "start_date" => $this->start_date,
             "end_date" => $this->end_date,

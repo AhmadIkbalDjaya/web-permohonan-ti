@@ -38,8 +38,8 @@ class ProposalController extends Controller
             "phone" => "required|phone:ID",
             "essay_title" => "required",
             "applicant_sign" => "required|image",
-            "mentors" => "array|min:2",
-            "mentors.*" => "required|string",
+            "mentor_ids" => "array|min:2",
+            "mentor_ids.*" => "required|string|exists:lecturers,id",
         ];
         $file_requirements = FileRequirement::where("request_type", "proposals")->get();
         foreach ($file_requirements as $file_requirement) {
@@ -77,9 +77,9 @@ class ProposalController extends Controller
                     "proposal_id" => $newProposal->id,
                 ]);
             }
-            foreach ($validated["mentors"] as $index => $mentor) {
+            foreach ($validated["mentor_ids"] as $index => $mentor) {
                 Mentor::create([
-                    "name" => $mentor,
+                    "lecturer_id" => $mentor,
                     "order" => $index,
                     "proposal_id" => $newProposal->id,
                 ]);

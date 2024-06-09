@@ -16,7 +16,8 @@ class TesterResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->name,
+            "lecturer_id" => $this->lecturer_id ?? null,
+            "lecturer" => new LecturerResource($this->lecturer),
             "order" => $this->order,
             "description" => $this->description,
         ];
