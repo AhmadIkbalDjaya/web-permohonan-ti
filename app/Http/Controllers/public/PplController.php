@@ -15,10 +15,7 @@ class PplController extends Controller
 {
     public function index()
     {
-        $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
-        return Inertia::render("public/ppl/Index", [
-            "lecturers" => $lecturers,
-        ]);
+        return Inertia::render("public/ppl/Index");
     }
 
     public function store(Request $request)

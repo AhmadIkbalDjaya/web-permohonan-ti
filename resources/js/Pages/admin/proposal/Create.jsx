@@ -724,7 +724,7 @@ export default function CreateProposal({
                                             fontWeight={"600"}
                                             display={"flex"}
                                         >
-                                            Nama Pembimbing 1
+                                            Nama Penguji 1
                                         </Typography>
                                     </MenuItem>
                                     {lecturers.map((lecturer, index) => (
@@ -768,7 +768,7 @@ export default function CreateProposal({
                                             fontWeight={"600"}
                                             display={"flex"}
                                         >
-                                            Nama Pembimbing 1
+                                            Nama Penguji 2
                                         </Typography>
                                     </MenuItem>
                                     {lecturers.map((lecturer, index) => (
