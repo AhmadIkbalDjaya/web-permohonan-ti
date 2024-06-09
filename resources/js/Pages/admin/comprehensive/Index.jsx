@@ -19,7 +19,6 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    ThemeProvider,
     Typography,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
@@ -33,7 +32,6 @@ import {
 import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import pickBy from "lodash.pickby";
-import { themePagination } from "../../../theme/PaginationTheme";
 import { idFormatDate } from "../../../helper/dateTimeHelper";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
@@ -145,9 +143,7 @@ export default function Comprehensive({ comprehensives, meta }) {
                             variant="contained"
                             startIcon={<FaPlus />}
                             size="small"
-                            color="primary"
                             sx={{
-                                background: "#B20600",
                                 textTransform: "none",
                             }}
                         >

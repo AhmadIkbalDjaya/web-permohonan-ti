@@ -20,14 +20,12 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    ThemeProvider,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { themePagination } from "../../../theme/PaginationTheme";
 import { idFormatDate } from "../../../helper/dateTimeHelper";
 import pickBy from "lodash.pickby";
 import {

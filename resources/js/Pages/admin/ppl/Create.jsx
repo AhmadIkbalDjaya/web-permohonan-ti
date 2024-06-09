@@ -11,12 +11,10 @@ import {
     MenuItem,
     Select,
     TextField,
-    ThemeProvider,
     Typography,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
 import AppInputLabel from "../components/elements/input/AppInputLabel";
-import { themeTextField } from "../../../theme/TextFieldTheme";
 import { semesterListItems } from "../components/elements/input/SemesterListItems";
 import ReactSignatureCanvas from "react-signature-canvas";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
@@ -164,11 +162,9 @@ export default function CreatePpl({
                     <Button
                         onClick={handleSubmitForm}
                         variant="contained"
-                        color="primary"
                         size="small"
                         startIcon={<FaPlus />}
                         sx={{
-                            background: "#B20600",
                             textTransform: "none",
                             display: {
                                 xs: "none",

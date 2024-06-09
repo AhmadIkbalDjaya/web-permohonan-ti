@@ -153,7 +153,6 @@ export default function CreateComprehensive({
                         size="small"
                         startIcon={<FaPlus />}
                         sx={{
-                            background: "#B20600",
                             textTransform: "none",
                             display: {
                                 xs: "none",

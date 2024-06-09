@@ -156,11 +156,9 @@ export default function CreateResult({
                     <Button
                         onClick={handleSubmitForm}
                         variant="contained"
-                        color="primary"
                         size="small"
                         startIcon={<FaPlus />}
                         sx={{
-                            background: "#B20600",
                             textTransform: "none",
                             display: {
                                 xs: "none",

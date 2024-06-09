@@ -71,11 +71,9 @@ export default function ShowPPL({ ppl }) {
                     <Stack direction={"row"} spacing={1}>
                         <Button
                             variant="contained"
-                            color="primary"
                             size="small"
                             startIcon={<MdDelete />}
                             sx={{
-                                background: "#B20600",
                                 textTransform: "none",
                                 display: {
                                     xs: "none",
@@ -88,11 +86,9 @@ export default function ShowPPL({ ppl }) {
                         </Button>
                         <Button
                             variant="contained"
-                            color="primary"
                             size="small"
                             startIcon={<MdModeEdit />}
                             sx={{
-                                background: "#B20600",
                                 textTransform: "none",
                                 display: {
                                     xs: "none",
@@ -291,11 +287,9 @@ export default function ShowPPL({ ppl }) {
                             <Button
                                 fullWidth
                                 variant="contained"
-                                color="primary"
                                 size="small"
                                 startIcon={<MdDelete />}
                                 sx={{
-                                    background: "#B20600",
                                     textTransform: "none",
                                 }}
                             >
@@ -304,11 +298,9 @@ export default function ShowPPL({ ppl }) {
                             <Button
                                 fullWidth
                                 variant="contained"
-                                color="primary"
                                 size="small"
                                 startIcon={<MdModeEdit />}
                                 sx={{
-                                    background: "#B20600",
                                     textTransform: "none",
                                 }}
                                 href={route("admin.ppl.edit", {

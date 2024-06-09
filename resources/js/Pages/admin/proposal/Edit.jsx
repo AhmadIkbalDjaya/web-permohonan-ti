@@ -195,11 +195,9 @@ export default function EditProposal({
                     <Button
                         onClick={handleSubmitForm}
                         variant="contained"
-                        color="primary"
                         size="small"
                         startIcon={<MdModeEdit />}
                         sx={{
-                            background: "#B20600",
                             textTransform: "none",
                             display: {
                                 xs: "none",

@@ -29,6 +29,7 @@ export default function Login() {
     }
 
     function handleSubmitForm(e) {
+        e.preventDefault();
         router.post(route("login.check"), formValues);
     }
     return (
@@ -44,7 +45,7 @@ export default function Login() {
                     alignItems="center"
                     alignContent="center"
                     wrap="wrap"
-                    sx={{ background: "#B20600" }}
+                    sx={{ background: "#003399" }}
                 >
                     <Box
                         sx={{
@@ -81,58 +82,60 @@ export default function Login() {
                                 {flash.error}
                             </Typography>
                         )}
-                        <Box sx={{ py: "25px" }}>
-                            <Box sx={{ pb: "25px" }}>
-                                <AppInputLabel
-                                    label="Email address"
-                                    color={"gray-500"}
-                                    fontWeight={"500"}
-                                />
-                                <TextField
-                                    id="email"
-                                    name="email"
-                                    type="string"
-                                    value={formValues.email}
-                                    onChange={handleChangeForm}
-                                    placeholder="Enter your email"
-                                    fullWidth
-                                    error={errors.email ? true : false}
-                                    helperText={errors.email ?? ""}
-                                />
+                        <form onSubmit={handleSubmitForm}>
+                            <Box sx={{ py: "25px" }}>
+                                <Box sx={{ pb: "25px" }}>
+                                    <AppInputLabel
+                                        label="Email address"
+                                        color={"gray-500"}
+                                        fontWeight={"500"}
+                                    />
+                                    <TextField
+                                        id="email"
+                                        name="email"
+                                        type="string"
+                                        value={formValues.email}
+                                        onChange={handleChangeForm}
+                                        placeholder="Enter your email"
+                                        fullWidth
+                                        error={errors.email ? true : false}
+                                        helperText={errors.email ?? ""}
+                                    />
+                                </Box>
+                                <Box>
+                                    <AppInputLabel
+                                        label="Password"
+                                        color={"gray-500"}
+                                        fontWeight={"500"}
+                                    />
+                                    <TextField
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        value={formValues.password}
+                                        onChange={handleChangeForm}
+                                        placeholder="Enter your password"
+                                        fullWidth
+                                        error={errors.password ? true : false}
+                                        helperText={errors.password ?? ""}
+                                    />
+                                </Box>
                             </Box>
-                            <Box>
-                                <AppInputLabel
-                                    label="Password"
-                                    color={"gray-500"}
-                                    fontWeight={"500"}
-                                />
-                                <TextField
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    value={formValues.password}
-                                    onChange={handleChangeForm}
-                                    placeholder="Enter your password"
-                                    fullWidth
-                                    error={errors.password ? true : false}
-                                    helperText={errors.password ?? ""}
-                                />
+                            <Box display={"flex"} justifyContent={"center"}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    size="small"
+                                    sx={{
+                                        width: "80%",
+                                        textTransform: "capitalize",
+                                    }}
+                                >
+                                    Sign In
+                                </Button>
                             </Box>
-                        </Box>
-                        <Box display={"flex"} justifyContent={"center"}>
-                            <Button
-                                onClick={handleSubmitForm}
-                                variant="contained"
-                                color="primary"
-                                size="small"
-                                sx={{
-                                    width: "80%",
-                                    textTransform: "capitalize",
-                                }}
-                            >
-                                Sign In
-                            </Button>
-                        </Box>
+                        </form>
                     </Box>
                 </Grid>
             </ThemeProvider>

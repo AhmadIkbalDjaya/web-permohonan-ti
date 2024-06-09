@@ -12,11 +12,9 @@ import {
     MenuItem,
     Select,
     TextField,
-    ThemeProvider,
     Typography,
 } from "@mui/material";
 import { MdModeEdit } from "react-icons/md";
-import { themeTextField } from "../../../theme/TextFieldTheme";
 import AppInputLabel from "../components/elements/input/AppInputLabel";
 import { semesterListItems } from "../components/elements/input/SemesterListItems";
 import ReactSignatureCanvas from "react-signature-canvas";
@@ -195,11 +193,9 @@ export default function EditResult({
                     <Button
                         onClick={handleSubmitForm}
                         variant="contained"
-                        color="primary"
                         size="small"
                         startIcon={<MdModeEdit />}
                         sx={{
-                            background: "#B20600",
                             textTransform: "none",
                             display: {
                                 xs: "none",

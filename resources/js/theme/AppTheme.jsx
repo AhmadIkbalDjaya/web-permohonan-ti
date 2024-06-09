@@ -3,13 +3,13 @@ import { createTheme } from "@mui/material";
 const appTheme = createTheme({
     palette: {
         primary: {
-            main: "#B20600",
-            light: "#DC0000",
-            dark: "#C21010",
+            main: "#003399",
+            light: "#0023DC",
+            dark: "#1037C2",
             contrastText: "#FFFFFF",
         },
-        primary2: "#DC0000",
-        primary3: "#C21010",
+        primary2: "#0023DC",
+        primary3: "#1037C2",
         secondary: {
             main: "#16213E",
         },
@@ -86,17 +86,17 @@ const appTheme = createTheme({
                     fontSize: "16px",
                     fontWeight: 500,
                     "&:hover": {
-                        backgroundColor: "#DC0000",
+                        backgroundColor: "#0023DC",
                         color: "white", // Warna latar belakang tombol terpilih saat dihover
                     },
                     "&.Mui-selected": {
                         color: "white", // Warna teks pada tombol terpilih
-                        backgroundColor: "#DC0000", // Warna latar belakang tombol terpilih
+                        backgroundColor: "#0023DC", // Warna latar belakang tombol terpilih
                         fontFamily: "Poppins",
                         fontSize: "16px",
                         fontWeight: 600,
                         "&:hover": {
-                            backgroundColor: "#DC0000",
+                            backgroundColor: "#0023DC",
                             opacity: 0.8, // Warna latar belakang tombol terpilih saat dihover
                         },
                     },

@@ -14,7 +14,7 @@ export function AppDrawer({ open }) {
             open={open}
             PaperProps={{
                 style: {
-                    background: "#B20600",
+                    background: "#003399",
                 },
             }}
         >

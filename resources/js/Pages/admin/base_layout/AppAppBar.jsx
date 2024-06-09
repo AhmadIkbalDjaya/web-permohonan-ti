@@ -52,7 +52,7 @@ export function AppAppBar({ setOpen, open }) {
                         },
                     }}
                 >
-                    <Box display={"flex"} alignItems={"center"}>
+                    <Box display={"flex"} gap={2} alignItems={"center"}>
                         <IconButton
                             color="#454F5B"
                             edge="start"
@@ -61,18 +61,19 @@ export function AppAppBar({ setOpen, open }) {
                             <FiMenu />
                         </IconButton>
                         <Typography
-                            color={"#ab003c"}
+                            color={"primary"}
                             fontSize={"18px"}
-                            fontWeight={"bold"}
+                            fontWeight={"800"}
+                            letterSpacing={3}
                         >
-                            Teknik Informatika
+                            TI-UINAM
                         </Typography>
                     </Box>
                     <Box
                         sx={{
                             flexGrow: 1,
                             marginLeft: {
-                                sm: "75px",
+                                sm: "85px",
                             },
                         }}
                         display={{

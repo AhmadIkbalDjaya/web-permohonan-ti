@@ -19,7 +19,6 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    ThemeProvider,
     Typography,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
@@ -29,7 +28,6 @@ import {
     tableCheckboxStyle,
     tableHeadStyle,
 } from "../components/styles/tableStyles";
-import { themePagination } from "../../../theme/PaginationTheme";
 import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";

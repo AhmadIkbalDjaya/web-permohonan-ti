@@ -18,7 +18,6 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    ThemeProvider,
     Typography,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
@@ -31,7 +30,6 @@ import {
 import { HiOutlineEye } from "react-icons/hi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbEdit } from "react-icons/tb";
-import { themePagination } from "../../../theme/PaginationTheme";
 import pickBy from "lodash.pickby";
 import { idFormatDate } from "../../../helper/dateTimeHelper";
 import StatusBox from "../components/StatusBox";
@@ -143,9 +141,7 @@ export default function Ppl({ ppls, meta }) {
                             variant="contained"
                             startIcon={<FaPlus />}
                             size="small"
-                            color="primary"
                             sx={{
-                                background: "#B20600",
                                 textTransform: "none",
                             }}
                         >
