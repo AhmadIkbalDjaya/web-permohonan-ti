@@ -7,7 +7,7 @@ import "./style.css";
 import useIntersectionObserver from "./animasi";
 
 import React, { useEffect } from "react";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import PublicBaseLayout from "../base_layout/PublicBaseLayout";
 
 function Home() {
@@ -47,7 +47,6 @@ function Home() {
             cardObserver.disconnect();
         };
     }, [headerRef, cardRefs]);
-
     return (
         <>
             <Head title="TI-UINAM"></Head>
