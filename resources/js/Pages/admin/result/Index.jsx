@@ -30,6 +30,8 @@ import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import pickBy from "lodash.pickby";
+import CetakSemhas from "../cetak/cetakSemhas";
+import ReactToPrint from "react-to-print";
 
 export default function Result({ results, meta }) {
     const showItemOptions = [5, 10, 15, 20, 25];
@@ -72,6 +74,7 @@ export default function Result({ results, meta }) {
         page.current = meta.total_page;
         getData();
     }
+    const componentRef = useRef();
     return (
         <>
             <Head title="Result" />
@@ -113,6 +116,19 @@ export default function Result({ results, meta }) {
                             Permohonan
                         </Button>
                     </AppLink>
+                    <ReactToPrint
+                        trigger={() => (
+                            <Button variant="contained" color="primary">
+                                Cetak ke PDF
+                            </Button>
+                        )}
+                        content={() => componentRef.current}
+                        paperSize={{ width: '210mm', height: '330mm', unit: 'mm' }} 
+                    />
+                    <Box sx={{display:'none'}}>
+
+                    <CetakSemhas  ref={componentRef} />
+                    </Box>
                     <Box
                         display={"flex"}
                         alignItems={"center"}
