@@ -30,6 +30,8 @@ import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import pickBy from "lodash.pickby";
 import { themePagination } from "../../../theme/PaginationTheme";
+import ReactToPrint from "react-to-print";
+import CetakKompren from "../cetak/cetakKompren";
 
 export default function Comprehensive({ comprehensives, meta }) {
     const showItemOptions = [5, 10, 15, 20, 25];
@@ -72,6 +74,8 @@ export default function Comprehensive({ comprehensives, meta }) {
         page.current = meta.total_page;
         getData();
     }
+    const componentRef = useRef();
+
     return (
         <>
             <Head title="Comprehensive" />
@@ -116,6 +120,22 @@ export default function Comprehensive({ comprehensives, meta }) {
                             Permohonan
                         </Button>
                     </AppLink>
+                    <ReactToPrint
+                        trigger={() => (
+                            <Button variant="contained" color="primary">
+                                Cetak ke PDF
+                            </Button>
+                        )}
+                        content={() => componentRef.current}
+                        paperSize={{
+                            width: "210mm",
+                            height: "330mm",
+                            unit: "mm",
+                        }}
+                    />
+                    <Box sx={{ display: "none" }}>
+                        <CetakKompren ref={componentRef}  />
+                    </Box>
                     <Box
                         display={"flex"}
                         alignItems={"center"}

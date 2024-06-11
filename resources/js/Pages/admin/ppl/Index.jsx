@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import { Head } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
@@ -18,8 +18,12 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { tableHeadStyle } from "../components/styles/tableHeadStyle";
+import CetakPengantarPPL from "../cetak/cetakPengantarPPL";
+import ReactToPrint from "react-to-print";
 
 export default function Ppl({ ppls, meta }) {
+    const componentRef = useRef();
+
     return (
         <>
             <Head title="Ppl" />
@@ -64,6 +68,22 @@ export default function Ppl({ ppls, meta }) {
                             Permohonan
                         </Button>
                     </AppLink>
+                    <ReactToPrint
+                        trigger={() => (
+                            <Button variant="contained" color="primary">
+                                Cetak ke PDF
+                            </Button>
+                        )}
+                        content={() => componentRef.current}
+                        paperSize={{
+                            width: "210mm",
+                            height: "330mm",
+                            unit: "mm",
+                        }}
+                    />
+                    <Box sx={{ display: "none" }}>
+                        <CetakPengantarPPL ref={componentRef} style={{fontFamily:"Times New Roman"}} />
+                    </Box>
                     <Box
                         display={"flex"}
                         alignItems={"center"}

@@ -3,7 +3,7 @@ import React, { forwardRef } from "react";
 import Uinam from "../assets/logoUinam.png";
 import "./style.css";
 
-const CetakProposal = forwardRef((props, ref) => {
+const cetakKompren = forwardRef((props, ref) => {
     return (
         <div ref={ref} className="print-container font-pdf">
             <Box
@@ -50,7 +50,7 @@ const CetakProposal = forwardRef((props, ref) => {
                                 fontSize: 18.62,
                                 fontWeight: "bold",
                                 marginTop: "-6px",
-                                fontFamily:"Arial"
+                                fontFamily: "Arial",
                             }}
                             component="div"
                             align="center"
@@ -58,10 +58,9 @@ const CetakProposal = forwardRef((props, ref) => {
                             JURUSAN TEKNIK INFORMATIKA
                         </Typography>
                         <Typography
-                            sx={{ fontSize: 10.64, fontWeight:"bold" }}
+                            sx={{ fontSize: 10.64, fontWeight: "bold" }}
                             component="div"
                             align="center"
-
                         >
                             Kampus II : Jl. H.M. Yasin Limpo No. 36 Romang Polng
                             Gowa Telp. 1500363, (0411) 841879, Fax 8221400
@@ -133,21 +132,7 @@ const CetakProposal = forwardRef((props, ref) => {
                                             }}
                                         >
                                             Permohonan Penerbitan SK Seminar
-                                            Proposal
-                                        </Typography>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <Typography
-                                            sx={{
-                                                fontSize: "13.3px",
-                                                fontWeight: "bold",
-                                            }}
-                                        >
-                                            dan Undangan
+                                            Komprehensif
                                         </Typography>
                                     </td>
                                 </tr>
@@ -196,8 +181,8 @@ const CetakProposal = forwardRef((props, ref) => {
                             Dalam rangka penyelesaian Tugas Akhir mahasiswa
                             Fakultas Sains dan Teknologi UIN Alauddin Makassar,
                             maka bersama ini kami memohon kepada Dekan kiranya
-                            berkenan menerbitkan Surat Keputusan dan jadwal
-                            pelaksanaan Seminar Proposal Mahasiswa dibawah ini :
+                            berkenan menerbitkan Surat Keputusan pelaksanaan
+                            Seminar Komprehensif Mahasiswa dibawah ini :
                         </Typography>
                         <table
                             style={{
@@ -239,8 +224,8 @@ const CetakProposal = forwardRef((props, ref) => {
                             </tbody>
                         </table>
                         <Typography sx={{ fontSize: "13.3px" }}>
-                            Adapun Komposisi Dewan Penguji dan Pelaksana Seminar
-                            Proposal tersebut adalah sebagai berikut :
+                            Adapun Komposisi Dewan Penguji dan Panitia Pelaksana
+                            Seminar Komprehensif tersebut adalah sebagai berikut:
                         </Typography>
                         <table
                             style={{
@@ -262,47 +247,21 @@ const CetakProposal = forwardRef((props, ref) => {
                                     <td>Darmatasia, S.Pd., M.Kom.</td>
                                 </tr>
                                 <tr>
-                                    <td>Pembimbing I</td>
+                                    <td>Penguji I (JARKOM) </td>
                                     <td>:</td>
                                     <td>Faisal Akib, S.Kom., M.Kom.</td>
                                 </tr>
                                 <tr>
-                                    <td>Pembimbing II</td>
+                                    <td>Penguji II (RPL)</td>
                                     <td>:</td>
                                     <td>Faisal Akib, S.Kom., M.Kom.</td>
                                 </tr>
                                 <tr>
-                                    <td>Penguji I</td>
+                                    <td>Penguji III (AGAMA)</td>
                                     <td>:</td>
                                     <td>Faisal Akib, S.Kom., M.Kom.</td>
                                 </tr>
-                                <tr>
-                                    <td>Penguji II</td>
-                                    <td>:</td>
-                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
-                                </tr>
-                                <tr>
-                                    <td>Pelaksana</td>
-                                    <td>:</td>
-                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
-                                </tr>
-                                <tr>
-                                    <td>Hari dan Tanggal</td>
-                                    <td>:</td>
-                                    <td>Senin, 25 April 2024</td>
-                                </tr>
-                                <tr>
-                                    <td>Waktu</td>
-                                    <td>:</td>
-                                    <td>14.30 - 16.00 Wita</td>
-                                </tr>
-                                <tr>
-                                    <td>Tempat Pelaksanaan</td>
-                                    <td>:</td>
-                                    <td>
-                                        Ruang Seminar Jurusan Teknik Informatika
-                                    </td>
-                                </tr>
+                                
                             </tbody>
                         </table>
                         <Typography
@@ -329,7 +288,7 @@ const CetakProposal = forwardRef((props, ref) => {
                             <Typography
                                 sx={{ fontWeight: "bold", fontSize: "13.3px" }}
                             >
-                                Ketua
+                                Ketua/Sekretaris
                             </Typography>
                             <Typography
                                 sx={{ fontWeight: "bold", fontSize: "13.3px" }}
@@ -356,4 +315,4 @@ const CetakProposal = forwardRef((props, ref) => {
     );
 });
 
-export default CetakProposal;
+export default cetakKompren;

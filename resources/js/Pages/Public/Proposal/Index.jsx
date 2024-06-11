@@ -67,10 +67,6 @@ export default function Proposal({ file_requirements }) {
         phone: "",
         essay_title: "",
         mentors: ["", ""],
-        testers: ["", ""],
-        date: "",
-        time: "",
-        location: "",
         files: {},
     });
 
@@ -429,7 +425,7 @@ export default function Proposal({ file_requirements }) {
                                                 label="semester"
                                                 fullWidth
                                                 variant="outlined"
-                                                value={formValues.tempatLahir}
+                                                value={formValues.semester}
                                                 id="semester"
                                                 type="string"
                                                 name="semester"
@@ -458,11 +454,11 @@ export default function Proposal({ file_requirements }) {
                                         fullWidth
                                         variant="outlined"
                                         sx={{ mb: 2 }}
-                                        id="phone"
-                                        name="phone"
+                                        id="essay_title"
+                                        name="essay_title"
                                         type="string"
                                         rows={3}
-                                        value={formValues.phone}
+                                        value={formValues.essay_title}
                                         onChange={handleChangeForm}
                                     />
 
@@ -471,14 +467,13 @@ export default function Proposal({ file_requirements }) {
                                             <TextField
                                                 label="Pembimbing 1"
                                                 fullWidth
+                                                name="mentors"
+                                                id="mentors"
                                                 variant="outlined"
-                                                value={formValues.tempatLahir}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        "name",
-                                                        e.target.value
-                                                    )
-                                                }
+                                                value={formValues.mentors[0]}
+                                                onChange={(e) => {
+                                                    handleChangeForm(e, 0);
+                                                }}
                                                 sx={{ mb: 2, width: "99.5%" }}
                                             />
                                         </Grid>
@@ -486,14 +481,13 @@ export default function Proposal({ file_requirements }) {
                                             <TextField
                                                 label="pembimbing 2"
                                                 fullWidth
+                                                name="mentors"
+                                                id="mentors"
                                                 variant="outlined"
-                                                value={formValues.tempatLahir}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        "tempatLahir",
-                                                        e.target.value
-                                                    )
-                                                }
+                                                value={formValues.mentors[1]}
+                                                onChange={(e) => {
+                                                    handleChangeForm(e, 1);
+                                                }}
                                                 sx={{ mb: 2, width: "99.5%" }}
                                             />
                                         </Grid>
