@@ -1,16 +1,9 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import React, { forwardRef } from "react";
 import Uinam from "../assets/logoUinam.png";
 import "./style.css";
-import {
-    convertToHHMM,
-    getDateDay,
-    idFormatDate,
-} from "../../../helper/dateTimeHelper";
 
-const CetakProposal = forwardRef((props, ref) => {
-    const proposal = props.proposal;
-    const hodSignature = props.hodSignature;
+const cetakKompren = forwardRef((props, ref) => {
     return (
         <div ref={ref} className="print-container font-pdf">
             <Box
@@ -57,6 +50,7 @@ const CetakProposal = forwardRef((props, ref) => {
                                 fontSize: 18.62,
                                 fontWeight: "bold",
                                 marginTop: "-6px",
+                                fontFamily: "Arial",
                             }}
                             component="div"
                             align="center"
@@ -64,10 +58,9 @@ const CetakProposal = forwardRef((props, ref) => {
                             JURUSAN TEKNIK INFORMATIKA
                         </Typography>
                         <Typography
-                            sx={{ fontSize: 10.64, fontWeight:"bold" }}
+                            sx={{ fontSize: 10.64, fontWeight: "bold" }}
                             component="div"
                             align="center"
-
                         >
                             Kampus II : Jl. H.M. Yasin Limpo No. 36 Romang Polng
                             Gowa Telp. 1500363, (0411) 841879, Fax 8221400
@@ -115,58 +108,39 @@ const CetakProposal = forwardRef((props, ref) => {
                                 cellSpacing={0}
                                 style={{ fontSize: "13.3px" }}
                             >
-                                <tbody>
-                                    <tr>
-                                        <td>Nomor </td>
-                                        <td>: </td>
-                                        <td>
-                                            <Typography
-                                                sx={{
-                                                    fontSize: "13.3px",
-                                                }}
-                                            >
-                                                {proposal.letter_number ?? "-"}
-                                            </Typography>
-                                        </td>
-                                    </tr>
-                                    <tr style={{ marginTop: "-100px" }}>
-                                        <td style={{ width: 50 }}>Hal </td>
-                                        <td style={{ width: 10 }}>: </td>
-                                        <td style={{ paddingTop: "-20px" }}>
-                                            <Typography
-                                                sx={{
-                                                    fontSize: "13.3px",
-                                                    fontWeight: "bold",
-                                                }}
-                                            >
-                                                Permohonan Penerbitan SK Seminar
-                                                Proposal
-                                            </Typography>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <Typography
-                                                sx={{
-                                                    fontSize: "13.3px",
-                                                    fontWeight: "bold",
-                                                }}
-                                            >
-                                                dan Undangan
-                                            </Typography>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <tr>
+                                    <td>Nomor </td>
+                                    <td>: </td>
+                                    <td>
+                                        <Typography
+                                            sx={{
+                                                fontSize: "13.3px",
+                                            }}
+                                        >
+                                            712/TI-UINAM/V/2024
+                                        </Typography>
+                                    </td>
+                                </tr>
+                                <tr style={{ marginTop: "-100px" }}>
+                                    <td style={{ width: 50 }}>Hal </td>
+                                    <td style={{ width: 10 }}>: </td>
+                                    <td style={{ paddingTop: "-20px" }}>
+                                        <Typography
+                                            sx={{
+                                                fontSize: "13.3px",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            Permohonan Penerbitan SK Seminar
+                                            Komprehensif
+                                        </Typography>
+                                    </td>
+                                </tr>
                             </table>
                         </Grid>
                         <Grid item xs={4}>
                             <Typography sx={{ fontSize: "13.3px" }}>
-                                Romang Polong,{" "}
-                                {proposal.letter_date
-                                    ? idFormatDate(proposal.letter_date)
-                                    : "-"}
+                                Romang Polong, 15 Mei 2024
                             </Typography>
                         </Grid>
                     </Grid>
@@ -207,8 +181,8 @@ const CetakProposal = forwardRef((props, ref) => {
                             Dalam rangka penyelesaian Tugas Akhir mahasiswa
                             Fakultas Sains dan Teknologi UIN Alauddin Makassar,
                             maka bersama ini kami memohon kepada Dekan kiranya
-                            berkenan menerbitkan Surat Keputusan dan jadwal
-                            pelaksanaan Seminar Proposal Mahasiswa dibawah ini :
+                            berkenan menerbitkan Surat Keputusan pelaksanaan
+                            Seminar Komprehensif Mahasiswa dibawah ini :
                         </Typography>
                         <table
                             style={{
@@ -222,12 +196,12 @@ const CetakProposal = forwardRef((props, ref) => {
                                 <tr>
                                     <td style={{ width: 150 }}>Nama</td>
                                     <td>:</td>
-                                    <td>{proposal.student.name}</td>
+                                    <td>Erni Rosiyanti</td>
                                 </tr>
                                 <tr>
                                     <td>Nim</td>
                                     <td>:</td>
-                                    <td>{proposal.student.nim}</td>
+                                    <td>60200120138</td>
                                 </tr>
                                 <tr>
                                     <td>Jurusan/Prodi</td>
@@ -240,14 +214,18 @@ const CetakProposal = forwardRef((props, ref) => {
                                     </td>
                                     <td style={{ verticalAlign: "top" }}>:</td>
                                     <td style={{ textAlign: "justify" }}>
-                                        {proposal.essay_title}
+                                        Implementasi Teknologi Deep Learning
+                                        dengan Convolutional Neural Network
+                                        dalam Meningkatkan Keterampilan Karateka
+                                        di International Black Panther Karate
+                                        Indonesia
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         <Typography sx={{ fontSize: "13.3px" }}>
-                            Adapun Komposisi Dewan Penguji dan Pelaksana Seminar
-                            Proposal tersebut adalah sebagai berikut :
+                            Adapun Komposisi Dewan Penguji dan Panitia Pelaksana
+                            Seminar Komprehensif tersebut adalah sebagai berikut:
                         </Typography>
                         <table
                             style={{
@@ -261,80 +239,29 @@ const CetakProposal = forwardRef((props, ref) => {
                                 <tr>
                                     <td style={{ width: 150 }}>Ketua</td>
                                     <td>:</td>
-                                    <td>
-                                        {proposal.chairman
-                                            ? proposal.chairman.name
-                                            : "-"}
-                                    </td>
+                                    <td> Aidil</td>
                                 </tr>
                                 <tr>
                                     <td>Sekretaris</td>
                                     <td>:</td>
-                                    <td>
-                                        {proposal.secretary
-                                            ? proposal.secretary.name
-                                            : "-"}
-                                    </td>
+                                    <td>Darmatasia, S.Pd., M.Kom.</td>
                                 </tr>
                                 <tr>
-                                    <td>Pembimbing I</td>
+                                    <td>Penguji I (JARKOM) </td>
                                     <td>:</td>
-                                    <td>{proposal.mentors[0].lecturer ? proposal.mentors[0].lecturer.name : "-"}</td>
+                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
                                 </tr>
                                 <tr>
-                                    <td>Pembimbing II</td>
+                                    <td>Penguji II (RPL)</td>
                                     <td>:</td>
-                                    <td>{proposal.mentors[0].lecturer ? proposal.mentors[0].lecturer.name : "-"}</td>
+                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
                                 </tr>
                                 <tr>
-                                    <td>Penguji I</td>
+                                    <td>Penguji III (AGAMA)</td>
                                     <td>:</td>
-                                    <td>{proposal.testers[0].lecturer ? proposal.testers[0].lecturer.name : "-"}</td>
+                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
                                 </tr>
-                                <tr>
-                                    <td>Penguji II</td>
-                                    <td>:</td>
-                                    <td>{proposal.testers[0].lecturer ? proposal.testers[0].lecturer.name : "-"}</td>
-                                </tr>
-                                <tr>
-                                    <td>Pelaksana</td>
-                                    <td>:</td>
-                                    <td>
-                                        {proposal.executor
-                                            ? proposal.executor.name
-                                            : "-"}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Hari dan Tanggal</td>
-                                    <td>:</td>
-                                    <td>
-                                        {proposal.schedule.date
-                                            ? `${getDateDay(
-                                                  proposal.schedule.date
-                                              )}, 
-                                        ${idFormatDate(proposal.schedule.date)}`
-                                            : "-"}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Waktu</td>
-                                    <td>:</td>
-                                    <td>
-                                        {proposal.schedule.start_time
-                                            ? `${convertToHHMM(
-                                                  proposal.schedule.start_time
-                                              )} - ${convertToHHMM(
-                                                  proposal.schedule.end_time
-                                              )} ${proposal.schedule.time_zone}`
-                                            : "-"}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Tempat Pelaksanaan</td>
-                                    <td>:</td>
-                                    <td>{proposal.schedule.location ?? "-"}</td>
-                                </tr>
+                                
                             </tbody>
                         </table>
                         <Typography
@@ -348,13 +275,7 @@ const CetakProposal = forwardRef((props, ref) => {
                             Demikian, atas perhatian dan dukungan Bapak, kami
                             ucapkan terima kasih.
                         </Typography>
-                        <Box
-                            sx={{
-                                marginLeft: 42,
-                                marginTop: 2,
-                                position: "absolute",
-                            }}
-                        >
+                        <Box sx={{ marginLeft: 42, marginTop: 2 }}>
                             <Typography
                                 sx={{
                                     fontWeight: "bold",
@@ -367,55 +288,25 @@ const CetakProposal = forwardRef((props, ref) => {
                             <Typography
                                 sx={{ fontWeight: "bold", fontSize: "13.3px" }}
                             >
-                                Ketua
+                                Ketua/Sekretaris
                             </Typography>
                             <Typography
                                 sx={{ fontWeight: "bold", fontSize: "13.3px" }}
                             >
                                 Jurusan Teknik Informatika
                             </Typography>
-                            {hodSignature ? (
-                                <Box
-                                    component={"img"}
-                                    sx={{
-                                        height: "120px",
-                                        width: "175px",
-                                        position: "relative",
-                                        top: "-26px",
-                                        left: "-10px",
-                                    }}
-                                    src={proposal.hod.signature}
-                                />
-                            ) : (
-                                <Box
-                                    sx={{
-                                        height: "120px",
-                                        width: "175px",
-                                        position: "relative",
-                                        top: "-26px",
-                                        left: "-10px",
-                                    }}
-                                ></Box>
-                            )}
-
-                            <Box sx={{ position: "relative", bottom: "60px" }}>
-                                <Typography
-                                    sx={{
-                                        fontWeight: "bold",
-                                        fontSize: "13.3px",
-                                    }}
-                                >
-                                    {proposal.hod.name}
-                                </Typography>
-                                <Typography
-                                    sx={{
-                                        fontWeight: "bold",
-                                        fontSize: "13.3px",
-                                    }}
-                                >
-                                    {proposal.hod.nip}
-                                </Typography>
-                            </Box>
+                        </Box>
+                        <Box sx={{ marginLeft: 42, marginTop: 7 }}>
+                            <Typography
+                                sx={{ fontWeight: "bold", fontSize: "13.3px" }}
+                            >
+                                Mustikasari, S.Kom., M.Kom.
+                            </Typography>
+                            <Typography
+                                sx={{ fontWeight: "bold", fontSize: "13.3px" }}
+                            >
+                                19781106 200604 2 001
+                            </Typography>
                         </Box>
                     </Box>
                 </Grid>
@@ -424,4 +315,4 @@ const CetakProposal = forwardRef((props, ref) => {
     );
 });
 
-export default CetakProposal;
+export default cetakKompren;

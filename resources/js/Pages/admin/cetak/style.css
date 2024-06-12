@@ -1,6 +1,12 @@
+*{
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
 @page {
     size: 210mm 330mm;
   }
+
+ 
   
   @media print {
     .print-container {

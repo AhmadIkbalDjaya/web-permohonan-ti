@@ -147,6 +147,19 @@ export default function Result({ results, meta }) {
                             Permohonan
                         </Button>
                     </AppLink>
+                    <ReactToPrint
+                        trigger={() => (
+                            <Button variant="contained" color="primary">
+                                Cetak ke PDF
+                            </Button>
+                        )}
+                        content={() => componentRef.current}
+                        paperSize={{ width: '210mm', height: '330mm', unit: 'mm' }} 
+                    />
+                    <Box sx={{display:'none'}}>
+
+                    <CetakSemhas  ref={componentRef} />
+                    </Box>
                     <Box
                         display={"flex"}
                         alignItems={"center"}
