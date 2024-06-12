@@ -29,9 +29,11 @@ class ProposalSeeder extends Seeder
         //         ],
         //         "schedule" => [
         //             "date" => null,
-        //             "time" => null,
+        //             "start_time" => null,
+        //             "end_time" => null,
         //             "location" => null,
         //         ],
+        //         "code" => "",
         //         "essay_title" => "",
         //         "applicant_sign" => "",
         //         "mentors" => ["", ""],
@@ -50,13 +52,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-01",
-                    "time" => "10:00",
+                    "start_time" => "10:00",
+                    "end_time" => "12:00",
                     "location" => "Room A101",
                 ],
+                "code" => "P001",
                 "essay_title" => "The Impact of Climate Change on Marine Life",
                 "applicant_sign" => "Alice J.",
-                "mentors" => ["Dr. Smith", "Prof. Johnson"],
-                "testers" => ["Jane Doe", "John Roe"],
+                "mentors" => [10, 22],
+                "testers" => [35, 47],
             ],
             [
                 "student" => [
@@ -69,13 +73,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-02",
-                    "time" => "11:00",
+                    "start_time" => "11:00",
+                    "end_time" => "13:00",
                     "location" => "Room B202",
                 ],
+                "code" => "P002",
                 "essay_title" => "Renewable Energy: Prospects and Challenges",
                 "applicant_sign" => "Bob S.",
-                "mentors" => ["Dr. Allen", "Prof. Brown"],
-                "testers" => ["Emily Davis", "Michael White"],
+                "mentors" => [8, 14],
+                "testers" => [29, 51],
             ],
             [
                 "student" => [
@@ -88,13 +94,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-03",
-                    "time" => "12:00",
+                    "start_time" => "12:00",
+                    "end_time" => "14:00",
                     "location" => "Room C303",
                 ],
+                "code" => "P003",
                 "essay_title" => "Artificial Intelligence in Healthcare",
                 "applicant_sign" => "Cathy B.",
-                "mentors" => ["Dr. Clark", "Prof. Scott"],
-                "testers" => ["Nancy Brown", "George Green"],
+                "mentors" => [15, 27],
+                "testers" => [39, 50],
             ],
             [
                 "student" => [
@@ -107,13 +115,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-04",
-                    "time" => "13:00",
+                    "start_time" => "13:00",
+                    "end_time" => "15:00",
                     "location" => "Room D404",
                 ],
+                "code" => "P004",
                 "essay_title" => "Blockchain Technology: A Decentralized Future",
                 "applicant_sign" => "David L.",
-                "mentors" => ["Dr. Martinez", "Prof. Wilson"],
-                "testers" => ["Liam Parker", "Sophia Taylor"],
+                "mentors" => [5, 32],
+                "testers" => [44, 58],
             ],
             [
                 "student" => [
@@ -126,13 +136,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-05",
-                    "time" => "14:00",
+                    "start_time" => "14:00",
+                    "end_time" => "16:00",
                     "location" => "Room E505",
                 ],
+                "code" => "P005",
                 "essay_title" => "The Evolution of Social Media",
                 "applicant_sign" => "Eva M.",
-                "mentors" => ["Dr. Lee", "Prof. Harris"],
-                "testers" => ["Andrew Martinez", "Olivia Lee"],
+                "mentors" => [11, 21],
+                "testers" => [38, 52],
             ],
             [
                 "student" => [
@@ -145,13 +157,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-06",
-                    "time" => "15:00",
+                    "start_time" => "15:00",
+                    "end_time" => "17:00",
                     "location" => "Room F606",
                 ],
+                "code" => "P006",
                 "essay_title" => "Cybersecurity Threats in the Modern World",
                 "applicant_sign" => "Frank G.",
-                "mentors" => ["Dr. Robinson", "Prof. Gonzalez"],
-                "testers" => ["Paul Harris", "Emma Clark"],
+                "mentors" => [13, 28],
+                "testers" => [36, 46],
             ],
             [
                 "student" => [
@@ -164,13 +178,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-07",
-                    "time" => "16:00",
+                    "start_time" => "16:00",
+                    "end_time" => "18:00",
                     "location" => "Room G707",
                 ],
+                "code" => "P007",
                 "essay_title" => "The Role of Genetics in Modern Medicine",
                 "applicant_sign" => "Grace H.",
-                "mentors" => ["Dr. Walker", "Prof. Lewis"],
-                "testers" => ["Kevin Martinez", "Emily Hernandez"],
+                "mentors" => [6, 17],
+                "testers" => [34, 43],
             ],
             [
                 "student" => [
@@ -183,13 +199,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-08",
-                    "time" => "09:00",
+                    "start_time" => "09:00",
+                    "end_time" => "11:00",
                     "location" => "Room H808",
                 ],
+                "code" => "P008",
                 "essay_title" => "Urban Planning and Sustainable Development",
                 "applicant_sign" => "Henry W.",
-                "mentors" => ["Dr. Hill", "Prof. King"],
-                "testers" => ["David Allen", "Sarah Martin"],
+                "mentors" => [9, 19],
+                "testers" => [40, 49],
             ],
             [
                 "student" => [
@@ -202,13 +220,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-09",
-                    "time" => "10:30",
+                    "start_time" => "10:30",
+                    "end_time" => "12:30",
                     "location" => "Room I909",
                 ],
+                "code" => "P009",
                 "essay_title" => "The Future of Electric Vehicles",
                 "applicant_sign" => "Isabel A.",
-                "mentors" => ["Dr. Perez", "Prof. Roberts"],
-                "testers" => ["Thomas Young", "Sophia King"],
+                "mentors" => [14, 26],
+                "testers" => [45, 59],
             ],
             [
                 "student" => [
@@ -221,13 +241,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-10",
-                    "time" => "11:30",
+                    "start_time" => "11:30",
+                    "end_time" => "13:30",
                     "location" => "Room J1010",
                 ],
+                "code" => "P010",
                 "essay_title" => "Advancements in Renewable Energy Technologies",
                 "applicant_sign" => "Jack S.",
-                "mentors" => ["Dr. Lopez", "Prof. Scott"],
-                "testers" => ["James Hernandez", "Mia Brown"],
+                "mentors" => [20, 30],
+                "testers" => [37, 48],
             ],
             [
                 "student" => [
@@ -240,32 +262,36 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-11",
-                    "time" => "12:30",
+                    "start_time" => "12:30",
+                    "end_time" => "14:30",
                     "location" => "Room K1111",
                 ],
-                "essay_title" => "Artificial Intelligence: Ethical Considerations",
+                "code" => "P011",
+                "essay_title" => "The Effects of Social Media on Mental Health",
                 "applicant_sign" => "Kelly T.",
-                "mentors" => ["Dr. Gonzalez", "Prof. Lee"],
-                "testers" => ["Joshua Martinez", "Sophia Lee"],
+                "mentors" => [7, 18],
+                "testers" => [31, 60],
             ],
             [
                 "student" => [
-                    "name" => "Liam Campbell",
+                    "name" => "Liam Clark",
                     "nim" => "123456012",
                     "pob" => "Jacksonville",
-                    "dob" => "1998-03-15",
+                    "dob" => "1998-03-21",
                     "semester" => "7",
                     "phone" => "555-3455",
                 ],
                 "schedule" => [
                     "date" => "2024-06-12",
-                    "time" => "13:30",
+                    "start_time" => "13:30",
+                    "end_time" => "15:30",
                     "location" => "Room L1212",
                 ],
-                "essay_title" => "The Impact of Globalization on Local Cultures",
+                "code" => "P012",
+                "essay_title" => "The Future of Financial Technologies",
                 "applicant_sign" => "Liam C.",
-                "mentors" => ["Dr. Brown", "Prof. Walker"],
-                "testers" => ["Daniel Martinez", "Olivia Wilson"],
+                "mentors" => [16, 24],
+                "testers" => [42, 55],
             ],
             [
                 "student" => [
@@ -278,13 +304,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-13",
-                    "time" => "14:30",
+                    "start_time" => "14:30",
+                    "end_time" => "16:30",
                     "location" => "Room M1313",
                 ],
+                "code" => "P013",
                 "essay_title" => "The Role of Women in STEM Fields",
                 "applicant_sign" => "Mia D.",
-                "mentors" => ["Dr. Taylor", "Prof. Robinson"],
-                "testers" => ["Michael Johnson", "Emily Scott"],
+                "mentors" => [25, 33],
+                "testers" => [41, 53],
             ],
             [
                 "student" => [
@@ -297,13 +325,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-14",
-                    "time" => "15:30",
+                    "start_time" => "15:30",
+                    "end_time" => "17:30",
                     "location" => "Room N1414",
                 ],
+                "code" => "P014",
                 "essay_title" => "The Future of Renewable Energy",
                 "applicant_sign" => "Noah E.",
-                "mentors" => ["Dr. Harris", "Prof. Martinez"],
-                "testers" => ["Andrew Brown", "Olivia Davis"],
+                "mentors" => [12, 29],
+                "testers" => [54, 60],
             ],
             [
                 "student" => [
@@ -316,13 +346,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-15",
-                    "time" => "16:30",
+                    "start_time" => "16:30",
+                    "end_time" => "18:30",
                     "location" => "Room O1515",
                 ],
+                "code" => "P015",
                 "essay_title" => "Climate Change and Its Economic Impact",
                 "applicant_sign" => "Olivia W.",
-                "mentors" => ["Dr. Johnson", "Prof. Taylor"],
-                "testers" => ["Lucas Harris", "Mia Lopez"],
+                "mentors" => [23, 35],
+                "testers" => [56, 57],
             ],
             [
                 "student" => [
@@ -335,13 +367,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-16",
-                    "time" => "09:00",
+                    "start_time" => "09:00",
+                    "end_time" => "11:00",
                     "location" => "Room P1616",
                 ],
+                "code" => "P016",
                 "essay_title" => "Innovations in Biotechnology",
                 "applicant_sign" => "Paul Y.",
-                "mentors" => ["Dr. Clark", "Prof. Martinez"],
-                "testers" => ["Emma Brown", "Lucas Martinez"],
+                "mentors" => [37, 44],
+                "testers" => [49, 52],
             ],
             [
                 "student" => [
@@ -354,13 +388,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-17",
-                    "time" => "10:00",
+                    "start_time" => "10:00",
+                    "end_time" => "12:00",
                     "location" => "Room Q1717",
                 ],
+                "code" => "P017",
                 "essay_title" => "The Ethics of Genetic Engineering",
                 "applicant_sign" => "Quinn D.",
-                "mentors" => ["Dr. Taylor", "Prof. Lee"],
-                "testers" => ["John Clark", "Emily Robinson"],
+                "mentors" => [32, 39],
+                "testers" => [48, 57],
             ],
             [
                 "student" => [
@@ -373,13 +409,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-18",
-                    "time" => "11:00",
+                    "start_time" => "11:00",
+                    "end_time" => "13:00",
                     "location" => "Room R1818",
                 ],
+                "code" => "P018",
                 "essay_title" => "Sustainable Agriculture Practices",
                 "applicant_sign" => "Rachel M.",
-                "mentors" => ["Dr. King", "Prof. Davis"],
-                "testers" => ["James Taylor", "Emma Martinez"],
+                "mentors" => [45, 58],
+                "testers" => [50, 51],
             ],
             [
                 "student" => [
@@ -392,13 +430,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-19",
-                    "time" => "12:00",
+                    "start_time" => "12:00",
+                    "end_time" => "14:00",
                     "location" => "Room S1919",
                 ],
+                "code" => "P019",
                 "essay_title" => "The Future of Space Exploration",
                 "applicant_sign" => "Sam B.",
-                "mentors" => ["Dr. Allen", "Prof. Walker"],
-                "testers" => ["Michael Brown", "Sophia Martinez"],
+                "mentors" => [33, 43],
+                "testers" => [52, 60],
             ],
             [
                 "student" => [
@@ -411,13 +451,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-20",
-                    "time" => "13:00",
+                    "start_time" => "13:00",
+                    "end_time" => "15:00",
                     "location" => "Room T2020",
                 ],
+                "code" => "P020",
                 "essay_title" => "The Role of Education in Economic Development",
                 "applicant_sign" => "Tina C.",
-                "mentors" => ["Dr. Wilson", "Prof. King"],
-                "testers" => ["Thomas Brown", "Olivia Martinez"],
+                "mentors" => [18, 29],
+                "testers" => [53, 54],
             ],
             [
                 "student" => [
@@ -430,13 +472,15 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-21",
-                    "time" => "14:00",
+                    "start_time" => "14:00",
+                    "end_time" => "16:00",
                     "location" => "Room U2121",
                 ],
+                "code" => "P021",
                 "essay_title" => "The Psychology of Consumer Behavior",
                 "applicant_sign" => "Uma R.",
-                "mentors" => ["Dr. Harris", "Prof. Martinez"],
-                "testers" => ["John Taylor", "Emily Brown"],
+                "mentors" => [35, 40],
+                "testers" => [55, 56],
             ],
             [
                 "student" => [
@@ -449,51 +493,57 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-22",
-                    "time" => "15:00",
+                    "start_time" => "15:00",
+                    "end_time" => "17:00",
                     "location" => "Room V2222",
                 ],
-                "essay_title" => "The Impact of Automation on Employment",
+                "code" => "P022",
+                "essay_title" => "The Future of Artificial Intelligence",
                 "applicant_sign" => "Victor B.",
-                "mentors" => ["Dr. Martinez", "Prof. Robinson"],
-                "testers" => ["Andrew Brown", "Sophia Johnson"],
+                "mentors" => [46, 50],
+                "testers" => [57, 58],
             ],
             [
                 "student" => [
-                    "name" => "Wendy Lee",
+                    "name" => "Wendy Lewis",
                     "nim" => "123456023",
                     "pob" => "Nashville",
-                    "dob" => "2001-07-14",
-                    "semester" => "4",
+                    "dob" => "2000-07-11",
+                    "semester" => "5",
                     "phone" => "555-4563",
                 ],
                 "schedule" => [
                     "date" => "2024-06-23",
-                    "time" => "16:00",
+                    "start_time" => "16:00",
+                    "end_time" => "18:00",
                     "location" => "Room W2323",
                 ],
-                "essay_title" => "The Role of Art in Society",
+                "code" => "P023",
+                "essay_title" => "Mental Health Awareness and Education",
                 "applicant_sign" => "Wendy L.",
-                "mentors" => ["Dr. Wilson", "Prof. Davis"],
-                "testers" => ["Daniel Martinez", "Olivia Clark"],
+                "mentors" => [47, 49],
+                "testers" => [58, 59],
             ],
             [
                 "student" => [
-                    "name" => "Xander White",
+                    "name" => "Xander Harris",
                     "nim" => "123456024",
                     "pob" => "Detroit",
-                    "dob" => "2000-11-30",
-                    "semester" => "5",
+                    "dob" => "1999-04-09",
+                    "semester" => "6",
                     "phone" => "555-5674",
                 ],
                 "schedule" => [
                     "date" => "2024-06-24",
-                    "time" => "09:00",
+                    "start_time" => "09:00",
+                    "end_time" => "11:00",
                     "location" => "Room X2424",
                 ],
-                "essay_title" => "The Evolution of Human Rights",
-                "applicant_sign" => "Xander W.",
-                "mentors" => ["Dr. Gonzalez", "Prof. King"],
-                "testers" => ["Lucas Brown", "Emma Martinez"],
+                "code" => "P024",
+                "essay_title" => "The Influence of Technology on Education",
+                "applicant_sign" => "Xander H.",
+                "mentors" => [51, 55],
+                "testers" => [60, 59],
             ],
             [
                 "student" => [
@@ -506,15 +556,18 @@ class ProposalSeeder extends Seeder
                 ],
                 "schedule" => [
                     "date" => "2024-06-25",
-                    "time" => "10:00",
+                    "start_time" => "10:00",
+                    "end_time" => "12:00",
                     "location" => "Room Y2525",
                 ],
+                "code" => "P025",
                 "essay_title" => "The Future of Work in the Digital Age",
                 "applicant_sign" => "Yara T.",
-                "mentors" => ["Dr. Johnson", "Prof. Taylor"],
-                "testers" => ["James Martinez", "Sophia Harris"],
+                "mentors" => [53, 54],
+                "testers" => [59, 60],
             ],
         ];
+        
 
         foreach ($proposals as $index => $proposal) {
             $newStudent = Student::create($proposal["student"]);
@@ -522,19 +575,20 @@ class ProposalSeeder extends Seeder
             $newProposal = Proposal::create([
                 "student_id" => $newStudent->id,
                 "schedule_id" => $newSchedule->id,
+                "code" => $proposal["code"],
                 "essay_title" => $proposal["essay_title"],
                 "applicant_sign" => $proposal["applicant_sign"],
             ]);
             foreach ($proposal["mentors"] as $index => $mentor) {
                 Mentor::create([
-                    "name" => $mentor,
+                    "lecturer_id" => $mentor,
                     "order" => $index,
                     "proposal_id" => $newProposal->id,
                 ]);
             }
             foreach ($proposal["testers"] as $index => $tester) {
                 Tester::create([
-                    "name" => $tester,
+                    "lecturer_id" => $tester,
                     "order" => $index,
                     "proposal_id" => $newProposal->id,
                 ]);

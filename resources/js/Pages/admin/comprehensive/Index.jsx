@@ -3,6 +3,7 @@ import BaseLayout from "../base_layout/BaseLayout";
 import { Head, router } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
+import StatusBox from "../components/StatusBox";
 import {
     Box,
     Button,
@@ -18,20 +19,21 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    ThemeProvider,
     Typography,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { tableHeadStyle } from "../components/styles/tableHeadStyle";
-import { idFormatDate } from "../../../helper/idFormatDate";
+import {
+    tableCellStyle,
+    tableCheckboxStyle,
+    tableHeadStyle,
+} from "../components/styles/tableStyles";
 import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import pickBy from "lodash.pickby";
-import { themePagination } from "../../../theme/PaginationTheme";
-import ReactToPrint from "react-to-print";
-import CetakKompren from "../cetak/cetakKompren";
+import { idFormatDate } from "../../../helper/dateTimeHelper";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 export default function Comprehensive({ comprehensives, meta }) {
     const showItemOptions = [5, 10, 15, 20, 25];
@@ -74,11 +76,41 @@ export default function Comprehensive({ comprehensives, meta }) {
         page.current = meta.total_page;
         getData();
     }
-    const componentRef = useRef();
-
+    const [confirmDelete, setConfirmDelete] = useState({
+        open: false,
+        id: "",
+    });
+    const handleOpenDelete = (id) => {
+        setConfirmDelete({
+            open: true,
+            id,
+        });
+    };
+    const handleCloseDelete = () => {
+        setConfirmDelete({
+            open: false,
+            id: "",
+        });
+    };
+    const handleDeleteData = () => {
+        router.delete(
+            route("admin.comprehensive.delete", {
+                comprehensive: confirmDelete.id,
+            })
+        );
+        setConfirmDelete({
+            open: false,
+            id: "",
+        });
+    };
     return (
         <>
             <Head title="Comprehensive" />
+            <ConfirmDeleteModal
+                open={confirmDelete.open}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -86,7 +118,7 @@ export default function Comprehensive({ comprehensives, meta }) {
                         href={route("admin.comprehensive.index")}
                         color="black"
                     >
-                        Kompren
+                        Komprehensif
                     </AppLink>
                 </AppBreadcrumbs>
                 <Box display={"flex"} alignItems={"center"} gap={1} mt={1}>
@@ -111,9 +143,7 @@ export default function Comprehensive({ comprehensives, meta }) {
                             variant="contained"
                             startIcon={<FaPlus />}
                             size="small"
-                            color="primary"
                             sx={{
-                                background: "#B20600",
                                 textTransform: "none",
                             }}
                         >
@@ -180,20 +210,13 @@ export default function Comprehensive({ comprehensives, meta }) {
                         <TableHead>
                             <TableRow sx={{ backgroundColor: "gray-100" }}>
                                 <TableCell padding="checkbox">
-                                    <Checkbox
-                                        sx={{
-                                            color: "zinc-200",
-                                            "&.Mui-checked": {
-                                                color: "primary2",
-                                            },
-                                        }}
-                                    ></Checkbox>
+                                    <Checkbox sx={tableCheckboxStyle} />
                                 </TableCell>
-                                <TableCell align="left" sx={tableHeadStyle}>
-                                    Nama
-                                </TableCell>
+                                <TableCell sx={tableHeadStyle}>Nama</TableCell>
                                 <TableCell sx={tableHeadStyle}>NIM</TableCell>
-                                <TableCell sx={tableHeadStyle}>Judul</TableCell>
+                                <TableCell sx={tableHeadStyle}>
+                                    Judul Skripsi
+                                </TableCell>
                                 <TableCell sx={tableHeadStyle}>
                                     Tanggal Pengajuan
                                 </TableCell>
@@ -207,35 +230,27 @@ export default function Comprehensive({ comprehensives, meta }) {
                             {comprehensives.data.map((comprehensive, index) => (
                                 <TableRow key={index}>
                                     <TableCell padding="checkbox">
-                                        <Checkbox
-                                            sx={{
-                                                color: "zinc-200",
-                                                "&.Mui-checked": {
-                                                    color: "primary2",
-                                                },
-                                            }}
-                                        ></Checkbox>
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "700",
-                                        }}
-                                    >
-                                        {comprehensive.student.name}
+                                        <Checkbox sx={tableCheckboxStyle} />
                                     </TableCell>
                                     <TableCell
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "150px",
+                                            maxWidth: "200px",
                                         }}
                                     >
+                                        {comprehensive.student.name}
+                                    </TableCell>
+                                    <TableCell sx={tableCellStyle}>
                                         {comprehensive.student.nim}
                                     </TableCell>
                                     <TableCell
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "250px",
+                                            maxWidth: "250px",
                                         }}
                                     >
                                         {comprehensive.essay_title}
@@ -244,17 +259,16 @@ export default function Comprehensive({ comprehensives, meta }) {
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "150px",
+                                            maxWidth: "200px",
                                         }}
                                     >
                                         {idFormatDate(comprehensive.created_at)}
                                     </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                        }}
-                                    >
-                                        Pending
+                                    <TableCell sx={tableCellStyle}>
+                                        <StatusBox
+                                            status={comprehensive.status.name}
+                                        />
                                     </TableCell>
                                     <TableCell
                                         sx={{ padding: "0 10px" }}
@@ -265,7 +279,18 @@ export default function Comprehensive({ comprehensives, meta }) {
                                             justifyContent={"space-between"}
                                             alignItems={"center"}
                                         >
-                                            <HiOutlineEye size={22} />
+                                            <AppLink
+                                                color="black"
+                                                href={route(
+                                                    "admin.comprehensive.show",
+                                                    {
+                                                        comprehensive:
+                                                            comprehensive.id,
+                                                    }
+                                                )}
+                                            >
+                                                <HiOutlineEye size={22} />
+                                            </AppLink>
                                             <AppLink
                                                 color={"black"}
                                                 href={route(
@@ -279,16 +304,11 @@ export default function Comprehensive({ comprehensives, meta }) {
                                                 <TbEdit size={22} />
                                             </AppLink>
                                             <RiDeleteBin6Line
+                                                cursor={"pointer"}
                                                 size={22}
                                                 onClick={() => {
-                                                    router.delete(
-                                                        route(
-                                                            "admin.proposal.delete",
-                                                            {
-                                                                proposal:
-                                                                    proposal.id,
-                                                            }
-                                                        )
+                                                    handleOpenDelete(
+                                                        comprehensive.id
                                                     );
                                                 }}
                                             />
@@ -328,15 +348,13 @@ export default function Comprehensive({ comprehensives, meta }) {
                             Data
                         </Typography>
                     </Box>
-                    <ThemeProvider theme={themePagination}>
-                        <Pagination
-                            count={meta.total_page}
-                            page={page.current}
-                            onChange={handleChangePage}
-                            size="small"
-                            shape="rounded"
-                        ></Pagination>
-                    </ThemeProvider>
+                    <Pagination
+                        count={meta.total_page}
+                        page={page.current}
+                        onChange={handleChangePage}
+                        size="small"
+                        shape="rounded"
+                    ></Pagination>
                 </Box>
             </BaseLayout>
             ;

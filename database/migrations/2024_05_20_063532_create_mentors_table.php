@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Lecturer;
 use App\Models\Proposal;
 use App\Models\Result;
 use Illuminate\Database\Migrations\Migration;
@@ -15,7 +16,8 @@ return new class extends Migration
     {
         Schema::create('mentors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            // $table->string('name');
+            $table->foreignIdFor(Lecturer::class)->nullable()->constrained()->references("id")->on("lecturers")->onDelete("set null")->onUpdate("cascade");
             $table->integer('order')->unsigned();
             $table->string('description')->nullable();
             $table->foreignIdFor(Proposal::class)->nullable()->constraint()->references("id")->on("proposals");

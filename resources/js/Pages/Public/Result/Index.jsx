@@ -1,31 +1,30 @@
 import React, { useState } from "react";
-import { Head, Link, router, usePage } from "@inertiajs/react";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import MenuItem from "@mui/material/MenuItem";
-import Typography from "@mui/material/Typography";
-import MenuIcon from "@mui/icons-material/Menu";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import Button from "@mui/material/Button";
+import { Head, router, usePage } from "@inertiajs/react";
 
 import {
-    AppBar,
-    Breadcrumbs,
+    TextField,
+    Box,
+    MenuItem,
+    Typography,
+    ButtonGroup,
+    Button,
     Container,
     Grid,
-    IconButton,
-    Menu,
-    Toolbar,
     FormHelperText,
+    Select,
 } from "@mui/material";
 import ReactSignatureCanvas from "react-signature-canvas";
 import { FaPlus } from "react-icons/fa";
-import AppInputLabel from "../component/AppInputLabel";
-import InputFileUpload from "../component/InputFileComponent";
-import FooterComponent from "../component/footerComponent";
+import { semesterListItems } from "../../admin/components/elements/input/SemesterListItems";
+import InputErrorMessage from "../../admin/components/elements/input/InputErrorMessage";
+import AppInputLabel from "../../admin/components/elements/input/AppInputLabel";
+import InputFileUpload from "../../admin/components/elements/input/InputFileUpload";
+import dataURLtoBlob from "blueimp-canvas-to-blob";
+import PublicBaseLayout from "../base_layout/PublicBaseLayout";
+import AppBreadcrumbs from "../../admin/components/elements/AppBreadcrumbs";
+import AppLink from "../../admin/components/AppLink";
 
-export default function Hasil({ file_requirements }) {
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
+export default function Hasil({ file_requirements, lecturers }) {
     const [signature, setSignatur] = useState();
     const [emptySignature, setEmptySignature] = useState(false);
     const clearSignatur = () => {
@@ -49,14 +48,6 @@ export default function Hasil({ file_requirements }) {
         }
     };
 
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
-
     const { errors } = usePage().props;
     const [formValues, setFormValues] = useState({
         name: "",
@@ -66,8 +57,8 @@ export default function Hasil({ file_requirements }) {
         semester: "",
         phone: "",
         essay_title: "",
-        mentors: ["", ""],
-        testers: ["", ""],
+        mentor_ids: ["", ""],
+        tester_ids: ["", ""],
         date: "",
         time: "",
         location: "",
@@ -77,7 +68,7 @@ export default function Hasil({ file_requirements }) {
     function handleChangeForm(e, index = null) {
         const name = e.target.name;
         const value = e.target.value;
-        if (["mentors", "testers"].includes(name) && index != null) {
+        if (["mentor_ids", "tester_ids"].includes(name) && index != null) {
             setFormValues((values) => {
                 const updateArray = [...values[name]];
                 updateArray[index] = value;
@@ -102,8 +93,6 @@ export default function Hasil({ file_requirements }) {
         }
     }
     function handleSubmitForm(e) {
-        console.log(formValues);
-        console.log(errors);
         const formData = new FormData();
         for (const [key, value] of Object.entries(formValues)) {
             if (key == "files") {
@@ -118,8 +107,7 @@ export default function Hasil({ file_requirements }) {
                 formData.append(key, value);
             }
         }
-        // router.post("/admin/proposal", formValues);
-        router.post("/admin/proposal", formData, {
+        router.post(route("result.store"), formData, {
             headers: {
                 "Content-Type": "multipart/form-formValues",
             },
@@ -129,558 +117,539 @@ export default function Hasil({ file_requirements }) {
     return (
         <>
             <Head title="Seminar Hasil" />
-            <AppBar position="static">
-                <Container maxWidth="xl">
-                    <Toolbar disableGutters>
-                        <Typography
-                            variant="h6"
-                            noWrap
-                            component="a"
-                            href="#app-bar-with-responsive-menu"
-                            sx={{
-                                mr: 2,
-                                display: { xs: "none", md: "flex" },
-                                fontFamily: "monospace",
-                                fontWeight: 700,
-                                letterSpacing: ".3rem",
-                                color: "inherit",
-                                textDecoration: "none",
-                            }}
-                        >
-                            TI-UINAM
-                        </Typography>
-
-                        <Box
-                            sx={{
-                                flexGrow: 1,
-                                display: { xs: "flex", md: "none" },
-                            }}
-                        >
-                            <IconButton
-                                size="large"
-                                aria-label="account of current user"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleOpenNavMenu}
-                                color="inherit"
-                            >
-                                <MenuIcon />
-                            </IconButton>
-                            <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorElNav}
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "left",
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "left",
-                                }}
-                                open={Boolean(anchorElNav)}
-                                onClose={handleCloseNavMenu}
-                                sx={{
-                                    display: { xs: "block", md: "none" },
-                                }}
-                            >
-                                <MenuItem
-                                    key="Home"
-                                    onClick={handleCloseNavMenu}
-                                >
-                                    <Link
-                                        key="Home"
-                                        onClick={handleCloseNavMenu}
-                                        style={{
-                                            marginRight: 10,
-                                            textDecoration: "none",
-                                        }}
-                                        href="/"
-                                        className="link-head-mobile"
-                                    >
-                                        Home
-                                    </Link>
-                                </MenuItem>
-                                <MenuItem
-                                    key="Daftar"
-                                    onClick={handleCloseNavMenu}
-                                >
-                                    <Link
-                                        key="Daftar"
-                                        onClick={handleCloseNavMenu}
-                                        style={{
-                                            marginRight: 10,
-                                            textDecoration: "none",
-                                        }}
-                                        href="/"
-                                        className="link-head-mobile"
-                                    >
-                                        Daftar
-                                    </Link>
-                                </MenuItem>
-                                <MenuItem
-                                    key="Tentang Kami"
-                                    onClick={handleCloseNavMenu}
-                                >
-                                    <Link
-                                        key="Tentang Kami"
-                                        onClick={handleCloseNavMenu}
-                                        style={{
-                                            marginRight: 10,
-                                            textDecoration: "none",
-                                        }}
-                                        href="/"
-                                        className="link-head-mobile"
-                                    >
-                                        Tentang Kami
-                                    </Link>
-                                </MenuItem>
-                            </Menu>
-                        </Box>
-                        <Typography
-                            variant="h5"
-                            noWrap
-                            component="a"
-                            href="#app-bar-with-responsive-menu"
-                            sx={{
-                                mr: 2,
-                                display: { xs: "flex", md: "none" },
-                                flexGrow: 1,
-                                fontFamily: "monospace",
-                                fontWeight: 700,
-                                letterSpacing: ".3rem",
-                                color: "inherit",
-                                textDecoration: "none",
-                            }}
-                        >
-                            TI-UINAM
-                        </Typography>
-                        <Box
-                            sx={{
-                                flexGrow: 1,
-                                display: { xs: "none", md: "flex" },
-                                justifyContent: "end",
-                            }}
-                        >
-                            <Link
-                                key="Home"
-                                onClick={handleCloseNavMenu}
-                                style={{
-                                    marginRight: 10,
-                                    textDecoration: "none",
-                                }}
-                                href="/"
-                                className="link-head"
-                            >
-                                Home
-                            </Link>
-                            <Link
-                                key="daftar"
-                                onClick={handleCloseNavMenu}
-                                style={{
-                                    textDecoration: "none",
-                                    marginRight: 10,
-                                }}
-                                href="/proposal"
-                                className="link-head"
-                            >
-                                Daftar
-                            </Link>
-                            <Link
-                                key="tentang-kami"
-                                onClick={handleCloseNavMenu}
-                                style={{
-                                    textDecoration: "none",
-                                    marginRight: 10,
-                                }}
-                                href="#tentang"
-                                className="link-head"
-                            >
-                                Tentang Kami
-                            </Link>
-                        </Box>
-                    </Toolbar>
-                </Container>
-            </AppBar>
-            <Box
-                justifyContent={"space-between"}
-                display={"flex"}
-                sx={{ marginTop: 3, width: "97%" }}
-            >
-                <Box container sx={{ marginLeft: { xs: 3, md: 5 } }}>
-                    <Breadcrumbs aria-label="breadcrumb">
-                        <Link underline="hover" color="inherit" href="/">
-                            Home
-                        </Link>
-                        <Link
-                            underline="hover"
-                            color="inherit"
-                            href="/proposal"
-                        >
-                            <Typography color="text.primary">
-                                Seminar Hasil
+            <PublicBaseLayout>
+                <Container maxWidth="lg" sx={{ marginTop: "85px" }}>
+                    <AppBreadcrumbs>
+                        <AppLink href={route("home")}>Home</AppLink>
+                        <AppLink href={route("home")}>Daftar</AppLink>
+                        <AppLink href={route("result")} color="black">
+                            Hasil
+                        </AppLink>
+                    </AppBreadcrumbs>
+                    <Box
+                        display={"flex"}
+                        alignItems={"flex-start"}
+                        justifyContent={"space-between"}
+                        my={1}
+                    >
+                        <Box>
+                            <Typography variant="h5" fontWeight={"600"}>
+                                Buat Permohonan
                             </Typography>
-                        </Link>
-                    </Breadcrumbs>
-                    <Typography variant="h5" component="h1">
-                        Seminar Hasil
-                    </Typography>
-                </Box>
-                <Box>
-                    <Button
-                        onClick={handleSubmitForm}
-                        variant="contained"
-                        color="primary"
-                        // startIcon={}
+                            <Typography variant="caption">
+                                Isi Formulir Permohonan Seminar Hasil
+                            </Typography>
+                        </Box>
+                        <Button
+                            onClick={handleSubmitForm}
+                            variant="contained"
+                            size="small"
+                            startIcon={<FaPlus size={16} />}
+                            sx={{
+                                textTransform: "none",
+                                display: {
+                                    xs: "none",
+                                    sm: "inherit",
+                                },
+                            }}
+                        >
+                            Simpan
+                        </Button>
+                    </Box>
+                    <Box
+                        display={"flex"}
+                        alignItems={"flex-start"}
+                        gap={3}
                         sx={{
-                            background: "#1976d2",
-                            textTransform: "none",
-                            display: {
-                                // xs: "none",
-                                sm: "inherit",
+                            flexWrap: {
+                                xs: "wrap",
+                                md: "nowrap",
                             },
                         }}
                     >
-                        <FaPlus /> Simpan
-                    </Button>
-                </Box>
-            </Box>
-            <Box>
-                <Grid item container>
-                    <Grid item xs={12} md={8}>
-                        <Box display={"flex"} justifyContent={"center"}>
-                            {/* <Grid> */}
-
-                            <Box
-                                sx={{
-                                    mt: 2,
-                                    width: "90%",
-                                    boxShadow: "3",
-                                    p: { xs: 1, md: 3 },
-                                    borderRadius: 2,
-                                }}
+                        <Box
+                            flex={{
+                                xs: "100%",
+                                md: 8,
+                            }}
+                            sx={{
+                                background: "white",
+                                border: ".5px solid",
+                                borderColor: "slate-300",
+                                borderRadius: "4px",
+                            }}
+                        >
+                            <Typography
+                                variant="body2"
+                                color="initial"
+                                sx={{ p: "15px", fontWeight: "600" }}
+                                borderBottom={"1px solid"}
+                                borderColor={"slate-300"}
                             >
-                                <Typography mb={2}>Mahasiswa</Typography>
-                                <TextField
-                                    label="Name"
-                                    fullWidth
-                                    variant="outlined"
-                                    value={formValues.name}
-                                    sx={{ mb: 2 }}
-                                    id="name"
-                                    type="string"
-                                    name="name"
-                                    onChange={handleChangeForm}
-                                />
-                                <TextField
-                                    label="Nim"
-                                    fullWidth
-                                    variant="outlined"
-                                    value={formValues.nim}
-                                    id="nim"
-                                    name="nim"
-                                    type="string"
-                                    sx={{ mb: 2 }}
-                                    onChange={handleChangeForm}
-                                />
-                                <Box>
-                                    <Grid item container>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                label="Tempat Lahir"
-                                                fullWidth
-                                                variant="outlined"
-                                                value={formValues.pob}
-                                                id="pob"
-                                                type="string"
-                                                name="pob"
-                                                onChange={handleChangeForm}
-                                                sx={{ mb: 2, width: "99.5%" }}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <TextField
-                                                //   label="Tempat Lahir"
-                                                fullWidth
-                                                variant="outlined"
-                                                type="date"
-                                                value={formValues.dob}
-                                                id="dob"
-                                                name="dob"
-                                                onChange={handleChangeForm}
-                                                sx={{ mb: 2, width: "99.5%" }}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container>
-                                        <Grid item xs={8}>
-                                            <TextField
-                                                label="Jurusan"
-                                                fullWidth
-                                                variant="outlined"
-                                                value={"Teknik Informatika"}
-                                                disabled
-                                                sx={{ mb: 2, width: "99.5%" }}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={4}>
-                                            <TextField
-                                                label="semester"
-                                                fullWidth
-                                                variant="outlined"
-                                                value={formValues.tempatLahir}
-                                                id="semester"
-                                                type="string"
-                                                name="semester"
-                                                onChange={handleChangeForm}
-                                                sx={{ mb: 2, width: "99.5%" }}
-                                            />
-                                        </Grid>
-                                    </Grid>
+                                Data Seminar
+                            </Typography>
+                            <Grid container spacing={2} padding={"15px"}>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel
+                                        label="Nama"
+                                        required={true}
+                                    />
                                     <TextField
-                                        label="Nomor Hp"
+                                        id="name"
+                                        name="name"
+                                        type="string"
+                                        value={formValues.name}
+                                        onChange={handleChangeForm}
+                                        placeholder="Masukkan Nama Mahasiswa"
                                         fullWidth
-                                        variant="outlined"
-                                        sx={{ mb: 2 }}
+                                        error={errors.name ? true : false}
+                                        helperText={errors.name ?? ""}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel
+                                        label="NIM"
+                                        required={true}
+                                    />
+                                    <TextField
+                                        id="nim"
+                                        name="nim"
+                                        type="number"
+                                        value={formValues.nim}
+                                        onChange={handleChangeForm}
+                                        placeholder="Masukkan NIM"
+                                        fullWidth
+                                        error={errors.nim ? true : false}
+                                        helperText={errors.nim ?? ""}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel
+                                        label="Tempat Lahir"
+                                        required={true}
+                                    />
+                                    <TextField
+                                        id="pob"
+                                        name="pob"
+                                        type="string"
+                                        value={formValues.pob}
+                                        onChange={handleChangeForm}
+                                        placeholder="Masukkan Tempat Lahir"
+                                        fullWidth
+                                        error={errors.pob ? true : false}
+                                        helperText={errors.pob ?? ""}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel
+                                        label="Tanggal Lahir"
+                                        required={true}
+                                    />
+                                    <TextField
+                                        id="dob"
+                                        name="dob"
+                                        type="date"
+                                        value={formValues.dob}
+                                        onChange={handleChangeForm}
+                                        placeholder="Masukkan Tanggal Lahir"
+                                        fullWidth
+                                        error={errors.dob ? true : false}
+                                        helperText={errors.dob ?? ""}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel
+                                        label="Semester"
+                                        required={true}
+                                    />
+                                    <Select
+                                        id="semester"
+                                        name="semester"
+                                        value={formValues.semester}
+                                        onChange={handleChangeForm}
+                                        fullWidth
+                                        displayEmpty
+                                        error={errors.semester ? true : false}
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Semester Saat Ini
+                                            </Typography>
+                                        </MenuItem>
+                                        {semesterListItems.map(
+                                            (semester, i) => {
+                                                return (
+                                                    <MenuItem
+                                                        key={i}
+                                                        value={semester.value}
+                                                    >
+                                                        {semester.body}
+                                                    </MenuItem>
+                                                );
+                                            }
+                                        )}
+                                    </Select>
+                                    {errors.semester && (
+                                        <InputErrorMessage>
+                                            {errors.semester}
+                                        </InputErrorMessage>
+                                    )}
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel
+                                        label="Nomor Telepon"
+                                        required={true}
+                                    />
+                                    <TextField
                                         id="phone"
                                         name="phone"
                                         type="number"
                                         value={formValues.phone}
                                         onChange={handleChangeForm}
+                                        placeholder="Masukkan Nomor Telepon"
+                                        fullWidth
+                                        error={errors.phone ? true : false}
+                                        helperText={errors.phone ?? ""}
                                     />
-                                </Box>
-                            </Box>
-                        </Box>
-                        <Box display={"flex"} justifyContent={"center"}>
-                            {/* <Grid> */}
-
-                            <Box
-                                sx={{
-                                    mt: 2,
-                                    width: "90%",
-                                    boxShadow: "3",
-                                    p: { xs: 1, md: 3 },
-                                    borderRadius: 2,
-                                }}
-                            >
-                                <Typography mb={2}>Seminar Hasil</Typography>
-                                <TextField
-                                    label="Judul Skripsi"
-                                    multiline
-                                    fullWidth
-                                    variant="outlined"
-                                    sx={{ mb: 2 }}
-                                    id="phone"
-                                    name="phone"
-                                    type="string"
-                                    rows={3}
-                                    value={formValues.phone}
-                                    onChange={handleChangeForm}
-                                />
-
-                                <Grid container>
-                                    <Grid item xs={6}>
-                                        <TextField
-                                            label="Pembimbing 1"
-                                            fullWidth
-                                            variant="outlined"
-                                            value={formValues.mentor}
-                                            onChange={handleChangeForm}
-                                            sx={{ mb: 2, width: "99.5%" }}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <TextField
-                                            label="pembimbing 2"
-                                            fullWidth
-                                            variant="outlined"
-                                            value={formValues.mentor}
-                                            onChange={handleChangeForm}
-                                            sx={{ mb: 2, width: "99.5%" }}
-                                        />
-                                    </Grid>
                                 </Grid>
-                                <Grid container>
-                                    <Grid item xs={6}>
-                                        <TextField
-                                            label="Penguji 1"
-                                            fullWidth
-                                            variant="outlined"
-                                            value={formValues.tempatLahir}
-                                            onChange={handleChangeForm}
-                                            sx={{ mb: 2, width: "99.5%" }}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <TextField
-                                            label="Penguji 2"
-                                            fullWidth
-                                            variant="outlined"
-                                            value={formValues.tempatLahir}
-                                            onChange={handleChangeForm}
-                                            sx={{ mb: 2, width: "99.5%" }}
-                                        />
-                                    </Grid>
+                                <Grid item xs={12}>
+                                    <AppInputLabel
+                                        label="Judul Skripsi"
+                                        required={true}
+                                    />
+                                    <TextField
+                                        id="essay_title"
+                                        name="essay_title"
+                                        type="string"
+                                        value={formValues.essay_title}
+                                        onChange={handleChangeForm}
+                                        placeholder="Masukkan Judul Skripsi"
+                                        fullWidth
+                                        multiline
+                                        rows={2}
+                                        error={
+                                            errors.essay_title ? true : false
+                                        }
+                                        helperText={errors.essay_title ?? ""}
+                                    />
                                 </Grid>
-                            </Box>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <Box display={"flex"} justifyContent={"center"}>
-                            <Box
-                                sx={{
-                                    mt: 2,
-                                    width: "90%",
-                                    boxShadow: "3",
-                                    borderRadius: 2,
-                                    padding: 1,
-                                }}
-                            >
-                                <Box
-                                    flex={{
-                                        xs: "100%",
-                                        md: 5,
-                                    }}
-                                    display={"flex"}
-                                    flexDirection={"column"}
-                                    gap={2}
-                                >
-                                    <Box
-                                        sx={{
-                                            background: "white",
-                                            // border: ".5px solid",
-                                            // borderColor: "slate-300",
-                                            borderRadius: "4px",
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel
+                                        label="Pembimbing 1"
+                                        required={true}
+                                    />
+                                    <Select
+                                        id="mentor_ids0"
+                                        name="mentor_ids"
+                                        value={formValues.mentor_ids[0]}
+                                        onChange={(e) => {
+                                            handleChangeForm(e, 0);
                                         }}
+                                        displayEmpty
+                                        error={
+                                            errors["mentor_ids.0"]
+                                                ? true
+                                                : false
+                                        }
+                                        fullWidth
+                                        sx={{ textTransform: "capitalize" }}
                                     >
-                                        <Typography
-                                            variant="body2"
-                                            color="initial"
-                                            sx={{
-                                                p: "15px",
-                                                fontWeight: "600",
-                                            }}
-                                            borderBottom={"1px solid"}
-                                            // borderColor={"   "}
-                                        >
-                                            Berkas
-                                        </Typography>
-                                        <Grid
-                                            container
-                                            spacing={2}
-                                            padding={"15px"}
-                                        >
-                                            <AppInputLabel label="seminar sk" />
-                                            <InputFileUpload />
-                                            {/* {file_requirements.map(
-                                                (file_requirement, index) => {
-                                                    return (
-                                                        <Grid
-                                                            item
-                                                            xs={12}
-                                                            key={index}
-                                                        >
-                                                            <AppInputLabel
-                                                                label={file_requirement.name.replaceAll(
-                                                                    "_",
-                                                                    " "
-                                                                )}
-                                                                required={
-                                                                    file_requirement.is_required
-                                                                }
-                                                            />
-                                                            <InputFileUpload
-                                                                id="name"
-                                                                name={
-                                                                    file_requirement.name
-                                                                }
-                                                                type="file"
-                                                                accept={".pdf"}
-                                                                onChange={
-                                                                    handleChangeForm
-                                                                }
-                                                            />
-                                                            {formValues.files[
-                                                                file_requirement
-                                                                    .name
-                                                            ] ? (
-                                                                <FormHelperText
-                                                                    sx={{
-                                                                        display:
-                                                                            "flex",
-                                                                        justifyContent:
-                                                                            "space-between",
-                                                                    }}
-                                                                >
-                                                                    <Typography variant="">
-                                                                        File:{" "}
-                                                                        {formValues.files[
-                                                                            file_requirement
-                                                                                .name
-                                                                        ].name.substring(
-                                                                            0,
-                                                                            20
-                                                                        )}
-                                                                    </Typography>
-                                                                    <Typography variant="">
-                                                                        {(
-                                                                            formValues
-                                                                                .files[
-                                                                                file_requirement
-                                                                                    .name
-                                                                            ]
-                                                                                .size /
-                                                                            1024
-                                                                        ).toFixed(
-                                                                            0
-                                                                        )}{" "}
-                                                                        KB
-                                                                    </Typography>
-                                                                </FormHelperText>
-                                                            ) : (
-                                                                ""
-                                                            )}
-                                                            {errors[
-                                                                file_requirement
-                                                                    .name
-                                                            ] && (
-                                                                <InputErrorMessage
-                                                                    px={"0px"}
-                                                                >
-                                                                    {
-                                                                        errors[
-                                                                            file_requirement
-                                                                                .name
-                                                                        ]
-                                                                    }
-                                                                </InputErrorMessage>
-                                                            )}
-                                                        </Grid>
-                                                    );
-                                                }
-                                            )} */}
-                                        </Grid>
-                                    </Box>
-                                </Box>
-                            </Box>
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Nama Pembimbing 1
+                                            </Typography>
+                                        </MenuItem>
+                                        {lecturers.map((lecturer, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={lecturer.id}
+                                                sx={{
+                                                    textTransform: "capitalize",
+                                                }}
+                                            >
+                                                {lecturer.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    {errors["mentor_ids.0"] && (
+                                        <InputErrorMessage>
+                                            {errors["mentor_ids.0"]}
+                                        </InputErrorMessage>
+                                    )}
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel
+                                        label="Pembimbing 2"
+                                        required={true}
+                                    />
+                                    <Select
+                                        id="mentor_ids1"
+                                        name="mentor_ids"
+                                        value={formValues.mentor_ids[1]}
+                                        onChange={(e) => {
+                                            handleChangeForm(e, 1);
+                                        }}
+                                        displayEmpty
+                                        error={
+                                            errors["mentor_ids.1"]
+                                                ? true
+                                                : false
+                                        }
+                                        fullWidth
+                                        sx={{ textTransform: "capitalize" }}
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Nama Pembimbing 1
+                                            </Typography>
+                                        </MenuItem>
+                                        {lecturers.map((lecturer, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={lecturer.id}
+                                                sx={{
+                                                    textTransform: "capitalize",
+                                                }}
+                                            >
+                                                {lecturer.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    {errors["mentor_ids.1"] && (
+                                        <InputErrorMessage>
+                                            {errors["mentor_ids.1"]}
+                                        </InputErrorMessage>
+                                    )}
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel label="Penguji 1" />
+                                    <Select
+                                        id="tester_ids0"
+                                        name="tester_ids"
+                                        value={formValues.tester_ids[0]}
+                                        onChange={(e) => {
+                                            handleChangeForm(e, 0);
+                                        }}
+                                        displayEmpty
+                                        error={
+                                            errors["tester_ids.0"]
+                                                ? true
+                                                : false
+                                        }
+                                        fullWidth
+                                        sx={{ textTransform: "capitalize" }}
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Nama Penguji 1
+                                            </Typography>
+                                        </MenuItem>
+                                        {lecturers.map((lecturer, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={lecturer.id}
+                                                sx={{
+                                                    textTransform: "capitalize",
+                                                }}
+                                            >
+                                                {lecturer.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    {errors["tester_ids.0"] && (
+                                        <InputErrorMessage>
+                                            {errors["tester_ids.0"]}
+                                        </InputErrorMessage>
+                                    )}
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel label="Penguji 2" />
+                                    <Select
+                                        id="tester_ids1"
+                                        name="tester_ids"
+                                        value={formValues.tester_ids[1]}
+                                        onChange={(e) => {
+                                            handleChangeForm(e, 1);
+                                        }}
+                                        displayEmpty
+                                        error={
+                                            errors["tester_ids.1"]
+                                                ? true
+                                                : false
+                                        }
+                                        fullWidth
+                                        sx={{ textTransform: "capitalize" }}
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Nama Penguji 2
+                                            </Typography>
+                                        </MenuItem>
+                                        {lecturers.map((lecturer, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={lecturer.id}
+                                                sx={{
+                                                    textTransform: "capitalize",
+                                                }}
+                                            >
+                                                {lecturer.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    {errors["tester_ids.1"] && (
+                                        <InputErrorMessage>
+                                            {errors["tester_ids.1"]}
+                                        </InputErrorMessage>
+                                    )}
+                                </Grid>
+                            </Grid>
                         </Box>
-                        <Box display={"flex"} justifyContent={"center"}>
+                        <Box
+                            flex={{
+                                xs: "100%",
+                                md: 5,
+                            }}
+                            display={"flex"}
+                            flexDirection={"column"}
+                            gap={2}
+                        >
                             <Box
                                 sx={{
                                     background: "white",
-                                    // border: ".5px solid",
-                                    // borderColor: "slate-300",
-                                    boxShadow: 2,
-                                    marginTop: 2,
+                                    border: ".5px solid",
+                                    borderColor: "slate-300",
                                     borderRadius: "4px",
-                                    width: "90%",
-                                    padding: 1,
+                                }}
+                            >
+                                <Typography
+                                    variant="body2"
+                                    color="initial"
+                                    sx={{ p: "15px", fontWeight: "600" }}
+                                    borderBottom={"1px solid"}
+                                    borderColor={"slate-300"}
+                                >
+                                    Berkas
+                                </Typography>
+                                <Grid container spacing={2} padding={"15px"}>
+                                    {file_requirements.map(
+                                        (file_requirement, index) => {
+                                            return (
+                                                <Grid item xs={12} key={index}>
+                                                    <AppInputLabel
+                                                        label={file_requirement.name.replaceAll(
+                                                            "_",
+                                                            " "
+                                                        )}
+                                                        required={
+                                                            file_requirement.is_required
+                                                        }
+                                                    />
+                                                    <InputFileUpload
+                                                        id="name"
+                                                        name={
+                                                            file_requirement.name
+                                                        }
+                                                        type="file"
+                                                        accept={".pdf"}
+                                                        onChange={
+                                                            handleChangeForm
+                                                        }
+                                                    />
+                                                    {formValues.files[
+                                                        file_requirement.name
+                                                    ] ? (
+                                                        <FormHelperText
+                                                            sx={{
+                                                                display: "flex",
+                                                                justifyContent:
+                                                                    "space-between",
+                                                            }}
+                                                        >
+                                                            <Typography variant="">
+                                                                File:{" "}
+                                                                {formValues.files[
+                                                                    file_requirement
+                                                                        .name
+                                                                ].name.substring(
+                                                                    0,
+                                                                    20
+                                                                )}
+                                                            </Typography>
+                                                            <Typography variant="">
+                                                                {(
+                                                                    formValues
+                                                                        .files[
+                                                                        file_requirement
+                                                                            .name
+                                                                    ].size /
+                                                                    1024
+                                                                ).toFixed(
+                                                                    0
+                                                                )}{" "}
+                                                                KB
+                                                            </Typography>
+                                                        </FormHelperText>
+                                                    ) : (
+                                                        ""
+                                                    )}
+                                                    {errors[
+                                                        file_requirement.name
+                                                    ] && (
+                                                        <InputErrorMessage
+                                                            px={"0px"}
+                                                        >
+                                                            {
+                                                                errors[
+                                                                    file_requirement
+                                                                        .name
+                                                                ]
+                                                            }
+                                                        </InputErrorMessage>
+                                                    )}
+                                                </Grid>
+                                            );
+                                        }
+                                    )}
+                                </Grid>
+                            </Box>
+                            <Box
+                                sx={{
+                                    background: "white",
+                                    border: ".5px solid",
+                                    borderColor: "slate-300",
+                                    borderRadius: "4px",
                                 }}
                             >
                                 <Box
                                     sx={{ p: "15px" }}
                                     borderBottom={"1px solid"}
-                                    // borderColor={"slate-300"}
+                                    borderColor={"slate-300"}
                                 >
                                     <Box display={"flex"} height={"fit"}>
                                         <Typography
@@ -726,7 +695,7 @@ export default function Hasil({ file_requirements }) {
                                 <Box>
                                     <ButtonGroup
                                         variant="contained"
-                                        // color="slate-300"
+                                        color="slate-300"
                                         fullWidth
                                     >
                                         <Button onClick={clearSignatur}>
@@ -739,10 +708,28 @@ export default function Hasil({ file_requirements }) {
                                 </Box>
                             </Box>
                         </Box>
-                    </Grid>
-                </Grid>
-            </Box>
-            <FooterComponent sx={{ marginTop: "100px" }} />
+                        <Box
+                            flex={"100%"}
+                            display={{
+                                sx: "inherit",
+                                md: "none",
+                            }}
+                        >
+                            <Button
+                                onClick={handleSubmitForm}
+                                variant="contained"
+                                startIcon={<FaPlus size={16} />}
+                                fullWidth
+                                sx={{
+                                    textTransform: "none",
+                                }}
+                            >
+                                Simpan
+                            </Button>
+                        </Box>
+                    </Box>
+                </Container>
+            </PublicBaseLayout>
         </>
     );
 }

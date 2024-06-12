@@ -3,6 +3,7 @@ import BaseLayout from "../base_layout/BaseLayout";
 import { Head, router } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
+import StatusBox from "../components/StatusBox";
 import Typography from "@mui/material/Typography";
 import {
     Box,
@@ -19,19 +20,20 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    ThemeProvider,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { themePagination } from "../../../theme/PaginationTheme";
-import { idFormatDate } from "../../../helper/idFormatDate";
+import { idFormatDate } from "../../../helper/dateTimeHelper";
 import pickBy from "lodash.pickby";
-import ReactToPrint from "react-to-print";
-import CetakProposal from "../cetak/cetakProposal";
-import { tableHeadStyle } from "../components/styles/tableHeadStyle";
+import {
+    tableCellStyle,
+    tableCheckboxStyle,
+    tableHeadStyle,
+} from "../components/styles/tableStyles";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 export default function Proposal({ proposals, meta }) {
     const showItemOptions = [5, 10, 15, 20, 25];
@@ -74,10 +76,42 @@ export default function Proposal({ proposals, meta }) {
         page.current = meta.total_page;
         getData();
     }
-    const componentRef = useRef();
+
+    const [confirmDelete, setConfirmDelete] = useState({
+        open: false,
+        id: "",
+    });
+    const handleOpenDelete = (id) => {
+        setConfirmDelete({
+            open: true,
+            id,
+        });
+    };
+    const handleCloseDelete = () => {
+        setConfirmDelete({
+            open: false,
+            id: "",
+        });
+    };
+    const handleDeleteData = () => {
+        router.delete(
+            route("admin.proposal.delete", {
+                proposal: confirmDelete.id,
+            })
+        );
+        setConfirmDelete({
+            open: false,
+            id: "",
+        });
+    };
     return (
         <>
             <Head title="Proposal" />
+            <ConfirmDeleteModal
+                open={confirmDelete.open}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -107,28 +141,13 @@ export default function Proposal({ proposals, meta }) {
                             variant="contained"
                             startIcon={<FaPlus />}
                             size="small"
-                            color="primary"
                             sx={{
-                                background: "#B20600",
                                 textTransform: "none",
                             }}
                         >
                             Permohonan
                         </Button>
                     </AppLink>
-                    <ReactToPrint
-                        trigger={() => (
-                            <Button variant="contained" color="primary">
-                                Cetak ke PDF
-                            </Button>
-                        )}
-                        content={() => componentRef.current}
-                        paperSize={{ width: '210mm', height: '330mm', unit: 'mm' }} 
-                    />
-                    <Box sx={{display:'none'}}>
-
-                    <CetakProposal  ref={componentRef} />
-                    </Box>
                     <Box
                         display={"flex"}
                         alignItems={"center"}
@@ -173,20 +192,13 @@ export default function Proposal({ proposals, meta }) {
                         <TableHead>
                             <TableRow sx={{ backgroundColor: "gray-100" }}>
                                 <TableCell padding="checkbox">
-                                    <Checkbox
-                                        sx={{
-                                            color: "zinc-200",
-                                            "&.Mui-checked": {
-                                                color: "primary2",
-                                            },
-                                        }}
-                                    ></Checkbox>
+                                    <Checkbox sx={tableCheckboxStyle} />
                                 </TableCell>
-                                <TableCell align="left" sx={tableHeadStyle}>
-                                    Nama
-                                </TableCell>
+                                <TableCell sx={tableHeadStyle}>Nama</TableCell>
                                 <TableCell sx={tableHeadStyle}>NIM</TableCell>
-                                <TableCell sx={tableHeadStyle}>Judul</TableCell>
+                                <TableCell sx={tableHeadStyle}>
+                                    Judul Skripsi
+                                </TableCell>
                                 <TableCell sx={tableHeadStyle}>
                                     Tanggal Pengajuan
                                 </TableCell>
@@ -200,35 +212,27 @@ export default function Proposal({ proposals, meta }) {
                             {proposals.data.map((proposal, index) => (
                                 <TableRow key={index}>
                                     <TableCell padding="checkbox">
-                                        <Checkbox
-                                            sx={{
-                                                color: "zinc-200",
-                                                "&.Mui-checked": {
-                                                    color: "primary2",
-                                                },
-                                            }}
-                                        ></Checkbox>
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "700",
-                                        }}
-                                    >
-                                        {proposal.student.name}
+                                        <Checkbox sx={tableCheckboxStyle} />
                                     </TableCell>
                                     <TableCell
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "150px",
+                                            maxWidth: "200px",
                                         }}
                                     >
+                                        {proposal.student.name}
+                                    </TableCell>
+                                    <TableCell sx={tableCellStyle}>
                                         {proposal.student.nim}
                                     </TableCell>
                                     <TableCell
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "250px",
+                                            maxWidth: "250px",
                                         }}
                                     >
                                         {proposal.essay_title}
@@ -237,28 +241,34 @@ export default function Proposal({ proposals, meta }) {
                                         sx={{
                                             padding: "0 10px",
                                             fontWeight: "600",
+                                            minWidth: "150px",
+                                            maxWidth: "200px",
                                         }}
                                     >
                                         {idFormatDate(proposal.created_at)}
                                     </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                        }}
-                                    >
-                                        Pending
+                                    <TableCell sx={tableCellStyle}>
+                                        <StatusBox
+                                            status={proposal.status.name}
+                                        />
                                     </TableCell>
-                                    <TableCell
-                                        sx={{ padding: "0 10px" }}
-                                        align="center"
-                                    >
+                                    <TableCell sx={tableCellStyle}>
                                         <Box
                                             display={"flex"}
                                             justifyContent={"space-between"}
                                             alignItems={"center"}
                                         >
-                                            <HiOutlineEye size={22} />
+                                            <AppLink
+                                                color="black"
+                                                href={route(
+                                                    "admin.proposal.show",
+                                                    {
+                                                        proposal: proposal.id,
+                                                    }
+                                                )}
+                                            >
+                                                <HiOutlineEye size={22} />
+                                            </AppLink>
                                             <AppLink
                                                 color={"black"}
                                                 href={route(
@@ -271,16 +281,11 @@ export default function Proposal({ proposals, meta }) {
                                                 <TbEdit size={22} />
                                             </AppLink>
                                             <RiDeleteBin6Line
+                                                cursor={"pointer"}
                                                 size={22}
                                                 onClick={() => {
-                                                    router.delete(
-                                                        route(
-                                                            "admin.proposal.delete",
-                                                            {
-                                                                proposal:
-                                                                    proposal.id,
-                                                            }
-                                                        )
+                                                    handleOpenDelete(
+                                                        proposal.id
                                                     );
                                                 }}
                                             />
@@ -320,15 +325,13 @@ export default function Proposal({ proposals, meta }) {
                             Data
                         </Typography>
                     </Box>
-                    <ThemeProvider theme={themePagination}>
-                        <Pagination
-                            count={meta.total_page}
-                            page={page.current}
-                            onChange={handleChangePage}
-                            size="small"
-                            shape="rounded"
-                        ></Pagination>
-                    </ThemeProvider>
+                    <Pagination
+                        count={meta.total_page}
+                        page={page.current}
+                        onChange={handleChangePage}
+                        size="small"
+                        shape="rounded"
+                    ></Pagination>
                 </Box>
             </BaseLayout>
         </>

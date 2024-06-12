@@ -37,12 +37,12 @@ export default function DrawerListItem({ open, toPage, icon, text }) {
                         py: "5px",
                         borderRadius: "3px",
                         "&.Mui-selected": {
-                            background: "#C21010",
+                            background: "#1037C2",
                         },
                         "&:hover": {
-                            background: "#C21010",
+                            background: "#1037C2",
                             "&:hover": {
-                                background: "#C21010",
+                                background: "#1037C2",
                             },
                         },
                     }}

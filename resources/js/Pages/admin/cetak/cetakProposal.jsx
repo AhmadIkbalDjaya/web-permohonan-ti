@@ -1,9 +1,16 @@
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import React, { forwardRef } from "react";
 import Uinam from "../assets/logoUinam.png";
 import "./style.css";
+import {
+    convertToHHMM,
+    getDateDay,
+    idFormatDate,
+} from "../../../helper/dateTimeHelper";
 
 const CetakProposal = forwardRef((props, ref) => {
+    const proposal = props.proposal;
+    const hodSignature = props.hodSignature;
     return (
         <div ref={ref} className="print-container font-pdf">
             <Box
@@ -50,7 +57,6 @@ const CetakProposal = forwardRef((props, ref) => {
                                 fontSize: 18.62,
                                 fontWeight: "bold",
                                 marginTop: "-6px",
-                                fontFamily:"Arial"
                             }}
                             component="div"
                             align="center"
@@ -109,53 +115,58 @@ const CetakProposal = forwardRef((props, ref) => {
                                 cellSpacing={0}
                                 style={{ fontSize: "13.3px" }}
                             >
-                                <tr>
-                                    <td>Nomor </td>
-                                    <td>: </td>
-                                    <td>
-                                        <Typography
-                                            sx={{
-                                                fontSize: "13.3px",
-                                            }}
-                                        >
-                                            712/TI-UINAM/V/2024
-                                        </Typography>
-                                    </td>
-                                </tr>
-                                <tr style={{ marginTop: "-100px" }}>
-                                    <td style={{ width: 50 }}>Hal </td>
-                                    <td style={{ width: 10 }}>: </td>
-                                    <td style={{ paddingTop: "-20px" }}>
-                                        <Typography
-                                            sx={{
-                                                fontSize: "13.3px",
-                                                fontWeight: "bold",
-                                            }}
-                                        >
-                                            Permohonan Penerbitan SK Seminar
-                                            Proposal
-                                        </Typography>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <Typography
-                                            sx={{
-                                                fontSize: "13.3px",
-                                                fontWeight: "bold",
-                                            }}
-                                        >
-                                            dan Undangan
-                                        </Typography>
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>Nomor </td>
+                                        <td>: </td>
+                                        <td>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: "13.3px",
+                                                }}
+                                            >
+                                                {proposal.letter_number ?? "-"}
+                                            </Typography>
+                                        </td>
+                                    </tr>
+                                    <tr style={{ marginTop: "-100px" }}>
+                                        <td style={{ width: 50 }}>Hal </td>
+                                        <td style={{ width: 10 }}>: </td>
+                                        <td style={{ paddingTop: "-20px" }}>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: "13.3px",
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                Permohonan Penerbitan SK Seminar
+                                                Proposal
+                                            </Typography>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: "13.3px",
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                dan Undangan
+                                            </Typography>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </Grid>
                         <Grid item xs={4}>
                             <Typography sx={{ fontSize: "13.3px" }}>
-                                Romang Polong, 15 Mei 2024
+                                Romang Polong,{" "}
+                                {proposal.letter_date
+                                    ? idFormatDate(proposal.letter_date)
+                                    : "-"}
                             </Typography>
                         </Grid>
                     </Grid>
@@ -211,12 +222,12 @@ const CetakProposal = forwardRef((props, ref) => {
                                 <tr>
                                     <td style={{ width: 150 }}>Nama</td>
                                     <td>:</td>
-                                    <td>Erni Rosiyanti</td>
+                                    <td>{proposal.student.name}</td>
                                 </tr>
                                 <tr>
                                     <td>Nim</td>
                                     <td>:</td>
-                                    <td>60200120138</td>
+                                    <td>{proposal.student.nim}</td>
                                 </tr>
                                 <tr>
                                     <td>Jurusan/Prodi</td>
@@ -229,11 +240,7 @@ const CetakProposal = forwardRef((props, ref) => {
                                     </td>
                                     <td style={{ verticalAlign: "top" }}>:</td>
                                     <td style={{ textAlign: "justify" }}>
-                                        Implementasi Teknologi Deep Learning
-                                        dengan Convolutional Neural Network
-                                        dalam Meningkatkan Keterampilan Karateka
-                                        di International Black Panther Karate
-                                        Indonesia
+                                        {proposal.essay_title}
                                     </td>
                                 </tr>
                             </tbody>
@@ -254,54 +261,79 @@ const CetakProposal = forwardRef((props, ref) => {
                                 <tr>
                                     <td style={{ width: 150 }}>Ketua</td>
                                     <td>:</td>
-                                    <td> Aidil</td>
+                                    <td>
+                                        {proposal.chairman
+                                            ? proposal.chairman.name
+                                            : "-"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Sekretaris</td>
                                     <td>:</td>
-                                    <td>Darmatasia, S.Pd., M.Kom.</td>
+                                    <td>
+                                        {proposal.secretary
+                                            ? proposal.secretary.name
+                                            : "-"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Pembimbing I</td>
                                     <td>:</td>
-                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
+                                    <td>{proposal.mentors[0].lecturer ? proposal.mentors[0].lecturer.name : "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Pembimbing II</td>
                                     <td>:</td>
-                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
+                                    <td>{proposal.mentors[0].lecturer ? proposal.mentors[0].lecturer.name : "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Penguji I</td>
                                     <td>:</td>
-                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
+                                    <td>{proposal.testers[0].lecturer ? proposal.testers[0].lecturer.name : "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Penguji II</td>
                                     <td>:</td>
-                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
+                                    <td>{proposal.testers[0].lecturer ? proposal.testers[0].lecturer.name : "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Pelaksana</td>
                                     <td>:</td>
-                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
+                                    <td>
+                                        {proposal.executor
+                                            ? proposal.executor.name
+                                            : "-"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Hari dan Tanggal</td>
                                     <td>:</td>
-                                    <td>Senin, 25 April 2024</td>
+                                    <td>
+                                        {proposal.schedule.date
+                                            ? `${getDateDay(
+                                                  proposal.schedule.date
+                                              )}, 
+                                        ${idFormatDate(proposal.schedule.date)}`
+                                            : "-"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Waktu</td>
                                     <td>:</td>
-                                    <td>14.30 - 16.00 Wita</td>
+                                    <td>
+                                        {proposal.schedule.start_time
+                                            ? `${convertToHHMM(
+                                                  proposal.schedule.start_time
+                                              )} - ${convertToHHMM(
+                                                  proposal.schedule.end_time
+                                              )} ${proposal.schedule.time_zone}`
+                                            : "-"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Tempat Pelaksanaan</td>
                                     <td>:</td>
-                                    <td>
-                                        Ruang Seminar Jurusan Teknik Informatika
-                                    </td>
+                                    <td>{proposal.schedule.location ?? "-"}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -316,7 +348,13 @@ const CetakProposal = forwardRef((props, ref) => {
                             Demikian, atas perhatian dan dukungan Bapak, kami
                             ucapkan terima kasih.
                         </Typography>
-                        <Box sx={{ marginLeft: 42, marginTop: 2 }}>
+                        <Box
+                            sx={{
+                                marginLeft: 42,
+                                marginTop: 2,
+                                position: "absolute",
+                            }}
+                        >
                             <Typography
                                 sx={{
                                     fontWeight: "bold",
@@ -336,18 +374,48 @@ const CetakProposal = forwardRef((props, ref) => {
                             >
                                 Jurusan Teknik Informatika
                             </Typography>
-                        </Box>
-                        <Box sx={{ marginLeft: 42, marginTop: 7 }}>
-                            <Typography
-                                sx={{ fontWeight: "bold", fontSize: "13.3px" }}
-                            >
-                                Mustikasari, S.Kom., M.Kom.
-                            </Typography>
-                            <Typography
-                                sx={{ fontWeight: "bold", fontSize: "13.3px" }}
-                            >
-                                19781106 200604 2 001
-                            </Typography>
+                            {hodSignature ? (
+                                <Box
+                                    component={"img"}
+                                    sx={{
+                                        height: "120px",
+                                        width: "175px",
+                                        position: "relative",
+                                        top: "-26px",
+                                        left: "-10px",
+                                    }}
+                                    src={proposal.hod.signature}
+                                />
+                            ) : (
+                                <Box
+                                    sx={{
+                                        height: "120px",
+                                        width: "175px",
+                                        position: "relative",
+                                        top: "-26px",
+                                        left: "-10px",
+                                    }}
+                                ></Box>
+                            )}
+
+                            <Box sx={{ position: "relative", bottom: "60px" }}>
+                                <Typography
+                                    sx={{
+                                        fontWeight: "bold",
+                                        fontSize: "13.3px",
+                                    }}
+                                >
+                                    {proposal.hod.name}
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        fontWeight: "bold",
+                                        fontSize: "13.3px",
+                                    }}
+                                >
+                                    {proposal.hod.nip}
+                                </Typography>
+                            </Box>
                         </Box>
                     </Box>
                 </Grid>

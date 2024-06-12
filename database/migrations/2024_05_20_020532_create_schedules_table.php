@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
             $table->date('date')->nullable();
-            $table->time('time')->nullable();
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
+            $table->enum('time_zone', ['wib', 'wita', 'wit'])->nullable()->default("wita");
             $table->string('location')->nullable();
             $table->timestamps();
         });
