@@ -530,15 +530,6 @@ export default function EditResult({
                                     Dewan Penguji dan Pelaksana :
                                 </Typography>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Typography
-                                    variant="body2"
-                                    color="initial"
-                                    sx={{ fontWeight: "600" }}
-                                >
-                                    Dewan Penguji dan Pelaksana :
-                                </Typography>
-                            </Grid>
                             <Grid item xs={12} sm={4}>
                                 <AppInputLabel label="Ketua" />
                                 <Select

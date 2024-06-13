@@ -2,8 +2,11 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import React, { forwardRef } from "react";
 import Uinam from "../assets/logoUinam.png";
 import "./style.css";
+import { idFormatDate } from "../../../helper/dateTimeHelper";
 
 const cetakKompren = forwardRef((props, ref) => {
+    const comprehensive = props.comprehensive;
+    const hodSignature = props.hodSignature;
     return (
         <div ref={ref} className="print-container font-pdf">
             <Box
@@ -108,39 +111,45 @@ const cetakKompren = forwardRef((props, ref) => {
                                 cellSpacing={0}
                                 style={{ fontSize: "13.3px" }}
                             >
-                                <tr>
-                                    <td>Nomor </td>
-                                    <td>: </td>
-                                    <td>
-                                        <Typography
-                                            sx={{
-                                                fontSize: "13.3px",
-                                            }}
-                                        >
-                                            712/TI-UINAM/V/2024
-                                        </Typography>
-                                    </td>
-                                </tr>
-                                <tr style={{ marginTop: "-100px" }}>
-                                    <td style={{ width: 50 }}>Hal </td>
-                                    <td style={{ width: 10 }}>: </td>
-                                    <td style={{ paddingTop: "-20px" }}>
-                                        <Typography
-                                            sx={{
-                                                fontSize: "13.3px",
-                                                fontWeight: "bold",
-                                            }}
-                                        >
-                                            Permohonan Penerbitan SK Seminar
-                                            Komprehensif
-                                        </Typography>
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>Nomor </td>
+                                        <td>: </td>
+                                        <td>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: "13.3px",
+                                                }}
+                                            >
+                                                {comprehensive.letter_number ??
+                                                    "-"}
+                                            </Typography>
+                                        </td>
+                                    </tr>
+                                    <tr style={{ marginTop: "-100px" }}>
+                                        <td style={{ width: 50 }}>Hal </td>
+                                        <td style={{ width: 10 }}>: </td>
+                                        <td style={{ paddingTop: "-20px" }}>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: "13.3px",
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                Permohonan Penerbitan SK Seminar
+                                                Komprehensif
+                                            </Typography>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </Grid>
                         <Grid item xs={4}>
                             <Typography sx={{ fontSize: "13.3px" }}>
-                                Romang Polong, 15 Mei 2024
+                                Romang Polong,{" "}
+                                {comprehensive.letter_date
+                                    ? idFormatDate(comprehensive.letter_date)
+                                    : "-"}
                             </Typography>
                         </Grid>
                     </Grid>
@@ -196,12 +205,12 @@ const cetakKompren = forwardRef((props, ref) => {
                                 <tr>
                                     <td style={{ width: 150 }}>Nama</td>
                                     <td>:</td>
-                                    <td>Erni Rosiyanti</td>
+                                    <td>{comprehensive.student.name}</td>
                                 </tr>
                                 <tr>
                                     <td>Nim</td>
                                     <td>:</td>
-                                    <td>60200120138</td>
+                                    <td>{comprehensive.student.nim}</td>
                                 </tr>
                                 <tr>
                                     <td>Jurusan/Prodi</td>
@@ -214,18 +223,15 @@ const cetakKompren = forwardRef((props, ref) => {
                                     </td>
                                     <td style={{ verticalAlign: "top" }}>:</td>
                                     <td style={{ textAlign: "justify" }}>
-                                        Implementasi Teknologi Deep Learning
-                                        dengan Convolutional Neural Network
-                                        dalam Meningkatkan Keterampilan Karateka
-                                        di International Black Panther Karate
-                                        Indonesia
+                                        {comprehensive.essay_title}
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         <Typography sx={{ fontSize: "13.3px" }}>
                             Adapun Komposisi Dewan Penguji dan Panitia Pelaksana
-                            Seminar Komprehensif tersebut adalah sebagai berikut:
+                            Seminar Komprehensif tersebut adalah sebagai
+                            berikut:
                         </Typography>
                         <table
                             style={{
@@ -239,29 +245,51 @@ const cetakKompren = forwardRef((props, ref) => {
                                 <tr>
                                     <td style={{ width: 150 }}>Ketua</td>
                                     <td>:</td>
-                                    <td> Aidil</td>
+                                    <td>
+                                        {comprehensive.chairman
+                                            ? comprehensive.chairman.name
+                                            : "-"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Sekretaris</td>
                                     <td>:</td>
-                                    <td>Darmatasia, S.Pd., M.Kom.</td>
+                                    <td>
+                                        {comprehensive.secretary
+                                            ? comprehensive.secretary.name
+                                            : "-"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Penguji I (JARKOM) </td>
                                     <td>:</td>
-                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
+                                    <td>
+                                        {comprehensive.testers[0].lecturer
+                                            ? comprehensive.testers[0].lecturer
+                                                  .name
+                                            : "-"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Penguji II (RPL)</td>
                                     <td>:</td>
-                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
+                                    <td>
+                                        {comprehensive.testers[1].lecturer
+                                            ? comprehensive.testers[1].lecturer
+                                                  .name
+                                            : "-"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Penguji III (AGAMA)</td>
                                     <td>:</td>
-                                    <td>Faisal Akib, S.Kom., M.Kom.</td>
+                                    <td>
+                                        {comprehensive.testers[2].lecturer
+                                            ? comprehensive.testers[2].lecturer
+                                                  .name
+                                            : "-"}
+                                    </td>
                                 </tr>
-                                
                             </tbody>
                         </table>
                         <Typography
@@ -275,7 +303,13 @@ const cetakKompren = forwardRef((props, ref) => {
                             Demikian, atas perhatian dan dukungan Bapak, kami
                             ucapkan terima kasih.
                         </Typography>
-                        <Box sx={{ marginLeft: 42, marginTop: 2 }}>
+                        <Box
+                            sx={{
+                                marginLeft: 42,
+                                marginTop: 2,
+                                position: "absolute",
+                            }}
+                        >
                             <Typography
                                 sx={{
                                     fontWeight: "bold",
@@ -295,18 +329,47 @@ const cetakKompren = forwardRef((props, ref) => {
                             >
                                 Jurusan Teknik Informatika
                             </Typography>
-                        </Box>
-                        <Box sx={{ marginLeft: 42, marginTop: 7 }}>
-                            <Typography
-                                sx={{ fontWeight: "bold", fontSize: "13.3px" }}
-                            >
-                                Mustikasari, S.Kom., M.Kom.
-                            </Typography>
-                            <Typography
-                                sx={{ fontWeight: "bold", fontSize: "13.3px" }}
-                            >
-                                19781106 200604 2 001
-                            </Typography>
+                            {hodSignature ? (
+                                <Box
+                                    component={"img"}
+                                    sx={{
+                                        height: "120px",
+                                        width: "175px",
+                                        position: "relative",
+                                        top: "-26px",
+                                        left: "-10px",
+                                    }}
+                                    src={comprehensive.hod.signature}
+                                />
+                            ) : (
+                                <Box
+                                    sx={{
+                                        height: "120px",
+                                        width: "175px",
+                                        position: "relative",
+                                        top: "-26px",
+                                        left: "-10px",
+                                    }}
+                                ></Box>
+                            )}
+                            <Box sx={{ position: "relative", bottom: "60px" }}>
+                                <Typography
+                                    sx={{
+                                        fontWeight: "bold",
+                                        fontSize: "13.3px",
+                                    }}
+                                >
+                                    {comprehensive.hod.name}
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        fontWeight: "bold",
+                                        fontSize: "13.3px",
+                                    }}
+                                >
+                                    {comprehensive.hod.nip}
+                                </Typography>
+                            </Box>
                         </Box>
                     </Box>
                 </Grid>

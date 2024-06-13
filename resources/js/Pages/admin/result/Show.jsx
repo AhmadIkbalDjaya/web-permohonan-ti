@@ -24,6 +24,7 @@ import {
 import { ShowRowData } from "../components/ShowRowData";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ShowPDFModal from "../components/ShowPDFModal";
+import CetakSemhas from "../cetak/cetakSemhas";
 
 export default function ShowResult({ result, file_requirements }) {
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -246,15 +247,6 @@ export default function ShowResult({ result, file_requirements }) {
                                     Dewan Penguji dan Pelaksana :
                                 </Typography>
                             </Grid>
-                            <Grid item xs={12} marginTop={"15px"}>
-                                <Typography
-                                    variant="body2"
-                                    color="initial"
-                                    sx={{ fontWeight: "600" }}
-                                >
-                                    Dewan Penguji dan Pelaksana :
-                                </Typography>
-                            </Grid>
                             <ShowRowData
                                 name={"Ketua"}
                                 value={result.chairman && result.chairman.name}
@@ -302,9 +294,15 @@ export default function ShowResult({ result, file_requirements }) {
                             </Grid>
                             <ShowRowData
                                 name={"Hari dan Tanggal"}
-                                value={`${getDateDay(
+                                value={
                                     result.schedule.date
-                                )}, ${idFormatDate(result.schedule.date)}`}
+                                        ? `${getDateDay(
+                                              result.schedule.date
+                                          )}, ${idFormatDate(
+                                              result.schedule.date
+                                          )}`
+                                        : null
+                                }
                             />
                             <ShowRowData
                                 name={"Waktu"}
@@ -522,7 +520,11 @@ export default function ShowResult({ result, file_requirements }) {
                             }}
                         />
                         <Box sx={{ display: "none" }}>
-                            {/* <CetakProposal ref={componentRef} /> */}
+                            <CetakSemhas
+                                ref={componentRef}
+                                result={result}
+                                hodSignature={hodSignature}
+                            />
                         </Box>
                     </Box>
                 </Box>

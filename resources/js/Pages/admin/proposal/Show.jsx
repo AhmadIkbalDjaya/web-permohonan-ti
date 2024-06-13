@@ -297,14 +297,21 @@ export default function ShowProposal({ proposal, file_requirements }) {
                                     color="initial"
                                     sx={{ fontWeight: "600" }}
                                 >
-                                    Jadwal Pelaksanaan :
+                                    {/* Jadwal Pelaksanaan : */}
+                                    {proposal.schedule.date}
                                 </Typography>
                             </Grid>
                             <ShowRowData
                                 name={"Hari dan Tanggal"}
-                                value={`${getDateDay(
+                                value={
                                     proposal.schedule.date
-                                )}, ${idFormatDate(proposal.schedule.date)}`}
+                                        ? `${getDateDay(
+                                              proposal.schedule.date
+                                          )}, ${idFormatDate(
+                                              proposal.schedule.date
+                                          )}`
+                                        : null
+                                }
                             />
                             <ShowRowData
                                 name={"Waktu"}

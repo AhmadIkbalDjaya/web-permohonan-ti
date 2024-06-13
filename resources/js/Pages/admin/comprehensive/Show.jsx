@@ -19,6 +19,7 @@ import StatusBox from "../components/StatusBox";
 import { idFormatDate } from "../../../helper/dateTimeHelper";
 import { ShowRowData } from "../components/ShowRowData";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import CetakKompren from "../cetak/cetakKompren";
 
 export default function ShowComprehensive({
     comprehensive,
@@ -354,7 +355,11 @@ export default function ShowComprehensive({
                             }}
                         />
                         <Box sx={{ display: "none" }}>
-                            {/* <Cetakcomprehensive ref={componentRef} /> */}
+                            <CetakKompren
+                                ref={componentRef}
+                                comprehensive={comprehensive}
+                                hodSignature={hodSignature}
+                            />
                         </Box>
                     </Box>
                 </Box>

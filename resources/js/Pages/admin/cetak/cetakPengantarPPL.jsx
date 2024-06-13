@@ -2,8 +2,11 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import React, { forwardRef } from "react";
 import Uinam from "../assets/logoUinam.png";
 import "./ppl.css";
+import { idFormatDate } from "../../../helper/dateTimeHelper";
 
 const CetakPengantarPPL = forwardRef((props, ref) => {
+    const ppl = props.ppl;
+    const hodSignature = props.hodSignature;
     return (
         <div ref={ref}>
             <Box
@@ -105,50 +108,56 @@ const CetakPengantarPPL = forwardRef((props, ref) => {
                                 cellSpacing={0}
                                 style={{ fontSize: "15.96px" }}
                             >
-                                <tr>
-                                    <td>Nomor </td>
-                                    <td>: </td>
-                                    <td>
-                                        <Typography
-                                            sx={{
-                                                fontSize: "15.96px",
-                                            }}
-                                        >
-                                            712/TI-UINAM/V/2024
-                                        </Typography>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Lamp </td>
-                                    <td>: </td>
-                                    <td>
-                                        <Typography
-                                            sx={{
-                                                fontSize: "15.96px",
-                                            }}
-                                        >
-                                            -
-                                        </Typography>
-                                    </td>
-                                </tr>
-                                <tr style={{ marginTop: "-100px" }}>
-                                    <td style={{ width: 50 }}>Hal </td>
-                                    <td style={{ width: 10 }}>: </td>
-                                    <td style={{ paddingTop: "-20px" }}>
-                                        <Typography
-                                            sx={{
-                                                fontSize: "15.96px",
-                                            }}
-                                        >
-                                            Permohonan Surat Pengantar PPL
-                                        </Typography>
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>Nomor </td>
+                                        <td>: </td>
+                                        <td>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: "15.96px",
+                                                }}
+                                            >
+                                                {ppl.letter_number_introduction ??
+                                                    "-"}
+                                            </Typography>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lamp </td>
+                                        <td>: </td>
+                                        <td>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: "15.96px",
+                                                }}
+                                            >
+                                                -
+                                            </Typography>
+                                        </td>
+                                    </tr>
+                                    <tr style={{ marginTop: "-100px" }}>
+                                        <td style={{ width: 50 }}>Hal </td>
+                                        <td style={{ width: 10 }}>: </td>
+                                        <td style={{ paddingTop: "-20px" }}>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: "15.96px",
+                                                }}
+                                            >
+                                                Permohonan Surat Pengantar PPL
+                                            </Typography>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </Grid>
                         <Grid item xs={4}>
                             <Typography sx={{ fontSize: "15.96px" }}>
-                                Gowa, 15 Mei 2024
+                                Romang Polong,{" "}
+                                {ppl.letter_date
+                                    ? idFormatDate(ppl.letter_date)
+                                    : "-"}
                             </Typography>
                         </Grid>
                     </Grid>
@@ -214,22 +223,26 @@ const CetakPengantarPPL = forwardRef((props, ref) => {
                                         }}
                                     >
                                         <table style={{ fontSize: "15.96px" }}>
-                                            <tr>
-                                                <td
-                                                    style={{
-                                                        marginTop: "-10px",
-                                                    }}
-                                                >
-                                                    ikrar restu gibrani
-                                                </td>
-                                                <td>/</td>
-                                                <td>60200120138</td>
-                                            </tr>
-                                            <tr>
-                                                <td>ikrar restu gibrani</td>
-                                                <td>/</td>
-                                                <td>60200120138</td>
-                                            </tr>
+                                            <tbody>
+                                                {ppl.students.map(
+                                                    (student, index) => (
+                                                        <tr key={index}>
+                                                            <td
+                                                                style={{
+                                                                    marginTop:
+                                                                        "-10px",
+                                                                }}
+                                                            >
+                                                                {student.name}
+                                                            </td>
+                                                            <td>/</td>
+                                                            <td>
+                                                                {student.nim}
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                )}
+                                            </tbody>
                                         </table>
                                     </td>
                                 </tr>
@@ -244,16 +257,23 @@ const CetakPengantarPPL = forwardRef((props, ref) => {
                                     </td>
                                     <td style={{ verticalAlign: "top" }}>:</td>
                                     <td style={{ textAlign: "justify" }}>
-                                        ditujukan (Kepada PUSTIPAD UIN Alauddin
-                                        Makassar) PUSTIPAD UIN Alauddin
-                                        Makassar, Jl. H. M. Yasin Limpo No. 36
-                                        Romangpolong, Gowa
+                                        ditujukan ({ppl.addressed_to ?? "-"})
+                                        <br />
+                                        {ppl.location_address}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Jadwal PPL </td>
                                     <td>:</td>
-                                    <td>17 Mei 2024 s/d 14 Juni 2024</td>
+                                    <td>
+                                        {ppl.start_date && ppl.end_date
+                                            ? `${idFormatDate(
+                                                  ppl.start_date
+                                              )} - ${idFormatDate(
+                                                  ppl.end_date
+                                              )}`
+                                            : "-"}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -273,29 +293,59 @@ const CetakPengantarPPL = forwardRef((props, ref) => {
                                 fontSize: "15.96px",
                                 fontStyle: "italic",
                                 marginLeft: 0.7,
-                                marginTop:2
+                                marginTop: 2,
                             }}
                         >
-                           Wassalamu Alaikum Wr.Wb.
+                            Wassalamu Alaikum Wr.Wb.
                         </Typography>
-                        <Box sx={{ marginLeft: 42, marginTop: 2 }}>
-                            <Typography
-                                sx={{ fontSize: "15.96px" }}
-                            >
+                        <Box
+                            sx={{
+                                marginLeft: 42,
+                                marginTop: 2,
+                                position: "absolute",
+                            }}
+                        >
+                            <Typography sx={{ fontSize: "15.96px" }}>
                                 Ketua Jurusan,
                             </Typography>
-                        </Box>
-                        <Box sx={{ marginLeft: 42, marginTop: 7 }}>
-                            <Typography
-                                sx={{ fontSize: "15.96px", textUnderlineOffset:"1px", textDecoration:"underline 1px", fontWeight:"bold" }}
-                            >
-                                Mustikasari, S.Kom., M.Kom.
-                            </Typography>
-                            <Typography
-                                sx={{ fontSize: "15.96px" }}
-                            >
-                                NIP. 19781106 200604 2 001
-                            </Typography>
+                            {hodSignature ? (
+                                <Box
+                                    component={"img"}
+                                    sx={{
+                                        height: "120px",
+                                        width: "175px",
+                                        position: "relative",
+                                        top: "-26px",
+                                        left: "-10px",
+                                    }}
+                                    src={ppl.hod.signature}
+                                />
+                            ) : (
+                                <Box
+                                    sx={{
+                                        height: "120px",
+                                        width: "175px",
+                                        position: "relative",
+                                        top: "-26px",
+                                        left: "-10px",
+                                    }}
+                                ></Box>
+                            )}
+                            <Box sx={{ position: "relative", bottom: "60px" }}>
+                                <Typography
+                                    sx={{
+                                        fontSize: "15.96px",
+                                        textUnderlineOffset: "1px",
+                                        textDecoration: "underline 1px",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Mustikasari, S.Kom., M.Kom.
+                                </Typography>
+                                <Typography sx={{ fontSize: "15.96px" }}>
+                                    NIP. 19781106 200604 2 001
+                                </Typography>
+                            </Box>
                         </Box>
                     </Box>
                 </Grid>

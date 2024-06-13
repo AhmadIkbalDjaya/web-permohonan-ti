@@ -19,6 +19,7 @@ import { idFormatDate } from "../../../helper/dateTimeHelper";
 import { ShowRowData } from "../components/ShowRowData";
 import StatusBox from "../components/StatusBox";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import CetakPengantarPPL from "../cetak/cetakPengantarPPL";
 
 export default function ShowPPL({ ppl }) {
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -37,7 +38,8 @@ export default function ShowPPL({ ppl }) {
         setConfirmDelete(false);
     };
 
-    const componentRef = useRef();
+    const componentRefIntro = useRef();
+    const componentRefMentor = useRef();
     const [hodSignature, setHodSignature] = useState(false);
     return (
         <>
@@ -189,9 +191,13 @@ export default function ShowPPL({ ppl }) {
                             />
                             <ShowRowData
                                 name={"Jadwal PPL"}
-                                value={`${idFormatDate(
-                                    ppl.start_date
-                                )} - ${idFormatDate(ppl.start_date)}`}
+                                value={
+                                    ppl.start_date && ppl.end_date
+                                        ? `${idFormatDate(
+                                              ppl.start_date
+                                          )} - ${idFormatDate(ppl.start_date)}`
+                                        : null
+                                }
                             />
                             <ShowRowData
                                 name={"Pembimbing"}
@@ -329,10 +335,10 @@ export default function ShowPPL({ ppl }) {
                                     color="zinc-200"
                                     sx={{ textTransform: "none" }}
                                 >
-                                    Cetak PDF
+                                    Cetak Surat Pengantar
                                 </Button>
                             )}
-                            content={() => componentRef.current}
+                            content={() => componentRefIntro.current}
                             paperSize={{
                                 width: "210mm",
                                 height: "330mm",
@@ -340,7 +346,36 @@ export default function ShowPPL({ ppl }) {
                             }}
                         />
                         <Box sx={{ display: "none" }}>
-                            {/* <CetakProposal ref={componentRef} /> */}
+                            <CetakPengantarPPL
+                                ref={componentRefIntro}
+                                ppl={ppl}
+                                hodSignature={hodSignature}
+                            />
+                        </Box>
+                        <ReactToPrint
+                            trigger={() => (
+                                <Button
+                                    variant="contained"
+                                    startIcon={<FaFilePdf />}
+                                    color="zinc-200"
+                                    sx={{ textTransform: "none" }}
+                                >
+                                    Cetak SK Pembimbing
+                                </Button>
+                            )}
+                            content={() => componentRefMentor.current}
+                            paperSize={{
+                                width: "210mm",
+                                height: "330mm",
+                                unit: "mm",
+                            }}
+                        />
+                        <Box sx={{ display: "none" }}>
+                            <CetakPengantarPPL
+                                ref={componentRefMentor}
+                                ppl={ppl}
+                                hodSignature={hodSignature}
+                            />
                         </Box>
                     </Box>
                 </Box>
