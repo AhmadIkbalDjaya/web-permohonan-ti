@@ -65,7 +65,7 @@ Route::prefix('admin')->group(function () {
             });
         });
         Route::prefix("hasil")->group(function () {
-            // Route::get('file_requirement', [FileRequirementController::class, "index"])->name('admin.result.file_requirement');
+            Route::get('file_requirement', [FileRequirementController::class, "index"])->name('admin.result.file_requirement');
             Route::controller(AdminResultController::class)->group(function () {
                 Route::get("", "index")->name('admin.result.index');
                 Route::get("create", "create")->name('admin.result.create');
@@ -77,6 +77,7 @@ Route::prefix('admin')->group(function () {
             });
         });
         Route::prefix("kompren")->controller(AdminComprehensiveController::class)->group(function () {
+            Route::get('file_requirement', [FileRequirementController::class, "index"])->name('admin.comprehensive.file_requirement');
             Route::get("", "index")->name('admin.comprehensive.index');
             Route::get("create", "create")->name('admin.comprehensive.create');
             Route::post("", 'store')->name('admin.comprehensive.store');
@@ -86,6 +87,7 @@ Route::prefix('admin')->group(function () {
             Route::delete("{comprehensive}", "destroy")->name('admin.comprehensive.delete');
         });
         Route::prefix("ppl")->controller(AdminPplController::class)->group(function () {
+            Route::get('file_requirement', [FileRequirementController::class, "index"])->name('admin.ppl.file_requirement');
             Route::get("", "index")->name('admin.ppl.index');
             Route::get("create", "create")->name('admin.ppl.create');
             Route::post("", 'store')->name('admin.ppl.store');

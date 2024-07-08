@@ -289,15 +289,15 @@ export default function FileRequirement({
                         mb={2}
                     >
                         <Button
-                            //   onClick={}
                             color="error"
                             sx={{ textTransform: "none" }}
                             variant="contained"
                             onClick={handleCloseForm}
-                        >
+                            >
                             Cancel
                         </Button>
                         <Button
+                            sx={{ textTransform: "none" }}
                             variant="contained"
                             color="primary"
                             onClick={handleSubmitForm}

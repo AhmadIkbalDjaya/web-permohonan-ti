@@ -121,21 +121,46 @@ export default function Comprehensive({ comprehensives, meta }) {
                         Komprehensif
                     </AppLink>
                 </AppBreadcrumbs>
-                <Box display={"flex"} alignItems={"center"} gap={1} mt={1}>
-                    <Typography variant="h5" fontWeight={"600"}>
-                        Permohonan Komprehensif
-                    </Typography>
-                    <Typography
-                        variant="caption"
-                        fontWeight={"600"}
-                        color={"#637381"}
-                        border={1.5}
-                        borderColor={"#637381"}
-                        padding={"0px 5px"}
-                        borderRadius={10}
+                <Box
+                    display={"flex"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                    gap={1}
+                    mt={1}
+                    mb={5}
+                >
+                    <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        gap={1}
                     >
-                        {meta.total_item}
-                    </Typography>
+                        <Typography variant="h5" fontWeight={"600"}>
+                            Permohonan Komprehensif
+                        </Typography>
+                        <Typography
+                            variant="caption"
+                            fontWeight={"600"}
+                            color={"#637381"}
+                            border={1.5}
+                            borderColor={"#637381"}
+                            padding={"0px 5px"}
+                            borderRadius={10}
+                        >
+                            {meta.total_item}
+                        </Typography>
+                    </Box>
+                    <AppLink href={route("admin.comprehensive.file_requirement")}>
+                        <Button
+                            variant="contained"
+                            startIcon={<FaPlus />}
+                            size="small"
+                            sx={{
+                                textTransform: "none",
+                            }}
+                        >
+                            Berkas Permohonan
+                        </Button>
+                    </AppLink>
                 </Box>
                 <Box display={"flex"} justifyContent={"space-between"} my={1}>
                     <AppLink href={route("admin.comprehensive.create")}>
