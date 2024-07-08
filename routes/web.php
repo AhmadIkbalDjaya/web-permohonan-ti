@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthenticateController;
+use App\Http\Controllers\admin\FileRequirementController;
 use App\Http\Controllers\public\ComprehensiveController;
 use App\Http\Controllers\public\HomeController;
 use App\Http\Controllers\public\PplController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\admin\ResultController as AdminResultController;
 use App\Http\Controllers\admin\ComprehensiveController as AdminComprehensiveController;
 use App\Http\Controllers\admin\PplController as AdminPplController;
 use App\Http\Controllers\public\StatusCheckController;
+use App\Models\FileRequirement;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,23 +48,33 @@ Route::prefix('admin')->group(function () {
     });
     Route::middleware(['auth'])->group(function () {
         Route::get("", [AdminController::class, "dashboard"])->name('admin.home');
-        Route::prefix("proposal")->controller(AdminProposalController::class)->group(function () {
-            Route::get("", "index")->name('admin.proposal.index');
-            Route::get("create", "create")->name('admin.proposal.create');
-            Route::post("", 'store')->name('admin.proposal.store');
-            Route::get('{proposal}', "show")->name('admin.proposal.show');
-            Route::get("{proposal}/edit", "edit")->name('admin.proposal.edit');
-            Route::put("{proposal}", "update")->name('admin.proposal.update');
-            Route::delete("{proposal}", "destroy")->name('admin.proposal.delete');
+        // $request_types = ["proposal", "hasil", "kompren", "ppl"];
+        // foreach ($request_types as $type) {
+        //     Route::get("$type/file_requirement", [FileRequirementController::class, "index"])->name("admin.$type.file_requirement");
+        // }
+        Route::prefix("proposal")->group(function () {
+            Route::get('file_requirement', [FileRequirementController::class, "index"])->name('admin.proposal.file_requirement');
+            Route::controller(AdminProposalController::class)->group(function () {
+                Route::get("", "index")->name('admin.proposal.index');
+                Route::get("create", "create")->name('admin.proposal.create');
+                Route::post("", 'store')->name('admin.proposal.store');
+                Route::get('{proposal}', "show")->name('admin.proposal.show');
+                Route::get("{proposal}/edit", "edit")->name('admin.proposal.edit');
+                Route::put("{proposal}", "update")->name('admin.proposal.update');
+                Route::delete("{proposal}", "destroy")->name('admin.proposal.delete');
+            });
         });
-        Route::prefix("hasil")->controller(AdminResultController::class)->group(function () {
-            Route::get("", "index")->name('admin.result.index');
-            Route::get("create", "create")->name('admin.result.create');
-            Route::post("", 'store')->name('admin.result.store');
-            Route::get('{result}', "show")->name('admin.result.show');
-            Route::get("{result}/edit", "edit")->name('admin.result.edit');
-            Route::put("{result}", "update")->name('admin.result.update');
-            Route::delete("{result}", "destroy")->name('admin.result.delete');
+        Route::prefix("hasil")->group(function () {
+            // Route::get('file_requirement', [FileRequirementController::class, "index"])->name('admin.result.file_requirement');
+            Route::controller(AdminResultController::class)->group(function () {
+                Route::get("", "index")->name('admin.result.index');
+                Route::get("create", "create")->name('admin.result.create');
+                Route::post("", 'store')->name('admin.result.store');
+                Route::get('{result}', "show")->name('admin.result.show');
+                Route::get("{result}/edit", "edit")->name('admin.result.edit');
+                Route::put("{result}", "update")->name('admin.result.update');
+                Route::delete("{result}", "destroy")->name('admin.result.delete');
+            });
         });
         Route::prefix("kompren")->controller(AdminComprehensiveController::class)->group(function () {
             Route::get("", "index")->name('admin.comprehensive.index');
@@ -81,6 +93,11 @@ Route::prefix('admin')->group(function () {
             Route::get("{ppl}/edit", "edit")->name('admin.ppl.edit');
             Route::put("{ppl}", "update")->name('admin.ppl.update');
             Route::delete("{ppl}", "destroy")->name('admin.ppl.delete');
+        });
+        Route::controller(FileRequirementController::class)->group(function () {
+            Route::post('file-requirement', "store")->name('admin.file-requirement.store');
+            Route::put('file-requirement/{file_requirement}', "update")->name('admin.file-requirement.update');
+            Route::delete('file-requirement/{file_requirement}', "destroy")->name('admin.file-requirement.delete');
         });
     });
 });

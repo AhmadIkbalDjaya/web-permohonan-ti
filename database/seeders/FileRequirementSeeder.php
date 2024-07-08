@@ -15,34 +15,40 @@ class FileRequirementSeeder extends Seeder
     {
         $file_requirements = [
             [
-                "name" => "sk_pembimbing_skripsi",
+                "name" => "Sk Pembimbing Skripsi",
                 "is_required" => true,
-                "request_type" => "proposals",
+                "request_type" => "proposal",
+                // "slug" => "sk_pembimbing_skripsi"
             ],
             [
-                "name" => "lembar_konsultasi_kedua_pembimbing",
+                "name" => "Lembar Konsultasi Kedua Pembimbing",
                 "is_required" => true,
-                "request_type" => "proposals",
+                "request_type" => "proposal",
+                // "slug" => "lembar_konsultasi_kedua_pembimbing"
             ],
             [
-                "name" => "lembar_persetujuan_seminar_proposal",
+                "name" => "Lembar Persetujuan Seminar Proposal",
                 "is_required" => true,
-                "request_type" => "proposals",
+                "request_type" => "proposal",
+                // "slug" => "lembar_persetujuan_seminar_proposal"
             ],
             [
-                "name" => "lembar_pengesahan_proposal_skripsi",
+                "name" => "Lembar Pengesahan Proposal Skripsi",
                 "is_required" => true,
-                "request_type" => "results",
+                "request_type" => "result",
+                // "slug" => "lembar_pengesahan_proposal_skripsi"
             ],
             [
-                "name" => "lembar_konsultasi_kedua_pembimbing",
+                "name" => "Lembar Konsultasi Kedua Pembimbing",
                 "is_required" => true,
-                "request_type" => "results",
+                "request_type" => "result",
+                // "slug" => "lembar_konsultasi_kedua_pembimbing"
             ],
             [
-                "name" => "lembar_persetujuan_seminar_hasil",
+                "name" => "Lembar Persetujuan Seminar Hasil",
                 "is_required" => true,
-                "request_type" => "results",
+                "request_type" => "result",
+                // "slug" => "lembar_persetujuan_seminar_hasil"
             ],
         ];
         foreach ($file_requirements as $index => $file_requirement) {

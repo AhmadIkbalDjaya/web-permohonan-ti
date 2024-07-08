@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('file_requirements', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug');
             $table->boolean('is_required')->nullable()->default(false);
-            $table->enum('request_type', ['proposals', 'results', 'comprehensives']);
+            $table->enum('request_type', ['proposal', 'result', 'comprehensive', 'ppl']);
             $table->timestamps();
         });
     }
