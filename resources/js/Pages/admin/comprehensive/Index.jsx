@@ -21,7 +21,7 @@ import {
     TableRow,
     Typography,
 } from "@mui/material";
-import { FaPlus } from "react-icons/fa";
+import { FaFileAlt, FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import {
@@ -152,7 +152,7 @@ export default function Comprehensive({ comprehensives, meta }) {
                     <AppLink href={route("admin.comprehensive.file_requirement")}>
                         <Button
                             variant="contained"
-                            startIcon={<FaPlus />}
+                            startIcon={<FaFileAlt />}
                             size="small"
                             sx={{
                                 textTransform: "none",

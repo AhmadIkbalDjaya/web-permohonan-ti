@@ -20,7 +20,7 @@ import {
     TableRow,
     Typography,
 } from "@mui/material";
-import { FaPlus } from "react-icons/fa";
+import { FaFileAlt, FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import {
     tableCellStyle,
@@ -150,7 +150,7 @@ export default function Ppl({ ppls, meta }) {
                     <AppLink href={route("admin.ppl.file_requirement")}>
                         <Button
                             variant="contained"
-                            startIcon={<FaPlus />}
+                            startIcon={<FaFileAlt />}
                             size="small"
                             sx={{
                                 textTransform: "none",

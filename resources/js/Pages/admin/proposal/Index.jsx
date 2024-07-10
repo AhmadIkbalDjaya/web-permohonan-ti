@@ -21,7 +21,7 @@ import {
     TableHead,
     TableRow,
 } from "@mui/material";
-import { FaPlus } from "react-icons/fa";
+import { FaFileAlt, FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
@@ -127,11 +127,7 @@ export default function Proposal({ proposals, meta }) {
                     mt={1}
                     mb={5}
                 >
-                    <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        gap={1}
-                    >
+                    <Box display={"flex"} alignItems={"center"} gap={1}>
                         <Typography variant="h5" fontWeight={"600"}>
                             Permohonan Proposal
                         </Typography>
@@ -150,7 +146,7 @@ export default function Proposal({ proposals, meta }) {
                     <AppLink href={route("admin.proposal.file_requirement")}>
                         <Button
                             variant="contained"
-                            startIcon={<FaPlus />}
+                            startIcon={<FaFileAlt />}
                             size="small"
                             sx={{
                                 textTransform: "none",

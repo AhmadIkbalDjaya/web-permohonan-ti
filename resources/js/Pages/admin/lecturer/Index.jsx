@@ -1,9 +1,8 @@
-import React, { useRef, useState } from "react";
-import BaseLayout from "../base_layout/BaseLayout";
+import React, { useState, useRef } from "react";
 import { Head, router } from "@inertiajs/react";
+import BaseLayout from "../base_layout/BaseLayout";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
-import StatusBox from "../components/StatusBox";
 import {
     Box,
     Button,
@@ -21,8 +20,9 @@ import {
     TableRow,
     Typography,
 } from "@mui/material";
-import { FaFileAlt, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
+import pickBy from "lodash.pickby";
 import {
     tableCellStyle,
     tableCheckboxStyle,
@@ -31,11 +31,13 @@ import {
 import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import pickBy from "lodash.pickby";
-import { idFormatDate } from "../../../helper/dateTimeHelper";
+import {
+    convertGenderToID,
+    convertRoleToID,
+} from "../../../helper/dataToIdHelper";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
-export default function Result({ results, meta }) {
+export default function Lecturer({ meta, lecturers }) {
     const showItemOptions = [5, 10, 15, 20, 25];
     const [loading, setloading] = useState(false);
     const perpage = useRef(meta.perpage);
@@ -76,6 +78,7 @@ export default function Result({ results, meta }) {
         page.current = meta.total_page;
         getData();
     }
+
     const [confirmDelete, setConfirmDelete] = useState({
         open: false,
         id: "",
@@ -94,8 +97,8 @@ export default function Result({ results, meta }) {
     };
     const handleDeleteData = () => {
         router.delete(
-            route("admin.result.delete", {
-                result: confirmDelete.id,
+            route("admin.lecturer.destroy", {
+                lecturer: confirmDelete.id,
             })
         );
         setConfirmDelete({
@@ -105,62 +108,37 @@ export default function Result({ results, meta }) {
     };
     return (
         <>
-            <Head title="Result" />
-            <ConfirmDeleteModal
-                open={confirmDelete.open}
-                handleClose={handleCloseDelete}
-                handleDelete={handleDeleteData}
-            />
+            <Head title="Dosen & Staff" />
             <BaseLayout>
+                <ConfirmDeleteModal
+                    open={confirmDelete.open}
+                    handleClose={handleCloseDelete}
+                    handleDelete={handleDeleteData}
+                />
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
-                    <AppLink href={route("admin.result.index")} color="black">
-                        Hasil
+                    <AppLink href={route("admin.lecturer.index")} color="black">
+                        Dosen & Staff
                     </AppLink>
                 </AppBreadcrumbs>
-                <Box
-                    display={"flex"}
-                    alignItems={"center"}
-                    justifyContent={"space-between"}
-                    gap={1}
-                    mt={1}
-                    mb={5}
-                >
-                    <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        gap={1}
+                <Box display={"flex"} alignItems={"center"} gap={1} mt={1}>
+                    <Typography variant="h5" fontWeight={"600"}>
+                        Dosen & Staff
+                    </Typography>
+                    <Typography
+                        variant="caption"
+                        fontWeight={"600"}
+                        color={"#637381"}
+                        border={1.5}
+                        borderColor={"#637381"}
+                        padding={"0px 5px"}
+                        borderRadius={10}
                     >
-                        <Typography variant="h5" fontWeight={"600"}>
-                            Permohonan Hasil
-                        </Typography>
-                        <Typography
-                            variant="caption"
-                            fontWeight={"600"}
-                            color={"#637381"}
-                            border={1.5}
-                            borderColor={"#637381"}
-                            padding={"0px 5px"}
-                            borderRadius={10}
-                        >
-                            {meta.total_item}
-                        </Typography>
-                    </Box>
-                    <AppLink href={route("admin.result.file_requirement")}>
-                        <Button
-                            variant="contained"
-                            startIcon={<FaFileAlt />}
-                            size="small"
-                            sx={{
-                                textTransform: "none",
-                            }}
-                        >
-                            Berkas Permohonan
-                        </Button>
-                    </AppLink>
+                        {meta.total_item}
+                    </Typography>
                 </Box>
                 <Box display={"flex"} justifyContent={"space-between"} my={1}>
-                    <AppLink href={route("admin.result.create")}>
+                    <AppLink href="/admin/lecturer/create">
                         <Button
                             variant="contained"
                             startIcon={<FaPlus />}
@@ -169,7 +147,7 @@ export default function Result({ results, meta }) {
                                 textTransform: "none",
                             }}
                         >
-                            Permohonan
+                            Dosen
                         </Button>
                     </AppLink>
                     <Box
@@ -216,31 +194,19 @@ export default function Result({ results, meta }) {
                         <TableHead>
                             <TableRow sx={{ backgroundColor: "gray-100" }}>
                                 <TableCell padding="checkbox">
-                                    <Checkbox
-                                        sx={{
-                                            color: "zinc-200",
-                                            "&.Mui-checked": {
-                                                color: "primary2",
-                                            },
-                                        }}
-                                    ></Checkbox>
+                                    <Checkbox sx={tableCheckboxStyle} />
                                 </TableCell>
                                 <TableCell sx={tableHeadStyle}>Nama</TableCell>
-                                <TableCell sx={tableHeadStyle}>NIM</TableCell>
+                                <TableCell sx={tableHeadStyle}>Peran</TableCell>
+                                <TableCell sx={tableHeadStyle}>nip</TableCell>
                                 <TableCell sx={tableHeadStyle}>
-                                    Judul Skripsi
-                                </TableCell>
-                                <TableCell sx={tableHeadStyle}>
-                                    Tanggal Pengajuan
-                                </TableCell>
-                                <TableCell sx={tableHeadStyle}>
-                                    Status
+                                    jenis Kelamin
                                 </TableCell>
                                 <TableCell sx={tableHeadStyle}>Aksi</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {results.data.map((result, index) => (
+                            {lecturers.data.map((lecturer, index) => (
                                 <TableRow key={index}>
                                     <TableCell padding="checkbox">
                                         <Checkbox sx={tableCheckboxStyle} />
@@ -253,35 +219,16 @@ export default function Result({ results, meta }) {
                                             maxWidth: "200px",
                                         }}
                                     >
-                                        {result.student.name}
+                                        {lecturer.name}
                                     </TableCell>
                                     <TableCell sx={tableCellStyle}>
-                                        {result.student.nim}
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                            minWidth: "250px",
-                                            maxWidth: "250px",
-                                        }}
-                                    >
-                                        {result.essay_title}
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                            minWidth: "150px",
-                                            maxWidth: "200px",
-                                        }}
-                                    >
-                                        {idFormatDate(result.created_at)}
+                                        {convertRoleToID(lecturer.role)}
                                     </TableCell>
                                     <TableCell sx={tableCellStyle}>
-                                        <StatusBox
-                                            status={result.status.name}
-                                        />
+                                        {lecturer.nip ?? "-"}
+                                    </TableCell>
+                                    <TableCell sx={tableCellStyle}>
+                                        {convertGenderToID(lecturer.gender)}
                                     </TableCell>
                                     <TableCell sx={tableCellStyle}>
                                         <Box
@@ -292,9 +239,9 @@ export default function Result({ results, meta }) {
                                             <AppLink
                                                 color="black"
                                                 href={route(
-                                                    "admin.result.show",
+                                                    "admin.lecturer.show",
                                                     {
-                                                        result: result.id,
+                                                        lecturer: lecturer.id,
                                                     }
                                                 )}
                                             >
@@ -303,9 +250,9 @@ export default function Result({ results, meta }) {
                                             <AppLink
                                                 color={"black"}
                                                 href={route(
-                                                    "admin.result.edit",
+                                                    "admin.lecturer.edit",
                                                     {
-                                                        result: result.id,
+                                                        lecturer: lecturer.id,
                                                     }
                                                 )}
                                             >
@@ -315,7 +262,9 @@ export default function Result({ results, meta }) {
                                                 cursor={"pointer"}
                                                 size={22}
                                                 onClick={() => {
-                                                    handleOpenDelete(result.id);
+                                                    handleOpenDelete(
+                                                        lecturer.id
+                                                    );
                                                 }}
                                             />
                                         </Box>
@@ -363,7 +312,6 @@ export default function Result({ results, meta }) {
                     ></Pagination>
                 </Box>
             </BaseLayout>
-            ;
         </>
     );
 }

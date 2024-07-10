@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->string('nip')->nullable();
             $table->string('signature')->nullable();
-            $table->enum('role', ['head', 'secretary'])->nullable()->default(null);
+            $table->enum('role', ['head', 'secretary', 'lecturer', 'staff'])->nullable()->default("lecturer");
             $table->timestamps();
         });
     }

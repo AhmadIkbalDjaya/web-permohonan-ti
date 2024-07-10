@@ -1,12 +1,13 @@
 import React from "react";
 import { Drawer, DrawerHeader } from "./BaseLayout";
-import { Box, List } from "@mui/material";
+import { Box, List, Typography } from "@mui/material";
 import DrawerListItem from "./DrawerListItem";
 import { TiHome } from "react-icons/ti";
 import { MdArticle } from "react-icons/md";
 import { RiArticleFill, RiComputerFill } from "react-icons/ri";
 import { HiClipboardDocumentList } from "react-icons/hi2";
 import { IoLogOut } from "react-icons/io5";
+import { FaChalkboardTeacher } from "react-icons/fa";
 export function AppDrawer({ open }) {
     return (
         <Drawer
@@ -63,6 +64,21 @@ export function AppDrawer({ open }) {
                         toPage={"/admin/ppl"}
                         icon={<RiComputerFill size={24} color="white" />}
                         text={"PPL"}
+                    />
+                    <Typography
+                        variant="caption"
+                        color="gray-400"
+                        fontWeight={600}
+                        fontSize={14}
+                        sx={{ px: 1.5 }}
+                    >
+                        {open ? "Master Data" : ""}
+                    </Typography>
+                    <DrawerListItem
+                        open={open}
+                        toPage={"/admin/lecturer"}
+                        icon={<FaChalkboardTeacher size={24} color="white" />}
+                        text={"Dosen & Staff"}
                     />
                 </List>
                 <List

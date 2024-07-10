@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthenticateController;
 use App\Http\Controllers\admin\FileRequirementController;
+use App\Http\Controllers\admin\LecturerController;
 use App\Http\Controllers\public\ComprehensiveController;
 use App\Http\Controllers\public\HomeController;
 use App\Http\Controllers\public\PplController;
@@ -13,7 +14,6 @@ use App\Http\Controllers\admin\ResultController as AdminResultController;
 use App\Http\Controllers\admin\ComprehensiveController as AdminComprehensiveController;
 use App\Http\Controllers\admin\PplController as AdminPplController;
 use App\Http\Controllers\public\StatusCheckController;
-use App\Models\FileRequirement;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,10 +48,6 @@ Route::prefix('admin')->group(function () {
     });
     Route::middleware(['auth'])->group(function () {
         Route::get("", [AdminController::class, "dashboard"])->name('admin.home');
-        // $request_types = ["proposal", "hasil", "kompren", "ppl"];
-        // foreach ($request_types as $type) {
-        //     Route::get("$type/file_requirement", [FileRequirementController::class, "index"])->name("admin.$type.file_requirement");
-        // }
         Route::prefix("proposal")->group(function () {
             Route::get('file_requirement', [FileRequirementController::class, "index"])->name('admin.proposal.file_requirement');
             Route::controller(AdminProposalController::class)->group(function () {
@@ -101,5 +97,6 @@ Route::prefix('admin')->group(function () {
             Route::put('file-requirement/{file_requirement}', "update")->name('admin.file-requirement.update');
             Route::delete('file-requirement/{file_requirement}', "destroy")->name('admin.file-requirement.delete');
         });
+        Route::resource('lecturer', LecturerController::class)->names("admin.lecturer");
     });
 });
