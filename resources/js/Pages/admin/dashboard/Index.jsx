@@ -1,10 +1,11 @@
+import { ChartSection } from "../components/dasboard/ChartSection";
 import { CountSection } from "../components/dasboard/CountSection";
 import React from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import { Head } from "@inertiajs/react";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
-export default function Dashboard({ count }) {
+export default function Dashboard({ count, chart }) {
     return (
         <>
             <Head title="Dashboard" />
@@ -12,7 +13,8 @@ export default function Dashboard({ count }) {
                 <Typography fontSize={24} fontWeight={"bold"}>
                     Dashboard
                 </Typography>
-                <CountSection count />
+                <CountSection count={count} />
+                <ChartSection chart={chart} />
             </BaseLayout>
             ;
         </>
