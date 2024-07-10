@@ -6,7 +6,7 @@ import { HiClipboardDocumentList } from "react-icons/hi2";
 import RegisCard from "./RegisCard";
 export function RegisSection({ headerRef, cardRefs }) {
     return (
-        <Box>
+        <Box id="regis-section">
             <Box
                 ref={(el) => (headerRef.current[1] = el)}
                 sx={{

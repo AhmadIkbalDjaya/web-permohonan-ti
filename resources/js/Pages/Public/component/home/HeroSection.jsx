@@ -2,7 +2,13 @@ import { Box, Grid, Typography } from "@mui/material";
 import React from "react";
 export function HeroSection({ headerRef, Model }) {
     return (
-        <Grid container spacing={1} alignItems="center" justifyContent="center">
+        <Grid
+            container
+            spacing={1}
+            alignItems="center"
+            justifyContent="center"
+            id="hero-section"
+        >
             <Grid
                 item
                 xs={12}

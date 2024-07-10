@@ -8,6 +8,7 @@ export default function PublicFooter() {
     return (
         <>
             <Box
+                id="footer"
                 sx={{
                     mt: "100px",
                     backgroundImage: `url(${url}/images/footer-bg.png)`,

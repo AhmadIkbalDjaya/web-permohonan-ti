@@ -179,16 +179,16 @@ export default function PublicAppbar(props) {
                                     }}
                                 >
                                     <AppLink
-                                        href={route("home")}
+                                        href={route("home") + "#hero-section"}
                                         color={"#FFF"}
                                         fontSize={"16px"}
                                     >
                                         Home
                                     </AppLink>
                                     <AppLink
-                                        href="#daftar-card"
                                         color={"#FFF"}
                                         fontSize={"16px"}
+                                        href={route("home") + "#regis-section"}
                                     >
                                         Daftar
                                     </AppLink>
@@ -200,9 +200,9 @@ export default function PublicAppbar(props) {
                                         Cek Status
                                     </AppLink>
                                     <AppLink
-                                        href="#tentang"
                                         color={"#FFF"}
                                         fontSize={"16px"}
+                                        href={route("home") + "#footer"}
                                     >
                                         Tentang Kami
                                     </AppLink>
