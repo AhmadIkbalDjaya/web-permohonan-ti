@@ -1,8 +1,5 @@
 import { HeroSection } from "../component/home/HeroSection";
 import { RegisSection } from "../component/home/RegisSection";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { Button, Grid } from "@mui/material";
 import Model from "../assets/model.png";
 import "./style.css";
 import useIntersectionObserver from "./animasi";
