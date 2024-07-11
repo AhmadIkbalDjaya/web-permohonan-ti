@@ -7,13 +7,12 @@ import {
     TextField,
     Button,
 } from "@mui/material";
-import AppInputLabel from "../components/elements/input/AppInputLabel";
 import React, { useState } from "react";
 import { Head, router, usePage } from "@inertiajs/react";
 import appTheme from "../../../theme/AppTheme";
 
 export default function Login() {
-    const { errors, flash } = usePage().props;
+    const { errors, flash, url } = usePage().props;
     const [formValues, setFormValues] = useState({
         email: "",
         password: "",
@@ -45,68 +44,115 @@ export default function Login() {
                     alignItems="center"
                     alignContent="center"
                     wrap="wrap"
-                    sx={{ background: "#003399" }}
+                    sx={{ background: "#DFE3E8", boxShadow: 3 }}
                 >
                     <Box
                         sx={{
-                            p: "50px 40px",
                             background: "white",
-                            borderRadius: "15px",
-                            minWidth: "425px",
+                            borderRadius: "20px",
+                            minWidth: {
+                                xs: "100%",
+                                md: "900px",
+                            },
+                            maxWidth: {
+                                md: "900px",
+                            },
                         }}
+                        display={"flex"}
                     >
-                        <Typography
-                            variant="h6"
-                            textAlign={"center"}
-                            fontWeight={"600"}
+                        <Grid
+                            container
+                            direction={"column"}
+                            justifyContent="center"
+                            alignItems="center"
+                            sx={{
+                                flex: 4,
+                                p: "50px 40px",
+                                background: "#003399",
+                                borderTopLeftRadius: "20px",
+                                borderBottomLeftRadius: "20px",
+                                display: {
+                                    xs: "none",
+                                    md: "inherit",
+                                },
+                            }}
                         >
-                            Login to Admin
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            fontWeight={"600"}
-                            fontSize={"12px"}
-                            textAlign={"center"}
-                            color={"gray-500"}
-                        >
-                            Please enter your email and password to continue
-                        </Typography>
-                        {flash.error && (
+                            <Box
+                                component={"img"}
+                                sx={{
+                                    width: "150px",
+                                }}
+                                src={`${url}/images/uinam.png`}
+                            />
                             <Typography
-                                variant="body2"
-                                fontWeight={"600"}
-                                fontSize={"12px"}
-                                textAlign={"center"}
-                                color={"red"}
+                                variant="h6"
+                                fontSize={22}
+                                fontWeight={500}
+                                color={"white"}
                             >
-                                {flash.error}
+                                Teknik Informatika
                             </Typography>
-                        )}
-                        <form onSubmit={handleSubmitForm}>
-                            <Box sx={{ py: "25px" }}>
-                                <Box sx={{ pb: "25px" }}>
-                                    <AppInputLabel
-                                        label="Email address"
-                                        color={"gray-500"}
-                                        fontWeight={"500"}
-                                    />
+                        </Grid>
+                        <Box
+                            sx={{
+                                flex: 5,
+                                py: "70px",
+                                px: {
+                                    xs: "10px",
+                                    md: "50px",
+                                },
+                            }}
+                        >
+                            <Typography
+                                variant="body1"
+                                textAlign={"center"}
+                                fontWeight={"600"}
+                                fontSize={20}
+                            >
+                                Admin
+                            </Typography>
+                            <Typography
+                                variant="body1"
+                                textAlign={"center"}
+                                fontWeight={"600"}
+                                fontSize={{ xs: 30, md: 45 }}
+                            >
+                                Login
+                            </Typography>
+                            {flash.error && (
+                                <Typography
+                                    variant="body2"
+                                    fontWeight={"600"}
+                                    fontSize={"12px"}
+                                    textAlign={"center"}
+                                    color={"red"}
+                                >
+                                    {flash.error}
+                                </Typography>
+                            )}
+                            <form onSubmit={handleSubmitForm}>
+                                <Box
+                                    sx={{ py: "40px" }}
+                                    display={"flex"}
+                                    flexDirection={"column"}
+                                    alignItems={"center"}
+                                >
                                     <TextField
                                         id="email"
                                         name="email"
                                         type="string"
                                         value={formValues.email}
                                         onChange={handleChangeForm}
-                                        placeholder="Enter your email"
-                                        fullWidth
+                                        placeholder="Email"
+                                        sx={{
+                                            width: {
+                                                xs: "100%",
+                                                md: "75%",
+                                            },
+                                            mb: 2,
+                                        }}
                                         error={errors.email ? true : false}
                                         helperText={errors.email ?? ""}
-                                    />
-                                </Box>
-                                <Box>
-                                    <AppInputLabel
-                                        label="Password"
-                                        color={"gray-500"}
-                                        fontWeight={"500"}
                                     />
                                     <TextField
                                         id="password"
@@ -114,28 +160,37 @@ export default function Login() {
                                         type="password"
                                         value={formValues.password}
                                         onChange={handleChangeForm}
-                                        placeholder="Enter your password"
-                                        fullWidth
+                                        placeholder="Password"
+                                        sx={{
+                                            width: {
+                                                xs: "100%",
+                                                md: "75%",
+                                            },
+                                        }}
                                         error={errors.password ? true : false}
                                         helperText={errors.password ?? ""}
                                     />
                                 </Box>
-                            </Box>
-                            <Box display={"flex"} justifyContent={"center"}>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    size="small"
-                                    sx={{
-                                        width: "80%",
-                                        textTransform: "capitalize",
-                                    }}
-                                >
-                                    Sign In
-                                </Button>
-                            </Box>
-                        </form>
+                                <Box display={"flex"} justifyContent={"center"}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        sx={{
+                                            width: {
+                                                xs: "100%",
+                                                md: "75%",
+                                            },
+                                            textTransform: "capitalize",
+                                            fontSize: 18,
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        Login
+                                    </Button>
+                                </Box>
+                            </form>
+                        </Box>
                     </Box>
                 </Grid>
             </ThemeProvider>
