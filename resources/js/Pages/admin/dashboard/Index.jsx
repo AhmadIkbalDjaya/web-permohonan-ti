@@ -1,3 +1,4 @@
+import { CalendarSection } from "../components/dasboard/CalendarSection";
 import { ChartSection } from "../components/dasboard/ChartSection";
 import { CountSection } from "../components/dasboard/CountSection";
 import React from "react";
@@ -15,6 +16,7 @@ export default function Dashboard({ count, chart }) {
                 </Typography>
                 <CountSection count={count} />
                 <ChartSection chart={chart} />
+                <CalendarSection />
             </BaseLayout>
             ;
         </>
