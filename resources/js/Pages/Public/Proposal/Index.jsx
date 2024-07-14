@@ -464,10 +464,9 @@ export default function Proposal({ file_requirements, lecturers }) {
                                             return (
                                                 <Grid item xs={12} key={index}>
                                                     <AppInputLabel
-                                                        label={file_requirement.name.replaceAll(
-                                                            "_",
-                                                            " "
-                                                        )}
+                                                        label={
+                                                            file_requirement.name
+                                                        }
                                                         required={
                                                             file_requirement.is_required
                                                         }
@@ -475,7 +474,7 @@ export default function Proposal({ file_requirements, lecturers }) {
                                                     <InputFileUpload
                                                         id="name"
                                                         name={
-                                                            file_requirement.name
+                                                            file_requirement.slug
                                                         }
                                                         type="file"
                                                         accept={".pdf"}
@@ -484,7 +483,7 @@ export default function Proposal({ file_requirements, lecturers }) {
                                                         }
                                                     />
                                                     {formValues.files[
-                                                        file_requirement.name
+                                                        file_requirement.slug
                                                     ] ? (
                                                         <FormHelperText
                                                             sx={{
@@ -497,7 +496,7 @@ export default function Proposal({ file_requirements, lecturers }) {
                                                                 File:{" "}
                                                                 {formValues.files[
                                                                     file_requirement
-                                                                        .name
+                                                                        .slug
                                                                 ].name.substring(
                                                                     0,
                                                                     20
@@ -508,7 +507,7 @@ export default function Proposal({ file_requirements, lecturers }) {
                                                                     formValues
                                                                         .files[
                                                                         file_requirement
-                                                                            .name
+                                                                            .slug
                                                                     ].size /
                                                                     1024
                                                                 ).toFixed(
@@ -521,7 +520,7 @@ export default function Proposal({ file_requirements, lecturers }) {
                                                         ""
                                                     )}
                                                     {errors[
-                                                        file_requirement.name
+                                                        file_requirement.slug
                                                     ] && (
                                                         <InputErrorMessage
                                                             px={"0px"}
@@ -529,7 +528,7 @@ export default function Proposal({ file_requirements, lecturers }) {
                                                             {
                                                                 errors[
                                                                     file_requirement
-                                                                        .name
+                                                                        .slug
                                                                 ]
                                                             }
                                                         </InputErrorMessage>

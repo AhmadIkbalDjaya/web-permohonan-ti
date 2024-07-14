@@ -6,7 +6,8 @@ import BaseLayout from "../base_layout/BaseLayout";
 import { Head } from "@inertiajs/react";
 import { Box, Typography } from "@mui/material";
 
-export default function Dashboard({ count, chart }) {
+export default function Dashboard({ count, chart, calendar }) {
+    // console.log(calendar.schedules);
     return (
         <>
             <Head title="Dashboard" />
@@ -16,7 +17,7 @@ export default function Dashboard({ count, chart }) {
                 </Typography>
                 <CountSection count={count} />
                 <ChartSection chart={chart} />
-                <CalendarSection />
+                <CalendarSection calendar={calendar} />
             </BaseLayout>
             ;
         </>

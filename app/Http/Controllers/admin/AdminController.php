@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CalendarScheduleResource;
 use App\Models\Proposal;
+use App\Models\Schedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,10 +41,16 @@ class AdminController extends Controller
                 ],
             ],
         ];
+        // dd(Schedule::first()->proposal);
+        $schedules = Schedule::whereNotNull("date")->whereNotNull("start_time")->get();
+        $calendar = [
+            "schedules" => CalendarScheduleResource::collection($schedules),
+        ];
 
         return Inertia::render("admin/dashboard/Index", [
             "count" => $count,
             "chart" => $chart,
+            "calendar" => $calendar,
         ]);
     }
 
