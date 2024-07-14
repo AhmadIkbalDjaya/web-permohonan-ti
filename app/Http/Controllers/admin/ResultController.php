@@ -327,6 +327,6 @@ class ResultController extends Controller
             $result->student()->delete();
             $result->schedule()->delete();
         });
-        return to_route("admin.result.index");
+        return to_route("admin.result.index")->with("success", "Data berhasil dihapus");
     }
 }

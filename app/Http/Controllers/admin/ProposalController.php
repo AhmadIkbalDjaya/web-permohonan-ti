@@ -169,7 +169,7 @@ class ProposalController extends Controller
                 ]);
             }
         });
-        return to_route("admin.proposal.index");
+        return to_route("admin.proposal.index")->with("success", "Data berhasil ditambahkan");
     }
 
     public function edit(Proposal $proposal)
@@ -304,7 +304,7 @@ class ProposalController extends Controller
                 }
             }
         });
-        return to_route("admin.proposal.show", ["proposal" => $proposal->id]);
+        return to_route("admin.proposal.show", ["proposal" => $proposal->id])->with("warning", "Data berhasil di ubah");
     }
 
     public function destroy(Proposal $proposal)
@@ -325,6 +325,6 @@ class ProposalController extends Controller
             $proposal->student()->delete();
             $proposal->schedule()->delete();
         });
-        return to_route("admin.proposal.index");
+        return to_route("admin.proposal.index")->with("error", "Data berhasil dihapus");
     }
 }

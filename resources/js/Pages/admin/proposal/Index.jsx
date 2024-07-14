@@ -1,3 +1,4 @@
+import { EmptyData } from "../components/EmptyData";
 import React, { useRef, useState } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import { Head, router } from "@inertiajs/react";
@@ -139,13 +140,17 @@ export default function Proposal({ proposals, meta }) {
                         handleChangeSearch={handleChangeSearch}
                     />
                 </Box>
-                <ProposalDataTable
-                    proposals={proposals}
-                    meta={meta}
-                    handleChangePage={handleChangePage}
-                    handleChangePerpage={handleChangePerpage}
-                    handleOpenDelete={handleOpenDelete}
-                />
+                {meta.total_item > 0 ? (
+                    <ProposalDataTable
+                        proposals={proposals}
+                        meta={meta}
+                        handleChangePage={handleChangePage}
+                        handleChangePerpage={handleChangePerpage}
+                        handleOpenDelete={handleOpenDelete}
+                    />
+                ) : (
+                    <EmptyData />
+                )}
             </BaseLayout>
             <ConfirmDeleteModal
                 open={confirmDelete.open}

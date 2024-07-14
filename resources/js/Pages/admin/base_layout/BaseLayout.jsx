@@ -6,6 +6,7 @@ import MuiAppBar from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
 import { DrawerOpen } from "../../../context/DrawerOpen";
 import appTheme from "../../../theme/AppTheme";
+import ShowSnackbar from "../../components/ShowSnackbar";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -85,6 +86,7 @@ export default function BaseLayout(props) {
                     <AppDrawer open={open} />
                     <Box component={"main"} sx={{ flexGrow: 1, p: 3 }}>
                         <DrawerHeader />
+                        <ShowSnackbar />
                         {children}
                     </Box>
                 </Box>
