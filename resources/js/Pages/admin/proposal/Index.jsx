@@ -3,40 +3,16 @@ import BaseLayout from "../base_layout/BaseLayout";
 import { Head, router } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
-import StatusBox from "../components/StatusBox";
 import Typography from "@mui/material/Typography";
-import {
-    Box,
-    Button,
-    Checkbox,
-    FormControl,
-    InputBase,
-    MenuItem,
-    Pagination,
-    Select,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-} from "@mui/material";
-import { FaFileAlt, FaPlus } from "react-icons/fa";
-import { FiSearch } from "react-icons/fi";
-import { HiOutlineEye } from "react-icons/hi";
-import { TbEdit } from "react-icons/tb";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { idFormatDate } from "../../../helper/dateTimeHelper";
+import { Box, Button } from "@mui/material";
+import { FaFileAlt } from "react-icons/fa";
 import pickBy from "lodash.pickby";
-import {
-    tableCellStyle,
-    tableCheckboxStyle,
-    tableHeadStyle,
-} from "../components/styles/tableStyles";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import ProposalDataTable from "../components/proposal/index/ProposalDataTable";
+import SearchFormTable from "../components/SearchFormTable";
+import ButtonCreateData from "../components/ButtonCreateData";
 
 export default function Proposal({ proposals, meta }) {
-    const showItemOptions = [5, 10, 15, 20, 25];
     const [loading, setloading] = useState(false);
     const perpage = useRef(meta.perpage);
     const search = useRef(meta.search ?? "");
@@ -107,11 +83,6 @@ export default function Proposal({ proposals, meta }) {
     return (
         <>
             <Head title="Proposal" />
-            <ConfirmDeleteModal
-                open={confirmDelete.open}
-                handleClose={handleCloseDelete}
-                handleDelete={handleDeleteData}
-            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -157,204 +128,30 @@ export default function Proposal({ proposals, meta }) {
                     </AppLink>
                 </Box>
                 <Box display={"flex"} justifyContent={"space-between"} my={1}>
-                    <AppLink href="/admin/proposal/create">
-                        <Button
-                            variant="contained"
-                            startIcon={<FaPlus />}
-                            size="small"
-                            sx={{
-                                textTransform: "none",
-                            }}
-                        >
-                            Permohonan
-                        </Button>
-                    </AppLink>
-                    <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        gap={1}
-                        sx={{
-                            backgroundColor: "gray-100",
-                            width: "200px",
-                            padding: "0 10px",
-                            boxSizing: "border-box",
-                            borderRadius: "3px",
+                    <ButtonCreateData
+                        text={"Permohonan"}
+                        handleClick={() => {
+                            router.get(route("admin.proposal.create"));
                         }}
-                        border={"1px solid #DFE3E8"}
-                    >
-                        <FiSearch color="#637381" />
-                        <InputBase
-                            name="search"
-                            value={search.current}
-                            onChange={handleChangeSearch}
-                            placeholder="Cari Data ..."
-                            sx={{
-                                flexGrow: 1,
-                                color: "gray-500",
-                                fontWeight: "600",
-                                fontSize: "12px",
-                                placeholder: {
-                                    color: "gray-500",
-                                    fontWeight: "600",
-                                    fontSize: "12px",
-                                },
-                            }}
-                        />
-                    </Box>
+                    />
+                    <SearchFormTable
+                        value={meta.search}
+                        handleChangeSearch={handleChangeSearch}
+                    />
                 </Box>
-                <TableContainer
-                    sx={{
-                        margin: "20px 0 10px 0",
-                        border: "1px solid #C4CDD5",
-                        borderRadius: "3px",
-                    }}
-                >
-                    <Table>
-                        <TableHead>
-                            <TableRow sx={{ backgroundColor: "gray-100" }}>
-                                <TableCell padding="checkbox">
-                                    <Checkbox sx={tableCheckboxStyle} />
-                                </TableCell>
-                                <TableCell sx={tableHeadStyle}>Nama</TableCell>
-                                <TableCell sx={tableHeadStyle}>NIM</TableCell>
-                                <TableCell sx={tableHeadStyle}>
-                                    Judul Skripsi
-                                </TableCell>
-                                <TableCell sx={tableHeadStyle}>
-                                    Tanggal Pengajuan
-                                </TableCell>
-                                <TableCell sx={tableHeadStyle}>
-                                    Status
-                                </TableCell>
-                                <TableCell sx={tableHeadStyle}>Aksi</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {proposals.data.map((proposal, index) => (
-                                <TableRow key={index}>
-                                    <TableCell padding="checkbox">
-                                        <Checkbox sx={tableCheckboxStyle} />
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                            minWidth: "150px",
-                                            maxWidth: "200px",
-                                        }}
-                                    >
-                                        {proposal.student.name}
-                                    </TableCell>
-                                    <TableCell sx={tableCellStyle}>
-                                        {proposal.student.nim}
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                            minWidth: "250px",
-                                            maxWidth: "250px",
-                                        }}
-                                    >
-                                        {proposal.essay_title}
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                            minWidth: "150px",
-                                            maxWidth: "200px",
-                                        }}
-                                    >
-                                        {idFormatDate(proposal.created_at)}
-                                    </TableCell>
-                                    <TableCell sx={tableCellStyle}>
-                                        <StatusBox
-                                            status={proposal.status.name}
-                                        />
-                                    </TableCell>
-                                    <TableCell sx={tableCellStyle}>
-                                        <Box
-                                            display={"flex"}
-                                            justifyContent={"space-between"}
-                                            alignItems={"center"}
-                                        >
-                                            <AppLink
-                                                color="black"
-                                                href={route(
-                                                    "admin.proposal.show",
-                                                    {
-                                                        proposal: proposal.id,
-                                                    }
-                                                )}
-                                            >
-                                                <HiOutlineEye size={22} />
-                                            </AppLink>
-                                            <AppLink
-                                                color={"black"}
-                                                href={route(
-                                                    "admin.proposal.edit",
-                                                    {
-                                                        proposal: proposal.id,
-                                                    }
-                                                )}
-                                            >
-                                                <TbEdit size={22} />
-                                            </AppLink>
-                                            <RiDeleteBin6Line
-                                                cursor={"pointer"}
-                                                size={22}
-                                                onClick={() => {
-                                                    handleOpenDelete(
-                                                        proposal.id
-                                                    );
-                                                }}
-                                            />
-                                        </Box>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <Box display={"flex"} justifyContent={"space-between"}>
-                    <Box display={"flex"} gap={1}>
-                        <Typography color={"gray-500"} fontWeight={"400"}>
-                            Tampilkan
-                        </Typography>
-                        <FormControl size="small">
-                            <Select
-                                name="perpage"
-                                value={perpage.current}
-                                onChange={handleChangePerpage}
-                                style={{ height: "25px" }}
-                                sx={{ border: "1px solid gray-500" }}
-                            >
-                                {showItemOptions.map((option, index) => (
-                                    <MenuItem key={index} value={option}>
-                                        <Typography
-                                            color={"gray-500"}
-                                            fontSize={"14px"}
-                                        >
-                                            {option}
-                                        </Typography>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <Typography color={"gray-500"} fontWeight={"400"}>
-                            Data
-                        </Typography>
-                    </Box>
-                    <Pagination
-                        count={meta.total_page}
-                        page={page.current}
-                        onChange={handleChangePage}
-                        size="small"
-                        shape="rounded"
-                    ></Pagination>
-                </Box>
+                <ProposalDataTable
+                    proposals={proposals}
+                    meta={meta}
+                    handleChangePage={handleChangePage}
+                    handleChangePerpage={handleChangePerpage}
+                    handleOpenDelete={handleOpenDelete}
+                />
             </BaseLayout>
+            <ConfirmDeleteModal
+                open={confirmDelete.open}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
         </>
     );
 }

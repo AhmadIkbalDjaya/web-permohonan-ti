@@ -55,7 +55,7 @@ class ProposalController extends Controller
 
     public function show(Proposal $proposal)
     {
-        $file_requirements = FileRequirement::where("request_type", "proposals")->get();
+        $file_requirements = FileRequirement::where("request_type", "proposal")->get();
         return Inertia::render("admin/proposal/Show", [
             "proposal" => new ProposalDetailResource($proposal->load(["student", "schedule", "mentors", "testers", "files"])),
             "file_requirements" => $file_requirements,
@@ -66,7 +66,7 @@ class ProposalController extends Controller
         $statuses = Status::select("id", "name")->get();
         $status_descriptions = StatusDescription::select("id", "status_id", "description")->get();
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
-        $file_requirements = FileRequirement::where("request_type", "proposals")->get();
+        $file_requirements = FileRequirement::where("request_type", "proposal")->get();
         return Inertia::render("admin/proposal/Create", [
             "lecturers" => $lecturers,
             "statuses" => $statuses,
@@ -104,17 +104,17 @@ class ProposalController extends Controller
             "end_time" => "nullable|date_format:H:i",
             "location" => "nullable|string",
         ];
-        $file_requirements = FileRequirement::where("request_type", "proposals")->get();
+        $file_requirements = FileRequirement::where("request_type", "proposal")->get();
         foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->name] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
+            $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
         }
         $validated = $request->validate($rules);
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("proposal/applicant_signs", "public");
         foreach ($file_requirements as $index => $file_requirement) {
-            if ($request->file($file_requirement->name)) {
-                $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("proposal/files", "public");
+            if ($request->file($file_requirement->slug)) {
+                $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("proposal/files", "public");
             } else {
-                unset($validated[$file_requirement->name]);
+                unset($validated[$file_requirement->slug]);
             }
         }
         DB::transaction(function () use ($validated, $file_requirements) {
@@ -149,7 +149,7 @@ class ProposalController extends Controller
             ]);
             foreach ($file_requirements as $index => $file_requirement) {
                 File::create([
-                    "file" => $validated[$file_requirement->name],
+                    "file" => $validated[$file_requirement->slug],
                     "name" => $file_requirement->name,
                     "proposal_id" => $newProposal->id,
                 ]);
@@ -178,7 +178,7 @@ class ProposalController extends Controller
         $status_descriptions = StatusDescription::select("id", "status_id", "description")->get();
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
 
-        $file_requirements = FileRequirement::where("request_type", "proposals")->get();
+        $file_requirements = FileRequirement::where("request_type", "proposal")->get();
         return Inertia::render("admin/proposal/Edit", [
             "proposal" => new ProposalDetailResource($proposal),
 
@@ -218,9 +218,9 @@ class ProposalController extends Controller
             "end_time" => "nullable|date_format:H:i",
             "location" => "nullable|string",
         ];
-        $file_requirements = FileRequirement::where("request_type", "proposals")->get();
+        $file_requirements = FileRequirement::where("request_type", "proposal")->get();
         foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->name] = "nullable|mimes:pdf";
+            $rules[$file_requirement->slug] = "nullable|mimes:pdf";
         }
 
         $validated = $request->validate($rules);
@@ -243,7 +243,7 @@ class ProposalController extends Controller
         }
 
         foreach ($file_requirements as $file_requirement) {
-            if ($request->file($file_requirement->name)) {
+            if ($request->file($file_requirement->slug)) {
                 foreach ($proposal->files as $index => $file) {
                     if ($file->name == $file_requirement->name) {
                         if (Storage::exists($file->file)) {
@@ -251,9 +251,9 @@ class ProposalController extends Controller
                         }
                     }
                 }
-                $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("proposal/file", "public");
+                $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("proposal/file", "public");
             } else {
-                unset($validated[$file_requirement->name]);
+                unset($validated[$file_requirement->slug]);
             }
         }
         DB::transaction(function () use ($proposal, $updateProposal, $validated, $file_requirements) {
@@ -289,7 +289,7 @@ class ProposalController extends Controller
                     foreach ($proposal->files as $index => $file) {
                         if ($file->name == $file_requirement->name) {
                             $file->update([
-                                "file" => $validated[$file_requirement->name],
+                                "file" => $validated[$file_requirement->slug],
                             ]);
                         }
                         // wrong place
