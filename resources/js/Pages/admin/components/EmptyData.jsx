@@ -9,6 +9,7 @@ export function EmptyData() {
             flexDirection={"column"}
             alignItems={"center"}
             justifyContent={"center"}
+            mt={5}
         >
             <Box
                 component={"img"}

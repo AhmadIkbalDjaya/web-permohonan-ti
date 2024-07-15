@@ -1,30 +1,34 @@
-import { Perpage } from "../../Perpage";
-import React from "react";
-import AppLink from "../../AppLink";
-import StatusBox from "../../StatusBox";
 import {
     Box,
     Checkbox,
+    FormControl,
+    MenuItem,
     Pagination,
+    Select,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
+    Typography,
 } from "@mui/material";
-import { HiOutlineEye } from "react-icons/hi";
-import { TbEdit } from "react-icons/tb";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { idFormatDate } from "../../../../../helper/dateTimeHelper";
+import React from "react";
 import {
     tableCellStyle,
     tableCheckboxStyle,
     tableHeadStyle,
 } from "../../styles/tableStyles";
+import AppLink from "../../AppLink";
+import { idFormatDate } from "../../../../../helper/dateTimeHelper";
+import StatusBox from "../../StatusBox";
+import { HiOutlineEye } from "react-icons/hi2";
+import { TbEdit } from "react-icons/tb";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { Perpage } from "../../Perpage";
 
-export default function ProposalDataTable({
-    proposals,
+export default function ResultDataTable({
+    results,
     meta,
     handleChangePerpage,
     handleChangePage,
@@ -43,7 +47,14 @@ export default function ProposalDataTable({
                     <TableHead>
                         <TableRow sx={{ backgroundColor: "gray-100" }}>
                             <TableCell padding="checkbox">
-                                <Checkbox sx={tableCheckboxStyle} />
+                                <Checkbox
+                                    sx={{
+                                        color: "zinc-200",
+                                        "&.Mui-checked": {
+                                            color: "primary2",
+                                        },
+                                    }}
+                                ></Checkbox>
                             </TableCell>
                             <TableCell sx={tableHeadStyle}>Nama</TableCell>
                             <TableCell sx={tableHeadStyle}>NIM</TableCell>
@@ -58,7 +69,7 @@ export default function ProposalDataTable({
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {proposals.data.map((proposal, index) => (
+                        {results.data.map((result, index) => (
                             <TableRow key={index}>
                                 <TableCell padding="checkbox">
                                     <Checkbox sx={tableCheckboxStyle} />
@@ -71,10 +82,10 @@ export default function ProposalDataTable({
                                         maxWidth: "200px",
                                     }}
                                 >
-                                    {proposal.student.name}
+                                    {result.student.name}
                                 </TableCell>
                                 <TableCell sx={tableCellStyle}>
-                                    {proposal.student.nim}
+                                    {result.student.nim}
                                 </TableCell>
                                 <TableCell
                                     sx={{
@@ -84,7 +95,7 @@ export default function ProposalDataTable({
                                         maxWidth: "250px",
                                     }}
                                 >
-                                    {proposal.essay_title}
+                                    {result.essay_title}
                                 </TableCell>
                                 <TableCell
                                     sx={{
@@ -94,10 +105,10 @@ export default function ProposalDataTable({
                                         maxWidth: "200px",
                                     }}
                                 >
-                                    {idFormatDate(proposal.created_at)}
+                                    {idFormatDate(result.created_at)}
                                 </TableCell>
                                 <TableCell sx={tableCellStyle}>
-                                    <StatusBox status={proposal.status.name} />
+                                    <StatusBox status={result.status.name} />
                                 </TableCell>
                                 <TableCell sx={tableCellStyle}>
                                     <Box
@@ -107,16 +118,16 @@ export default function ProposalDataTable({
                                     >
                                         <AppLink
                                             color="black"
-                                            href={route("admin.proposal.show", {
-                                                proposal: proposal.id,
+                                            href={route("admin.result.show", {
+                                                result: result.id,
                                             })}
                                         >
                                             <HiOutlineEye size={22} />
                                         </AppLink>
                                         <AppLink
                                             color={"black"}
-                                            href={route("admin.proposal.edit", {
-                                                proposal: proposal.id,
+                                            href={route("admin.result.edit", {
+                                                result: result.id,
                                             })}
                                         >
                                             <TbEdit size={22} />
@@ -125,7 +136,7 @@ export default function ProposalDataTable({
                                             cursor={"pointer"}
                                             size={22}
                                             onClick={() => {
-                                                handleOpenDelete(proposal.id);
+                                                handleOpenDelete(result.id);
                                             }}
                                         />
                                     </Box>

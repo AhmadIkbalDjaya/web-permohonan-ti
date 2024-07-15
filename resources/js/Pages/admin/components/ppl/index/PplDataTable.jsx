@@ -23,8 +23,8 @@ import {
     tableHeadStyle,
 } from "../../styles/tableStyles";
 
-export default function ProposalDataTable({
-    proposals,
+export default function PplDataTable({
+    ppls,
     meta,
     handleChangePerpage,
     handleChangePage,
@@ -47,9 +47,7 @@ export default function ProposalDataTable({
                             </TableCell>
                             <TableCell sx={tableHeadStyle}>Nama</TableCell>
                             <TableCell sx={tableHeadStyle}>NIM</TableCell>
-                            <TableCell sx={tableHeadStyle}>
-                                Judul Skripsi
-                            </TableCell>
+                            <TableCell sx={tableHeadStyle}>Instansi</TableCell>
                             <TableCell sx={tableHeadStyle}>
                                 Tanggal Pengajuan
                             </TableCell>
@@ -58,7 +56,7 @@ export default function ProposalDataTable({
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {proposals.data.map((proposal, index) => (
+                        {ppls.data.map((ppl, index) => (
                             <TableRow key={index}>
                                 <TableCell padding="checkbox">
                                     <Checkbox sx={tableCheckboxStyle} />
@@ -71,10 +69,10 @@ export default function ProposalDataTable({
                                         maxWidth: "200px",
                                     }}
                                 >
-                                    {proposal.student.name}
+                                    {ppl.students[0].name}
                                 </TableCell>
                                 <TableCell sx={tableCellStyle}>
-                                    {proposal.student.nim}
+                                    {ppl.students[0].nim}
                                 </TableCell>
                                 <TableCell
                                     sx={{
@@ -84,7 +82,7 @@ export default function ProposalDataTable({
                                         maxWidth: "250px",
                                     }}
                                 >
-                                    {proposal.essay_title}
+                                    {ppl.location}
                                 </TableCell>
                                 <TableCell
                                     sx={{
@@ -94,12 +92,15 @@ export default function ProposalDataTable({
                                         maxWidth: "200px",
                                     }}
                                 >
-                                    {idFormatDate(proposal.created_at)}
+                                    {idFormatDate(ppl.created_at)}
                                 </TableCell>
                                 <TableCell sx={tableCellStyle}>
-                                    <StatusBox status={proposal.status.name} />
+                                    <StatusBox status={ppl.status.name} />
                                 </TableCell>
-                                <TableCell sx={tableCellStyle}>
+                                <TableCell
+                                    sx={{ padding: "0 10px" }}
+                                    align="center"
+                                >
                                     <Box
                                         display={"flex"}
                                         justifyContent={"space-between"}
@@ -107,16 +108,16 @@ export default function ProposalDataTable({
                                     >
                                         <AppLink
                                             color="black"
-                                            href={route("admin.proposal.show", {
-                                                proposal: proposal.id,
+                                            href={route("admin.ppl.show", {
+                                                ppl: ppl.id,
                                             })}
                                         >
                                             <HiOutlineEye size={22} />
                                         </AppLink>
                                         <AppLink
                                             color={"black"}
-                                            href={route("admin.proposal.edit", {
-                                                proposal: proposal.id,
+                                            href={route("admin.ppl.edit", {
+                                                ppl: ppl.id,
                                             })}
                                         >
                                             <TbEdit size={22} />
@@ -125,7 +126,7 @@ export default function ProposalDataTable({
                                             cursor={"pointer"}
                                             size={22}
                                             onClick={() => {
-                                                handleOpenDelete(proposal.id);
+                                                handleOpenDelete(ppl.id);
                                             }}
                                         />
                                     </Box>

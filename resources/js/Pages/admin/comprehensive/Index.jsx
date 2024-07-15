@@ -3,40 +3,16 @@ import BaseLayout from "../base_layout/BaseLayout";
 import { Head, router } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
-import StatusBox from "../components/StatusBox";
-import {
-    Box,
-    Button,
-    Checkbox,
-    FormControl,
-    InputBase,
-    MenuItem,
-    Pagination,
-    Select,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Typography,
-} from "@mui/material";
-import { FaFileAlt, FaPlus } from "react-icons/fa";
-import { FiSearch } from "react-icons/fi";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import {
-    tableCellStyle,
-    tableCheckboxStyle,
-    tableHeadStyle,
-} from "../components/styles/tableStyles";
-import { HiOutlineEye } from "react-icons/hi";
-import { TbEdit } from "react-icons/tb";
+import { Box, Button, Typography } from "@mui/material";
+import { FaFileAlt } from "react-icons/fa";
 import pickBy from "lodash.pickby";
-import { idFormatDate } from "../../../helper/dateTimeHelper";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import ButtonCreateData from "../components/ButtonCreateData";
+import SearchFormTable from "../components/SearchFormTable";
+import ComprehensiveDataTable from "../components/comprehensive/index/ComprehensiveDataTable";
+import { EmptyData } from "../components/EmptyData";
 
 export default function Comprehensive({ comprehensives, meta }) {
-    const showItemOptions = [5, 10, 15, 20, 25];
     const [loading, setloading] = useState(false);
     const perpage = useRef(meta.perpage);
     const search = useRef(meta.search ?? "");
@@ -129,11 +105,7 @@ export default function Comprehensive({ comprehensives, meta }) {
                     mt={1}
                     mb={5}
                 >
-                    <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        gap={1}
-                    >
+                    <Box display={"flex"} alignItems={"center"} gap={1}>
                         <Typography variant="h5" fontWeight={"600"}>
                             Permohonan Komprehensif
                         </Typography>
@@ -149,7 +121,9 @@ export default function Comprehensive({ comprehensives, meta }) {
                             {meta.total_item}
                         </Typography>
                     </Box>
-                    <AppLink href={route("admin.comprehensive.file_requirement")}>
+                    <AppLink
+                        href={route("admin.comprehensive.file_requirement")}
+                    >
                         <Button
                             variant="contained"
                             startIcon={<FaFileAlt />}
@@ -163,208 +137,28 @@ export default function Comprehensive({ comprehensives, meta }) {
                     </AppLink>
                 </Box>
                 <Box display={"flex"} justifyContent={"space-between"} my={1}>
-                    <AppLink href={route("admin.comprehensive.create")}>
-                        <Button
-                            variant="contained"
-                            startIcon={<FaPlus />}
-                            size="small"
-                            sx={{
-                                textTransform: "none",
-                            }}
-                        >
-                            Permohonan
-                        </Button>
-                    </AppLink>
-                    <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        gap={1}
-                        sx={{
-                            backgroundColor: "gray-100",
-                            width: "200px",
-                            padding: "0 10px",
-                            boxSizing: "border-box",
-                            borderRadius: "3px",
+                    <ButtonCreateData
+                        text={"Permohonan"}
+                        handleClick={() => {
+                            router.get(route("admin.comprehensive.create"));
                         }}
-                        border={"1px solid #DFE3E8"}
-                    >
-                        <FiSearch color="#637381" />
-                        <InputBase
-                            name="search"
-                            value={search.current}
-                            onChange={handleChangeSearch}
-                            placeholder="Cari Data ..."
-                            sx={{
-                                flexGrow: 1,
-                                color: "gray-500",
-                                fontWeight: "600",
-                                fontSize: "12px",
-                                placeholder: {
-                                    color: "gray-500",
-                                    fontWeight: "600",
-                                    fontSize: "12px",
-                                },
-                            }}
-                        />
-                    </Box>
+                    />
+                    <SearchFormTable
+                        value={meta.search}
+                        handleChangeSearch={handleChangeSearch}
+                    />
                 </Box>
-                <TableContainer
-                    sx={{
-                        margin: "20px 0 10px 0",
-                        border: "1px solid #C4CDD5",
-                        borderRadius: "3px",
-                    }}
-                >
-                    <Table>
-                        <TableHead>
-                            <TableRow sx={{ backgroundColor: "gray-100" }}>
-                                <TableCell padding="checkbox">
-                                    <Checkbox sx={tableCheckboxStyle} />
-                                </TableCell>
-                                <TableCell sx={tableHeadStyle}>Nama</TableCell>
-                                <TableCell sx={tableHeadStyle}>NIM</TableCell>
-                                <TableCell sx={tableHeadStyle}>
-                                    Judul Skripsi
-                                </TableCell>
-                                <TableCell sx={tableHeadStyle}>
-                                    Tanggal Pengajuan
-                                </TableCell>
-                                <TableCell sx={tableHeadStyle}>
-                                    Status
-                                </TableCell>
-                                <TableCell sx={tableHeadStyle}>Aksi</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {comprehensives.data.map((comprehensive, index) => (
-                                <TableRow key={index}>
-                                    <TableCell padding="checkbox">
-                                        <Checkbox sx={tableCheckboxStyle} />
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                            minWidth: "150px",
-                                            maxWidth: "200px",
-                                        }}
-                                    >
-                                        {comprehensive.student.name}
-                                    </TableCell>
-                                    <TableCell sx={tableCellStyle}>
-                                        {comprehensive.student.nim}
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                            minWidth: "250px",
-                                            maxWidth: "250px",
-                                        }}
-                                    >
-                                        {comprehensive.essay_title}
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                            minWidth: "150px",
-                                            maxWidth: "200px",
-                                        }}
-                                    >
-                                        {idFormatDate(comprehensive.created_at)}
-                                    </TableCell>
-                                    <TableCell sx={tableCellStyle}>
-                                        <StatusBox
-                                            status={comprehensive.status.name}
-                                        />
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{ padding: "0 10px" }}
-                                        align="center"
-                                    >
-                                        <Box
-                                            display={"flex"}
-                                            justifyContent={"space-between"}
-                                            alignItems={"center"}
-                                        >
-                                            <AppLink
-                                                color="black"
-                                                href={route(
-                                                    "admin.comprehensive.show",
-                                                    {
-                                                        comprehensive:
-                                                            comprehensive.id,
-                                                    }
-                                                )}
-                                            >
-                                                <HiOutlineEye size={22} />
-                                            </AppLink>
-                                            <AppLink
-                                                color={"black"}
-                                                href={route(
-                                                    "admin.comprehensive.edit",
-                                                    {
-                                                        comprehensive:
-                                                            comprehensive.id,
-                                                    }
-                                                )}
-                                            >
-                                                <TbEdit size={22} />
-                                            </AppLink>
-                                            <RiDeleteBin6Line
-                                                cursor={"pointer"}
-                                                size={22}
-                                                onClick={() => {
-                                                    handleOpenDelete(
-                                                        comprehensive.id
-                                                    );
-                                                }}
-                                            />
-                                        </Box>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <Box display={"flex"} justifyContent={"space-between"}>
-                    <Box display={"flex"} gap={1}>
-                        <Typography color={"gray-500"} fontWeight={"400"}>
-                            Tampilkan
-                        </Typography>
-                        <FormControl size="small">
-                            <Select
-                                name="perpage"
-                                value={perpage.current}
-                                onChange={handleChangePerpage}
-                                style={{ height: "25px" }}
-                                sx={{ border: "1px solid gray-500" }}
-                            >
-                                {showItemOptions.map((option, index) => (
-                                    <MenuItem key={index} value={option}>
-                                        <Typography
-                                            color={"gray-500"}
-                                            fontSize={"14px"}
-                                        >
-                                            {option}
-                                        </Typography>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <Typography color={"gray-500"} fontWeight={"400"}>
-                            Data
-                        </Typography>
-                    </Box>
-                    <Pagination
-                        count={meta.total_page}
-                        page={page.current}
-                        onChange={handleChangePage}
-                        size="small"
-                        shape="rounded"
-                    ></Pagination>
-                </Box>
+                {meta.total_item > 0 ? (
+                    <ComprehensiveDataTable
+                        comprehensives={comprehensives}
+                        meta={meta}
+                        handleChangePage={handleChangePage}
+                        handleChangePerpage={handleChangePerpage}
+                        handleOpenDelete={handleOpenDelete}
+                    />
+                ) : (
+                    <EmptyData />
+                )}
             </BaseLayout>
             ;
         </>

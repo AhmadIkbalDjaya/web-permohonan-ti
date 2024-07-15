@@ -23,8 +23,8 @@ import {
     tableHeadStyle,
 } from "../../styles/tableStyles";
 
-export default function ProposalDataTable({
-    proposals,
+export default function ComprehensiveDataTable({
+    comprehensives,
     meta,
     handleChangePerpage,
     handleChangePage,
@@ -58,7 +58,7 @@ export default function ProposalDataTable({
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {proposals.data.map((proposal, index) => (
+                        {comprehensives.data.map((comprehensive, index) => (
                             <TableRow key={index}>
                                 <TableCell padding="checkbox">
                                     <Checkbox sx={tableCheckboxStyle} />
@@ -71,10 +71,10 @@ export default function ProposalDataTable({
                                         maxWidth: "200px",
                                     }}
                                 >
-                                    {proposal.student.name}
+                                    {comprehensive.student.name}
                                 </TableCell>
                                 <TableCell sx={tableCellStyle}>
-                                    {proposal.student.nim}
+                                    {comprehensive.student.nim}
                                 </TableCell>
                                 <TableCell
                                     sx={{
@@ -84,7 +84,7 @@ export default function ProposalDataTable({
                                         maxWidth: "250px",
                                     }}
                                 >
-                                    {proposal.essay_title}
+                                    {comprehensive.essay_title}
                                 </TableCell>
                                 <TableCell
                                     sx={{
@@ -94,12 +94,17 @@ export default function ProposalDataTable({
                                         maxWidth: "200px",
                                     }}
                                 >
-                                    {idFormatDate(proposal.created_at)}
+                                    {idFormatDate(comprehensive.created_at)}
                                 </TableCell>
                                 <TableCell sx={tableCellStyle}>
-                                    <StatusBox status={proposal.status.name} />
+                                    <StatusBox
+                                        status={comprehensive.status.name}
+                                    />
                                 </TableCell>
-                                <TableCell sx={tableCellStyle}>
+                                <TableCell
+                                    sx={{ padding: "0 10px" }}
+                                    align="center"
+                                >
                                     <Box
                                         display={"flex"}
                                         justifyContent={"space-between"}
@@ -107,17 +112,25 @@ export default function ProposalDataTable({
                                     >
                                         <AppLink
                                             color="black"
-                                            href={route("admin.proposal.show", {
-                                                proposal: proposal.id,
-                                            })}
+                                            href={route(
+                                                "admin.comprehensive.show",
+                                                {
+                                                    comprehensive:
+                                                        comprehensive.id,
+                                                }
+                                            )}
                                         >
                                             <HiOutlineEye size={22} />
                                         </AppLink>
                                         <AppLink
                                             color={"black"}
-                                            href={route("admin.proposal.edit", {
-                                                proposal: proposal.id,
-                                            })}
+                                            href={route(
+                                                "admin.comprehensive.edit",
+                                                {
+                                                    comprehensive:
+                                                        comprehensive.id,
+                                                }
+                                            )}
                                         >
                                             <TbEdit size={22} />
                                         </AppLink>
@@ -125,7 +138,9 @@ export default function ProposalDataTable({
                                             cursor={"pointer"}
                                             size={22}
                                             onClick={() => {
-                                                handleOpenDelete(proposal.id);
+                                                handleOpenDelete(
+                                                    comprehensive.id
+                                                );
                                             }}
                                         />
                                     </Box>

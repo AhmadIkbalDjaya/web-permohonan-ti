@@ -6,14 +6,6 @@ import AppLink from "../components/AppLink";
 import {
     Box,
     Button,
-    Checkbox,
-    InputBase,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
     Typography,
     Dialog,
     DialogTitle,
@@ -21,30 +13,22 @@ import {
     TextField,
     Select,
     MenuItem,
-    FormControl,
-    Pagination,
 } from "@mui/material";
-import { FaPlus } from "react-icons/fa";
-import { FiSearch } from "react-icons/fi";
-import {
-    tableCellStyle,
-    tableCheckboxStyle,
-    tableHeadStyle,
-} from "../components/styles/tableStyles";
-import { TbEdit } from "react-icons/tb";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import AppInputLabel from "../components/elements/input/AppInputLabel";
 import { IoMdClose } from "react-icons/io";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
 import pickBy from "lodash.pickby";
+import ButtonCreateData from "../components/ButtonCreateData";
+import SearchFormTable from "../components/SearchFormTable";
+import FileDataTable from "../components/file_requirement/FileDataTable";
+import { EmptyData } from "../components/EmptyData";
 
 export default function FileRequirement({
     file_requirements,
     meta,
     request_type,
 }) {
-    const showItemOptions = [5, 10, 15, 20, 25];
     const [loading, setloading] = useState(false);
     const perpage = useRef(meta.perpage);
     const search = useRef(meta.search ?? "");
@@ -241,7 +225,6 @@ export default function FileRequirement({
                         <Select
                             id="is_required"
                             name="is_required"
-                            // value={""}
                             value={formValues.is_required}
                             onChange={handleChangeForm}
                             displayEmpty
@@ -293,7 +276,7 @@ export default function FileRequirement({
                             sx={{ textTransform: "none" }}
                             variant="contained"
                             onClick={handleCloseForm}
-                            >
+                        >
                             Cancel
                         </Button>
                         <Button
@@ -341,185 +324,27 @@ export default function FileRequirement({
                     </Typography>
                 </Box>
                 <Box display={"flex"} justifyContent={"space-between"} my={1}>
-                    <Button
-                        variant="contained"
-                        startIcon={<FaPlus />}
-                        size="small"
-                        sx={{
-                            textTransform: "none",
-                        }}
-                        onClick={handleOpenForm}
-                    >
-                        Berkas
-                    </Button>
-                    <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        gap={1}
-                        sx={{
-                            backgroundColor: "gray-100",
-                            width: "200px",
-                            padding: "0 10px",
-                            boxSizing: "border-box",
-                            borderRadius: "3px",
-                        }}
-                        border={"1px solid #DFE3E8"}
-                    >
-                        <FiSearch color="#637381" />
-                        <InputBase
-                            name="search"
-                            value={search.current}
-                            onChange={handleChangeSearch}
-                            placeholder="Cari Data ..."
-                            sx={{
-                                flexGrow: 1,
-                                color: "gray-500",
-                                fontWeight: "600",
-                                fontSize: "12px",
-                                placeholder: {
-                                    color: "gray-500",
-                                    fontWeight: "600",
-                                    fontSize: "12px",
-                                },
-                            }}
-                        />
-                    </Box>
+                    <ButtonCreateData
+                        text={"Berkass"}
+                        handleClick={handleOpenForm}
+                    />
+                    <SearchFormTable
+                        value={meta.search}
+                        handleChangeSearch={handleChangeSearch}
+                    />
                 </Box>
-                <TableContainer
-                    sx={{
-                        margin: "20px 0 10px 0",
-                        border: "1px solid #C4CDD5",
-                        borderRadius: "3px",
-                    }}
-                >
-                    <Table>
-                        <TableHead>
-                            <TableRow sx={{ backgroundColor: "gray-100" }}>
-                                <TableCell padding="checkbox">
-                                    <Checkbox
-                                        sx={{
-                                            color: "zinc-200",
-                                            "&.Mui-checked": {
-                                                color: "primary2",
-                                            },
-                                        }}
-                                    ></Checkbox>
-                                </TableCell>
-                                <TableCell sx={tableHeadStyle}>Nama</TableCell>
-                                <TableCell sx={tableHeadStyle}>
-                                    Status
-                                </TableCell>
-                                <TableCell sx={tableHeadStyle}>Aksi</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {file_requirements.data.map((file, index) => (
-                                <TableRow key={index}>
-                                    <TableCell padding="checkbox">
-                                        <Checkbox sx={tableCheckboxStyle} />
-                                    </TableCell>
-                                    <TableCell
-                                        sx={{
-                                            padding: "0 10px",
-                                            fontWeight: "600",
-                                            minWidth: "150px",
-                                            maxWidth: "200px",
-                                        }}
-                                    >
-                                        {file.name}
-                                    </TableCell>
-                                    <TableCell sx={tableCellStyle}>
-                                        <Typography
-                                            variant=""
-                                            color={
-                                                file.is_required
-                                                    ? "#f44336"
-                                                    : "#4caf50"
-                                            }
-                                            backgroundColor={
-                                                file.is_required
-                                                    ? "#ffebee"
-                                                    : "#e8f5e9"
-                                            }
-                                            padding={"1px 4px"}
-                                            borderRadius={"3px"}
-                                            sx={{ textTransform: "capitalize" }}
-                                        >
-                                            {file.is_required
-                                                ? "Wajib"
-                                                : "Opsional"}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Box
-                                            display={"flex"}
-                                            columnGap={1}
-                                            alignItems={"center"}
-                                        >
-                                            <TbEdit
-                                                cursor={"pointer"}
-                                                size={22}
-                                                onClick={() => {
-                                                    handleOpenForm({
-                                                        form_type: "update",
-                                                        id: file.id,
-                                                        name: file.name,
-                                                        is_required:
-                                                            file.is_required,
-                                                    });
-                                                }}
-                                            />
-                                            <RiDeleteBin6Line
-                                                cursor={"pointer"}
-                                                size={22}
-                                                onClick={() => {
-                                                    handleOpenDelete(file.id);
-                                                }}
-                                            />
-                                        </Box>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <Box display={"flex"} justifyContent={"space-between"}>
-                    <Box display={"flex"} gap={1}>
-                        <Typography color={"gray-500"} fontWeight={"400"}>
-                            Tampilkan
-                        </Typography>
-                        <FormControl size="small">
-                            <Select
-                                name="perpage"
-                                value={perpage.current}
-                                onChange={handleChangePerpage}
-                                style={{ height: "25px" }}
-                                sx={{ border: "1px solid gray-500" }}
-                            >
-                                {showItemOptions.map((option, index) => (
-                                    <MenuItem key={index} value={option}>
-                                        <Typography
-                                            color={"gray-500"}
-                                            fontSize={"14px"}
-                                        >
-                                            {option}
-                                        </Typography>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <Typography color={"gray-500"} fontWeight={"400"}>
-                            Data
-                        </Typography>
-                    </Box>
-                    <Pagination
-                        count={meta.total_page}
-                        page={page.current}
-                        onChange={handleChangePage}
-                        size="small"
-                        shape="rounded"
-                    ></Pagination>
-                </Box>
+                {meta.total_item > 0 ? (
+                    <FileDataTable
+                        file_requirements={file_requirements}
+                        meta={meta}
+                        handleChangePage={handleChangePage}
+                        handleChangePerpage={handleChangePerpage}
+                        handleOpenDelete={handleOpenDelete}
+                        handleOpenForm={handleOpenForm}
+                    />
+                ) : (
+                    <EmptyData />
+                )}
             </BaseLayout>
         </>
     );

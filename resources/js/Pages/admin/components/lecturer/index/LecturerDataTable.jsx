@@ -1,7 +1,4 @@
-import { Perpage } from "../../Perpage";
 import React from "react";
-import AppLink from "../../AppLink";
-import StatusBox from "../../StatusBox";
 import {
     Box,
     Checkbox,
@@ -16,15 +13,20 @@ import {
 import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { idFormatDate } from "../../../../../helper/dateTimeHelper";
 import {
     tableCellStyle,
     tableCheckboxStyle,
     tableHeadStyle,
 } from "../../styles/tableStyles";
+import {
+    convertGenderToID,
+    convertRoleToID,
+} from "../../../../../helper/dataToIdHelper";
+import AppLink from "../../AppLink";
+import { Perpage } from "../../Perpage";
 
-export default function ProposalDataTable({
-    proposals,
+export default function LecturerDataTable({
+    lecturers,
     meta,
     handleChangePerpage,
     handleChangePage,
@@ -46,19 +48,16 @@ export default function ProposalDataTable({
                                 <Checkbox sx={tableCheckboxStyle} />
                             </TableCell>
                             <TableCell sx={tableHeadStyle}>Nama</TableCell>
-                            <TableCell sx={tableHeadStyle}>NIM</TableCell>
+                            <TableCell sx={tableHeadStyle}>Peran</TableCell>
+                            <TableCell sx={tableHeadStyle}>nip</TableCell>
                             <TableCell sx={tableHeadStyle}>
-                                Judul Skripsi
+                                jenis Kelamin
                             </TableCell>
-                            <TableCell sx={tableHeadStyle}>
-                                Tanggal Pengajuan
-                            </TableCell>
-                            <TableCell sx={tableHeadStyle}>Status</TableCell>
                             <TableCell sx={tableHeadStyle}>Aksi</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {proposals.data.map((proposal, index) => (
+                        {lecturers.data.map((lecturer, index) => (
                             <TableRow key={index}>
                                 <TableCell padding="checkbox">
                                     <Checkbox sx={tableCheckboxStyle} />
@@ -71,33 +70,16 @@ export default function ProposalDataTable({
                                         maxWidth: "200px",
                                     }}
                                 >
-                                    {proposal.student.name}
+                                    {lecturer.name}
                                 </TableCell>
                                 <TableCell sx={tableCellStyle}>
-                                    {proposal.student.nim}
-                                </TableCell>
-                                <TableCell
-                                    sx={{
-                                        padding: "0 10px",
-                                        fontWeight: "600",
-                                        minWidth: "250px",
-                                        maxWidth: "250px",
-                                    }}
-                                >
-                                    {proposal.essay_title}
-                                </TableCell>
-                                <TableCell
-                                    sx={{
-                                        padding: "0 10px",
-                                        fontWeight: "600",
-                                        minWidth: "150px",
-                                        maxWidth: "200px",
-                                    }}
-                                >
-                                    {idFormatDate(proposal.created_at)}
+                                    {convertRoleToID(lecturer.role)}
                                 </TableCell>
                                 <TableCell sx={tableCellStyle}>
-                                    <StatusBox status={proposal.status.name} />
+                                    {lecturer.nip ?? "-"}
+                                </TableCell>
+                                <TableCell sx={tableCellStyle}>
+                                    {convertGenderToID(lecturer.gender)}
                                 </TableCell>
                                 <TableCell sx={tableCellStyle}>
                                     <Box
@@ -107,16 +89,16 @@ export default function ProposalDataTable({
                                     >
                                         <AppLink
                                             color="black"
-                                            href={route("admin.proposal.show", {
-                                                proposal: proposal.id,
+                                            href={route("admin.lecturer.show", {
+                                                lecturer: lecturer.id,
                                             })}
                                         >
                                             <HiOutlineEye size={22} />
                                         </AppLink>
                                         <AppLink
                                             color={"black"}
-                                            href={route("admin.proposal.edit", {
-                                                proposal: proposal.id,
+                                            href={route("admin.lecturer.edit", {
+                                                lecturer: lecturer.id,
                                             })}
                                         >
                                             <TbEdit size={22} />
@@ -125,7 +107,7 @@ export default function ProposalDataTable({
                                             cursor={"pointer"}
                                             size={22}
                                             onClick={() => {
-                                                handleOpenDelete(proposal.id);
+                                                handleOpenDelete(lecturer.id);
                                             }}
                                         />
                                     </Box>
@@ -146,7 +128,7 @@ export default function ProposalDataTable({
                     onChange={handleChangePage}
                     size="small"
                     shape="rounded"
-                />
+                ></Pagination>
             </Box>
         </>
     );
