@@ -61,7 +61,7 @@ class FileRequirementController extends Controller
             "request_type" => "required|in:proposal,result,comprehensive,ppl"
         ]);
         FileRequirement::create($validated);
-        return to_route("admin." . $validated["request_type"] . ".file_requirement");
+        return to_route("admin." . $validated["request_type"] . ".file_requirement")->with("success", "Data berhasil ditambahkan");
     }
 
     public function update(FileRequirement $fileRequirement, Request $request)
@@ -72,13 +72,13 @@ class FileRequirementController extends Controller
             "request_type" => "required|in:proposal,result,comprehensive,ppl"
         ]);
         $fileRequirement->update($validated);
-        return to_route("admin." . $validated["request_type"] . ".file_requirement");
+        return to_route("admin." . $validated["request_type"] . ".file_requirement")->with("warning", "Data berhasil di ubah");
     }
 
     public function destroy(FileRequirement $fileRequirement, Request $request)
     {
-        $type = $request->input("type", "proposal");
+        $type = $fileRequirement->request_type;
         $fileRequirement->delete();
-        return to_route("admin.$type.file_requirement");
+        return to_route("admin.$type.file_requirement")->with("error", "Data berhasil dihapus");
     }
 }

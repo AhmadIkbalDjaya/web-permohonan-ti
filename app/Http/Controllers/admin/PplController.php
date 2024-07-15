@@ -4,6 +4,8 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\PPLDetailResource;
+use App\Models\File;
+use App\Models\FileRequirement;
 use App\Models\Lecturer;
 use App\Models\PPL;
 use App\Models\PplStudent;
@@ -51,8 +53,10 @@ class PplController extends Controller
 
     public function show(PPL $ppl)
     {
+        $file_requirements = FileRequirement::where("request_type", "ppl")->get();
         return Inertia::render("admin/ppl/Show", [
             "ppl" => new PPLDetailResource($ppl),
+            "file_requirements" => $file_requirements,
         ]);
     }
 
@@ -61,16 +65,18 @@ class PplController extends Controller
         $statuses = Status::select("id", "name")->get();
         $status_descriptions = StatusDescription::select("id", "status_id", "description")->get();
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
+        $file_requirements = FileRequirement::where("request_type", "ppl")->get();
         return Inertia::render("admin/ppl/Create", [
             "lecturers" => $lecturers,
             "statuses" => $statuses,
             "status_descriptions" => $status_descriptions,
+            "file_requirements" => $file_requirements,
         ]);
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $rules = [
             "status_id" => "nullable|exists:statuses,id",
             "status_description_id" => "nullable|exists:status_descriptions,id",
             "letter_number_mentor" => "nullable",
@@ -98,10 +104,21 @@ class PplController extends Controller
             "semesters.*" => "required|integer|min:0",
             "phones" => "required|array|min:" . $request->student_count,
             "phones.*" => "required|phone:ID",
-        ]);
+        ];
+        $file_requirements = FileRequirement::where("request_type", "ppl")->get();
+        foreach ($file_requirements as $file_requirement) {
+            $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
+        }
+        $validated = $request->validate($rules);
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("ppl/applicant_signs", "public");
-
-        DB::transaction(function () use ($validated) {
+        foreach ($file_requirements as $index => $file_requirement) {
+            if ($request->file($file_requirement->slug)) {
+                $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("ppl/files", "public");
+            } else {
+                unset($validated[$file_requirement->slug]);
+            }
+        }
+        DB::transaction(function () use ($validated, $file_requirements) {
             $newPpl = PPL::create([
                 "status_id" => $validated["status_id"],
                 "status_description_id" => $validated["status_description_id"],
@@ -117,6 +134,13 @@ class PplController extends Controller
                 "location_address" => $validated["location_address"],
                 "applicant_sign" => $validated["applicant_sign"],
             ]);
+            foreach ($file_requirements as $index => $file_requirement) {
+                File::create([
+                    "file" => $validated[$file_requirement->slug],
+                    "name" => $file_requirement->name,
+                    "ppl_id" => $newPpl->id,
+                ]);
+            }
             for ($i = 0; $i < $validated["student_count"]; $i++) {
                 $newStudent = Student::create([
                     "name" => $validated["names"][$i],
@@ -132,7 +156,7 @@ class PplController extends Controller
                 ]);
             }
         });
-        return to_route("admin.ppl.index");
+        return to_route("admin.ppl.index")->with("success", "Data berhasil ditambahkan");
     }
 
     public function edit(PPL $ppl)
@@ -140,18 +164,21 @@ class PplController extends Controller
         $statuses = Status::select("id", "name")->get();
         $status_descriptions = StatusDescription::select("id", "status_id", "description")->get();
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
+        $file_requirements = FileRequirement::where("request_type", "ppl")->get();
+        // dd($ppl->files);
         return Inertia::render("admin/ppl/Edit", [
             "ppl" => new PPLDetailResource($ppl),
 
             "lecturers" => $lecturers,
             "statuses" => $statuses,
             "status_descriptions" => $status_descriptions,
+            "file_requirements" => $file_requirements,
         ]);
     }
 
     public function update(PPL $ppl, Request $request)
     {
-        $validated = $request->validate([
+        $rules = [
             "status_id" => "nullable|exists:statuses,id",
             "status_description_id" => "nullable|exists:status_descriptions,id",
             "letter_number_mentor" => "nullable",
@@ -179,7 +206,13 @@ class PplController extends Controller
             "semesters.*" => "required|integer|min:0",
             "phones" => "required|array|min:" . $request->student_count,
             "phones.*" => "required|phone:ID",
-        ]);
+        ];
+        $file_requirements = FileRequirement::where("request_type", "ppl")->get();
+        foreach ($file_requirements as $file_requirement) {
+            $rules[$file_requirement->slug] = "nullable|mimes:pdf";
+        }
+        $validated = $request->validate($rules);
+
         $updatePpl = [
             "status_id" => $validated["status_id"],
             "status_description_id" => $validated["status_description_id"],
@@ -200,7 +233,21 @@ class PplController extends Controller
             }
             $updatePpl["applicant_sign"] = $request->file("applicant_sign")->storePublicly("ppl/applicant_signs", "public");
         }
-        DB::transaction(function () use ($ppl, $updatePpl, $validated) {
+        foreach ($file_requirements as $file_requirement) {
+            if ($request->file($file_requirement->slug)) {
+                foreach ($ppl->files as $index => $file) {
+                    if ($file->name == $file_requirement->name) {
+                        if (Storage::exists($file->file)) {
+                            Storage::delete($file->file);
+                        }
+                    }
+                }
+                $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("proposal/files", "public");
+            } else {
+                unset($validated[$file_requirement->slug]);
+            }
+        }
+        DB::transaction(function () use ($ppl, $updatePpl, $validated, $file_requirements) {
             $ppl->update($updatePpl);
             $ppl->students()->delete();
             for ($i = 0; $i < $validated["student_count"]; $i++) {
@@ -217,19 +264,45 @@ class PplController extends Controller
                     "student_id" => $newStudent->id,
                 ]);
             }
+            // tambahkan logic simpan path file di db jika belum ada sebelumnya
+            foreach ($file_requirements as $index => $file_requirement) {
+                if (array_key_exists($file_requirement->slug, $validated)) {
+                    foreach ($ppl->files as $index => $file) {
+                        if ($file->name == $file_requirement->name) {
+                            $file->update([
+                                "file" => $validated[$file_requirement->slug],
+                            ]);
+                        }
+                        // wrong place
+                        // else {
+                        //     File::create([
+                        //         "file" => $validated[$file_requirement->name],
+                        //         "name" => $file_requirement->name,
+                        //         "proposal_id" => $proposal->id,
+                        //     ]);
+                        // }
+                    }
+                }
+            }
         });
-        return to_route("admin.ppl.show", ["ppl" => $ppl->id]);
+        return to_route("admin.ppl.show", ["ppl" => $ppl->id])->with("warning", "Data berhasil di ubah");
     }
     public function destroy(PPL $ppl)
     {
         DB::transaction(function () use ($ppl) {
             $ppl->mentor()->delete();
             $ppl->students()->delete();
+            foreach ($ppl->files as $index => $file) {
+                if (Storage::exists($file->file)) {
+                    Storage::delete($file->file);
+                }
+            }
             if (Storage::exists($ppl->applicant_sign)) {
                 Storage::delete($ppl->applicant_sign);
             }
+            $ppl->files()->delete();
             $ppl->delete();
         });
-        return to_route("admin.ppl.index");
+        return to_route("admin.ppl.index")->with("error", "Data berhasil dihapus");
     }
 }

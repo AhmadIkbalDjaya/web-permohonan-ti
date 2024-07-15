@@ -20,8 +20,10 @@ import { ShowRowData } from "../components/ShowRowData";
 import StatusBox from "../components/StatusBox";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import CetakPengantarPPL from "../cetak/cetakPengantarPPL";
+import { ShowApplicantDocumentsCard } from "../components/ShowApplicantDocumentsCard";
+import ShowPDFModal from "../components/ShowPDFModal";
 
-export default function ShowPPL({ ppl }) {
+export default function ShowPPL({ ppl, file_requirements }) {
     const [confirmDelete, setConfirmDelete] = useState(false);
     const handleOpenDelete = (id) => {
         setConfirmDelete(true);
@@ -41,6 +43,27 @@ export default function ShowPPL({ ppl }) {
     const componentRefIntro = useRef();
     const componentRefMentor = useRef();
     const [hodSignature, setHodSignature] = useState(false);
+
+    const [showPDF, setShowPDF] = useState({
+        open: false,
+        name: "",
+        file: "",
+    });
+
+    const handleClickShowPDF = (name, file) => {
+        setShowPDF({
+            open: true,
+            name,
+            file,
+        });
+    };
+    const handleCloseShowPDF = () => {
+        setShowPDF({
+            open: false,
+            name: "",
+            file: "",
+        });
+    };
     return (
         <>
             <Head title="Detail Permohonan" />
@@ -49,7 +72,12 @@ export default function ShowPPL({ ppl }) {
                 handleClose={handleCloseDelete}
                 handleDelete={handleDeleteData}
             />
-            ;
+            <ShowPDFModal
+                handleClose={handleCloseShowPDF}
+                open={showPDF.open}
+                name={showPDF.name}
+                file={showPDF.file}
+            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -252,6 +280,11 @@ export default function ShowPPL({ ppl }) {
                         flexDirection={"column"}
                         gap={2}
                     >
+                        <ShowApplicantDocumentsCard
+                            file_requirements={file_requirements}
+                            files={ppl.files}
+                            handleClickShowPDF={handleClickShowPDF}
+                        />
                         <Box
                             sx={{
                                 background: "white",

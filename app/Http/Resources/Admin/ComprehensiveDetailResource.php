@@ -30,6 +30,7 @@ class ComprehensiveDetailResource extends JsonResource
             "applicant_sign" => $this->applicant_sign ? url("storage/$this->applicant_sign") : "",
             "student" => new StudentDetailResource($this->student),
             "testers" => TesterResource::collection($this->testers),
+            "files" => FileResource::collection($this->files),
             "created_at" => $this->created_at,
         ];
     }

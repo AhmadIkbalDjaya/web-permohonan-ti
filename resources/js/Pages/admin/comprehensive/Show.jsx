@@ -20,6 +20,8 @@ import { idFormatDate } from "../../../helper/dateTimeHelper";
 import { ShowRowData } from "../components/ShowRowData";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import CetakKompren from "../cetak/cetakKompren";
+import { ShowApplicantDocumentsCard } from "../components/ShowApplicantDocumentsCard";
+import ShowPDFModal from "../components/ShowPDFModal";
 
 export default function ShowComprehensive({
     comprehensive,
@@ -43,6 +45,27 @@ export default function ShowComprehensive({
 
     const componentRef = useRef();
     const [hodSignature, setHodSignature] = useState(false);
+
+    const [showPDF, setShowPDF] = useState({
+        open: false,
+        name: "",
+        file: "",
+    });
+
+    const handleClickShowPDF = (name, file) => {
+        setShowPDF({
+            open: true,
+            name,
+            file,
+        });
+    };
+    const handleCloseShowPDF = () => {
+        setShowPDF({
+            open: false,
+            name: "",
+            file: "",
+        });
+    };
     return (
         <>
             <Head title="Detail Permohonan" />
@@ -50,6 +73,12 @@ export default function ShowComprehensive({
                 open={confirmDelete}
                 handleClose={handleCloseDelete}
                 handleDelete={handleDeleteData}
+            />
+            <ShowPDFModal
+                handleClose={handleCloseShowPDF}
+                open={showPDF.open}
+                name={showPDF.name}
+                file={showPDF.file}
             />
             <BaseLayout>
                 <AppBreadcrumbs>
@@ -261,6 +290,11 @@ export default function ShowComprehensive({
                         flexDirection={"column"}
                         gap={2}
                     >
+                        <ShowApplicantDocumentsCard
+                            file_requirements={file_requirements}
+                            files={comprehensive.files}
+                            handleClickShowPDF={handleClickShowPDF}
+                        />
                         <Box
                             sx={{
                                 background: "white",

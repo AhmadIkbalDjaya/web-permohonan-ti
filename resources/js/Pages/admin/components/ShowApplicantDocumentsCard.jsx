@@ -76,7 +76,13 @@ export function ShowApplicantDocumentsCard({
                                         )
                                 )}
                                 {!anyFileMatches && (
-                                    <Typography variant="body2">
+                                    <Typography
+                                        variant="body2"
+                                        textAlign={"center"}
+                                        color={"gray-500"}
+                                        fontWeight={"bold"}
+                                        mt={1}
+                                    >
                                         Tidak Ada Berkas
                                     </Typography>
                                 )}

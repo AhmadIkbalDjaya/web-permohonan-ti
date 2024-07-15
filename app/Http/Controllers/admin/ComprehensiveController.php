@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\ComprehensiveDetailResource;
 use App\Models\Comprehensive;
+use App\Models\File;
 use App\Models\FileRequirement;
 use App\Models\Lecturer;
 use App\Models\Status;
@@ -53,8 +54,10 @@ class ComprehensiveController extends Controller
 
     public function show(Comprehensive $comprehensive)
     {
+        $file_requirements = FileRequirement::where("request_type", "comprehensive")->get();
         return Inertia::render("admin/comprehensive/Show", [
             "comprehensive" => new ComprehensiveDetailResource($comprehensive->load(["student", "testers"])),
+            "file_requirements" => $file_requirements,
         ]);
     }
 
@@ -63,7 +66,7 @@ class ComprehensiveController extends Controller
         $statuses = Status::select("id", "name")->get();
         $status_descriptions = StatusDescription::select("id", "status_id", "description")->get();
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
-        $file_requirements = FileRequirement::where("request_type", "results")->get();
+        $file_requirements = FileRequirement::where("request_type", "comprehensive")->get();
         return Inertia::render("admin/comprehensive/Create", [
             "lecturers" => $lecturers,
             "statuses" => $statuses,
@@ -74,7 +77,7 @@ class ComprehensiveController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $rules = [
             "status_id" => "nullable|exists:statuses,id",
             "status_description_id" => "nullable|exists:status_descriptions,id",
             "letter_number" => "nullable",
@@ -92,9 +95,21 @@ class ComprehensiveController extends Controller
             "applicant_sign" => "required|image",
             "tester_ids" => "nullable|array",
             "tester_ids.*" => "nullable|string|exists:lecturers,id",
-        ]);
+        ];
+        $file_requirements = FileRequirement::where("request_type", "comprehensive")->get();
+        foreach ($file_requirements as $file_requirement) {
+            $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
+        }
+        $validated = $request->validate($rules);
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("comprehensive/applicant_signs", "public");
-        DB::transaction(function () use ($validated) {
+        foreach ($file_requirements as $index => $file_requirement) {
+            if ($request->file($file_requirement->slug)) {
+                $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("comprehensive/files", "public");
+            } else {
+                unset($validated[$file_requirement->slug]);
+            }
+        }
+        DB::transaction(function () use ($validated, $file_requirements) {
             $newStudent = Student::create([
                 "name" => $validated["name"],
                 "nim" => $validated["nim"],
@@ -114,6 +129,13 @@ class ComprehensiveController extends Controller
                 "chairman_id" => $validated["chairman_id"],
                 "secretary_id" => $validated["secretary_id"],
             ]);
+            foreach ($file_requirements as $index => $file_requirement) {
+                File::create([
+                    "file" => $validated[$file_requirement->slug],
+                    "name" => $file_requirement->name,
+                    "comprehensive_id" => $newComprehensive->id,
+                ]);
+            }
             $testerSectors = ["JARKOM", "RPL", "Agama"];
             foreach ($testerSectors as $index => $sector) {
                 Tester::create([
@@ -124,7 +146,7 @@ class ComprehensiveController extends Controller
                 ]);
             }
         });
-        return to_route("admin.comprehensive.index");
+        return to_route("admin.comprehensive.index")->with("success", "Data berhasil ditambahkan");
     }
 
     public function edit(Comprehensive $comprehensive)
@@ -133,19 +155,20 @@ class ComprehensiveController extends Controller
         $status_descriptions = StatusDescription::select("id", "status_id", "description")->get();
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
 
+        $file_requirements = FileRequirement::where("request_type", "comprehensive")->get();
         return Inertia::render("admin/comprehensive/Edit", [
             "comprehensive" => new ComprehensiveDetailResource($comprehensive),
 
             "lecturers" => $lecturers,
             "statuses" => $statuses,
             "status_descriptions" => $status_descriptions,
-            // "file_requirements" => $file_requirements,
+            "file_requirements" => $file_requirements,
         ]);
     }
 
     public function update(Comprehensive $comprehensive, Request $request)
     {
-        $validated = $request->validate([
+        $rules = [
             "status_id" => "nullable|exists:statuses,id",
             "status_description_id" => "nullable|exists:status_descriptions,id",
             "letter_number" => "nullable",
@@ -163,7 +186,14 @@ class ComprehensiveController extends Controller
             "applicant_sign" => "nullable|image",
             "tester_ids" => "nullable|array",
             "tester_ids.*" => "nullable|string|exists:lecturers,id",
-        ]);
+        ];
+        $file_requirements = FileRequirement::where("request_type", "comprehensive")->get();
+        foreach ($file_requirements as $file_requirement) {
+            $rules[$file_requirement->slug] = "nullable|mimes:pdf";
+        }
+
+        $validated = $request->validate($rules);
+
         $updateComprehensive = [
             "essay_title" => $validated["essay_title"],
             "status_id" => $validated["status_id"],
@@ -180,7 +210,21 @@ class ComprehensiveController extends Controller
             $updateComprehensive["applicant_sign"] = $request->file("applicant_sign")->storePublicly("comprehensive/applicant_signs", "public");
         }
 
-        DB::transaction(function () use ($comprehensive, $validated, $updateComprehensive) {
+        foreach ($file_requirements as $file_requirement) {
+            if ($request->file($file_requirement->slug)) {
+                foreach ($comprehensive->files as $index => $file) {
+                    if ($file->name == $file_requirement->name) {
+                        if (Storage::exists($file->file)) {
+                            Storage::delete($file->file);
+                        }
+                    }
+                }
+                $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("comprehensive/files", "public");
+            } else {
+                unset($validated[$file_requirement->slug]);
+            }
+        }
+        DB::transaction(function () use ($comprehensive, $validated, $updateComprehensive, $file_requirements) {
             $comprehensive->student->update([
                 "name" => $validated["name"],
                 "nim" => $validated["nim"],
@@ -198,20 +242,46 @@ class ComprehensiveController extends Controller
                     ]);
                 }
             }
+            // tambahkan logic simpan path file di db jika belum ada sebelumnya
+            foreach ($file_requirements as $index => $file_requirement) {
+                if (array_key_exists($file_requirement->slug, $validated)) {
+                    foreach ($comprehensive->files as $index => $file) {
+                        if ($file->name == $file_requirement->name) {
+                            $file->update([
+                                "file" => $validated[$file_requirement->slug],
+                            ]);
+                        }
+                        // wrong place
+                        // else {
+                        //     File::create([
+                        //         "file" => $validated[$file_requirement->name],
+                        //         "name" => $file_requirement->name,
+                        //         "proposal_id" => $proposal->id,
+                        //     ]);
+                        // }
+                    }
+                }
+            }
         });
-        return to_route("admin.comprehensive.show", ["comprehensive" => $comprehensive->id]);
+        return to_route("admin.comprehensive.show", ["comprehensive" => $comprehensive->id])->with("warning", "Data berhasil di ubah");
     }
 
     public function destroy(Comprehensive $comprehensive)
     {
         DB::transaction(function () use ($comprehensive) {
             $comprehensive->testers()->delete();
+            foreach ($comprehensive->files as $index => $file) {
+                if (Storage::exists($file->file)) {
+                    Storage::delete($file->file);
+                }
+            }
             if (Storage::exists($comprehensive->applicant_sign)) {
                 Storage::delete($comprehensive->applicant_sign);
             }
+            $comprehensive->files()->delete();
             $comprehensive->delete();
             $comprehensive->student()->delete();
         });
-        return to_route("admin.comprehensive.index");
+        return to_route("admin.comprehensive.index")->with("error", "Data berhasil dihapus");
     }
 }

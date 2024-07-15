@@ -198,12 +198,14 @@ export default function CreateProposal({
                         flexDirection={"column"}
                         gap={2}
                     >
-                        <DocumentsFormCard
-                            file_requirements={file_requirements}
-                            handleChangeForm={handleChangeForm}
-                            formValues={formValues}
-                            errors={errors}
-                        />
+                        {file_requirements.length > 0 && (
+                            <DocumentsFormCard
+                                file_requirements={file_requirements}
+                                handleChangeForm={handleChangeForm}
+                                formValues={formValues}
+                                errors={errors}
+                            />
+                        )}
                         <SigantureInputCard
                             emptySignature={emptySignature}
                             errors={errors}

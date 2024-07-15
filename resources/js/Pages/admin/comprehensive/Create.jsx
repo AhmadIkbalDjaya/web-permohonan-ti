@@ -19,6 +19,8 @@ import { semesterListItems } from "../components/elements/input/SemesterListItem
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
 import ReactSignatureCanvas from "react-signature-canvas";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
+import { SigantureInputCard } from "../components/SigantureInputCard";
+import { DocumentsFormCard } from "../components/DocumentsFormCard";
 
 export default function CreateComprehensive({
     file_requirements,
@@ -43,6 +45,7 @@ export default function CreateComprehensive({
         phone: "",
         essay_title: "",
         tester_ids: ["", "", ""],
+        files: {},
     });
 
     function handleChangeForm(e, index = null) {
@@ -708,75 +711,21 @@ export default function CreateComprehensive({
                         flexDirection={"column"}
                         gap={2}
                     >
-                        <Box
-                            sx={{
-                                background: "white",
-                                border: ".5px solid",
-                                borderColor: "slate-300",
-                                borderRadius: "4px",
-                            }}
-                        >
-                            <Box
-                                sx={{ p: "15px" }}
-                                borderBottom={"1px solid"}
-                                borderColor={"slate-300"}
-                            >
-                                <Box display={"flex"} height={"fit"}>
-                                    <Typography
-                                        variant="body2"
-                                        color="initial"
-                                        fontWeight={600}
-                                    >
-                                        Tanda Tangan Pemohon
-                                    </Typography>
-                                    <Typography color="red">
-                                        &nbsp; *
-                                    </Typography>
-                                </Box>
-                                {errors.applicant_sign ? (
-                                    <InputErrorMessage px={0}>
-                                        {errors.applicant_sign}
-                                    </InputErrorMessage>
-                                ) : (
-                                    ""
-                                )}
-                                {emptySignature ? (
-                                    <InputErrorMessage px={0}>
-                                        Anda Belum Tanda Tangan
-                                    </InputErrorMessage>
-                                ) : (
-                                    ""
-                                )}
-                            </Box>
-                            <Box display={"flex"} justifyContent={"center"}>
-                                <ReactSignatureCanvas
-                                    ref={(ref) => {
-                                        setSignatur(ref);
-                                    }}
-                                    penColor="black"
-                                    backgroundColor="#F4F6F8"
-                                    canvasProps={{
-                                        width: 300,
-                                        height: 200,
-                                        className: "sigCanvas",
-                                    }}
-                                />
-                            </Box>
-                            <Box>
-                                <ButtonGroup
-                                    variant="contained"
-                                    color="slate-300"
-                                    fullWidth
-                                >
-                                    <Button onClick={clearSignatur}>
-                                        Bersihkan
-                                    </Button>
-                                    <Button onClick={saveSignature}>
-                                        Simpan
-                                    </Button>
-                                </ButtonGroup>
-                            </Box>
-                        </Box>
+                        {file_requirements.length > 0 && (
+                            <DocumentsFormCard
+                                file_requirements={file_requirements}
+                                handleChangeForm={handleChangeForm}
+                                formValues={formValues}
+                                errors={errors}
+                            />
+                        )}
+                        <SigantureInputCard
+                            emptySignature={emptySignature}
+                            errors={errors}
+                            setSignatur={setSignatur}
+                            clearSignatur={clearSignatur}
+                            saveSignature={saveSignature}
+                        />
                     </Box>
                 </Box>
             </BaseLayout>

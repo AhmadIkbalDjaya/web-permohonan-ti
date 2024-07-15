@@ -21,6 +21,7 @@ import AppInputLabel from "../../admin/components/elements/input/AppInputLabel";
 import PublicBaseLayout from "../base_layout/PublicBaseLayout";
 import AppBreadcrumbs from "../../admin/components/elements/AppBreadcrumbs";
 import AppLink from "../../admin/components/AppLink";
+import InputFileUpload from "../../admin/components/elements/input/InputFileUpload";
 
 export default function Kompren({ file_requirements }) {
     const [signature, setSignatur] = useState();
@@ -342,7 +343,7 @@ export default function Kompren({ file_requirements }) {
                             flexDirection={"column"}
                             gap={2}
                         >
-                            {file_requirements.length > 1 && (
+                            {file_requirements.length > 0 && (
                                 <Box
                                     sx={{
                                         background: "white",
@@ -374,10 +375,9 @@ export default function Kompren({ file_requirements }) {
                                                         key={index}
                                                     >
                                                         <AppInputLabel
-                                                            label={file_requirement.name.replaceAll(
-                                                                "_",
-                                                                " "
-                                                            )}
+                                                            label={
+                                                                file_requirement.name
+                                                            }
                                                             required={
                                                                 file_requirement.is_required
                                                             }
@@ -385,7 +385,7 @@ export default function Kompren({ file_requirements }) {
                                                         <InputFileUpload
                                                             id="name"
                                                             name={
-                                                                file_requirement.name
+                                                                file_requirement.slug
                                                             }
                                                             type="file"
                                                             accept={".pdf"}
@@ -395,7 +395,7 @@ export default function Kompren({ file_requirements }) {
                                                         />
                                                         {formValues.files[
                                                             file_requirement
-                                                                .name
+                                                                .slug
                                                         ] ? (
                                                             <FormHelperText
                                                                 sx={{
@@ -409,7 +409,7 @@ export default function Kompren({ file_requirements }) {
                                                                     File:{" "}
                                                                     {formValues.files[
                                                                         file_requirement
-                                                                            .name
+                                                                            .slug
                                                                     ].name.substring(
                                                                         0,
                                                                         20
@@ -420,7 +420,7 @@ export default function Kompren({ file_requirements }) {
                                                                         formValues
                                                                             .files[
                                                                             file_requirement
-                                                                                .name
+                                                                                .slug
                                                                         ].size /
                                                                         1024
                                                                     ).toFixed(
@@ -434,7 +434,7 @@ export default function Kompren({ file_requirements }) {
                                                         )}
                                                         {errors[
                                                             file_requirement
-                                                                .name
+                                                                .slug
                                                         ] && (
                                                             <InputErrorMessage
                                                                 px={"0px"}
@@ -442,7 +442,7 @@ export default function Kompren({ file_requirements }) {
                                                                 {
                                                                     errors[
                                                                         file_requirement
-                                                                            .name
+                                                                            .slug
                                                                     ]
                                                                 }
                                                             </InputErrorMessage>

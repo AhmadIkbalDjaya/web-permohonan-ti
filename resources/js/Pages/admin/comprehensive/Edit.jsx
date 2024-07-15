@@ -19,10 +19,14 @@ import AppInputLabel from "../components/elements/input/AppInputLabel";
 import { semesterListItems } from "../components/elements/input/SemesterListItems";
 import ReactSignatureCanvas from "react-signature-canvas";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
+import { DocumentsEditFormCard } from "../components/DocumentsEditFormCard";
+import { SigantureInputCard } from "../components/SigantureInputCard";
+import ShowPDFModal from "../components/ShowPDFModal";
 
 export default function EditComprehensive({
     comprehensive,
 
+    file_requirements,
     lecturers,
     statuses,
     status_descriptions,
@@ -48,6 +52,7 @@ export default function EditComprehensive({
         tester_ids: comprehensive.testers.map(
             (tester) => tester.lecturer_id || ""
         ),
+        files: {},
         _method: "PUT",
     });
     function handleChangeForm(e, index = null) {
@@ -128,9 +133,36 @@ export default function EditComprehensive({
             }
         );
     }
+
+    const [showPDF, setShowPDF] = useState({
+        open: false,
+        name: "",
+        file: "",
+    });
+
+    const handleClickShowPDF = (name, file) => {
+        setShowPDF({
+            open: true,
+            name,
+            file,
+        });
+    };
+    const handleCloseShowPDF = () => {
+        setShowPDF({
+            open: false,
+            name: "",
+            file: "",
+        });
+    };
     return (
         <>
             <Head title="Edit Permohonan Kompren" />
+            <ShowPDFModal
+                handleClose={handleCloseShowPDF}
+                open={showPDF.open}
+                name={showPDF.name}
+                file={showPDF.file}
+            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -725,75 +757,22 @@ export default function EditComprehensive({
                         flexDirection={"column"}
                         gap={2}
                     >
-                        <Box
-                            sx={{
-                                background: "white",
-                                border: ".5px solid",
-                                borderColor: "slate-300",
-                                borderRadius: "4px",
-                            }}
-                        >
-                            <Box
-                                sx={{ p: "15px" }}
-                                borderBottom={"1px solid"}
-                                borderColor={"slate-300"}
-                            >
-                                <Box display={"flex"} height={"fit"}>
-                                    <Typography
-                                        variant="body2"
-                                        color="initial"
-                                        fontWeight={600}
-                                    >
-                                        Tanda Tangan Pemohon
-                                    </Typography>
-                                </Box>
-                                <FormHelperText>
-                                    Kosongkan jika tidak ingin mengganti
-                                </FormHelperText>
-                                {errors.applicant_sign ? (
-                                    <InputErrorMessage px={0}>
-                                        {errors.applicant_sign}
-                                    </InputErrorMessage>
-                                ) : (
-                                    ""
-                                )}
-                                {emptySignature ? (
-                                    <InputErrorMessage px={0}>
-                                        Anda Belum Tanda Tangan
-                                    </InputErrorMessage>
-                                ) : (
-                                    ""
-                                )}
-                            </Box>
-                            <Box display={"flex"} justifyContent={"center"}>
-                                <ReactSignatureCanvas
-                                    ref={(ref) => {
-                                        setSignatur(ref);
-                                    }}
-                                    penColor="black"
-                                    backgroundColor="#F4F6F8"
-                                    canvasProps={{
-                                        width: 300,
-                                        height: 200,
-                                        className: "sigCanvas",
-                                    }}
-                                />
-                            </Box>
-                            <Box>
-                                <ButtonGroup
-                                    variant="contained"
-                                    color="slate-300"
-                                    fullWidth
-                                >
-                                    <Button onClick={clearSignatur}>
-                                        Bersihkan
-                                    </Button>
-                                    <Button onClick={saveSignature}>
-                                        Simpan
-                                    </Button>
-                                </ButtonGroup>
-                            </Box>
-                        </Box>
+                        <DocumentsEditFormCard
+                            file_requirements={file_requirements}
+                            handleChangeForm={handleChangeForm}
+                            formValues={formValues}
+                            errors={errors}
+                            files={comprehensive.files}
+                            handleClickShowPDF={handleClickShowPDF}
+                        />
+                        <SigantureInputCard
+                            formType={"edit"}
+                            emptySignature={emptySignature}
+                            errors={errors}
+                            setSignatur={setSignatur}
+                            clearSignatur={clearSignatur}
+                            saveSignature={saveSignature}
+                        />
                     </Box>
                 </Box>
             </BaseLayout>

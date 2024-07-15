@@ -19,8 +19,11 @@ import { semesterListItems } from "../components/elements/input/SemesterListItem
 import ReactSignatureCanvas from "react-signature-canvas";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
+import { DocumentsFormCard } from "../components/DocumentsFormCard";
+import { SigantureInputCard } from "../components/SigantureInputCard";
 
 export default function CreatePpl({
+    file_requirements,
     statuses,
     status_descriptions,
     lecturers,
@@ -47,6 +50,7 @@ export default function CreatePpl({
         dobs: [""],
         semesters: [""],
         phones: [""],
+        files: {},
     });
 
     function handleChangeForm(e, index = null) {
@@ -66,6 +70,14 @@ export default function CreatePpl({
                     [name]: updateArray,
                 };
             });
+        } else if (e.target.type == "file") {
+            setFormValues((values) => ({
+                ...values,
+                files: {
+                    ...values.files,
+                    [name]: e.target.files[0],
+                },
+            }));
         } else {
             if (name == "student_count") {
                 if (value > formValues.student_count) {
@@ -105,7 +117,21 @@ export default function CreatePpl({
         }
     }
     function handleSubmitForm(e) {
-        router.post(route("admin.ppl.store"), formValues, {
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(formValues)) {
+            if (key == "files") {
+                for (const [key, file] of Object.entries(value)) {
+                    formData.append(key, file);
+                }
+            } else if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    formData.append(`${key}[${index}]`, item);
+                });
+            } else {
+                formData.append(key, value);
+            }
+        }
+        router.post(route("admin.ppl.store"), formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -763,69 +789,25 @@ export default function CreatePpl({
                             xs: "100%",
                             md: 5,
                         }}
-                        sx={{
-                            background: "white",
-                            border: ".5px solid",
-                            borderColor: "slate-300",
-                            borderRadius: "4px",
-                        }}
+                        display={"flex"}
+                        flexDirection={"column"}
+                        gap={2}
                     >
-                        <Box
-                            sx={{ p: "15px" }}
-                            borderBottom={"1px solid"}
-                            borderColor={"slate-300"}
-                        >
-                            <Box display={"flex"} height={"fit"}>
-                                <Typography
-                                    variant="body2"
-                                    color="initial"
-                                    fontWeight={600}
-                                >
-                                    Tanda Tangan Pemohon
-                                </Typography>
-                                <Typography color="red">&nbsp; *</Typography>
-                            </Box>
-                            {errors.applicant_sign ? (
-                                <InputErrorMessage px={0}>
-                                    {errors.applicant_sign}
-                                </InputErrorMessage>
-                            ) : (
-                                ""
-                            )}
-                            {emptySignature ? (
-                                <InputErrorMessage px={0}>
-                                    Anda Belum Tanda Tangan
-                                </InputErrorMessage>
-                            ) : (
-                                ""
-                            )}
-                        </Box>
-                        <Box display={"flex"} justifyContent={"center"}>
-                            <ReactSignatureCanvas
-                                ref={(ref) => {
-                                    setSignatur(ref);
-                                }}
-                                penColor="black"
-                                backgroundColor="#F4F6F8"
-                                canvasProps={{
-                                    width: 300,
-                                    height: 200,
-                                    className: "sigCanvas",
-                                }}
+                        {file_requirements.length > 0 && (
+                            <DocumentsFormCard
+                                file_requirements={file_requirements}
+                                handleChangeForm={handleChangeForm}
+                                formValues={formValues}
+                                errors={errors}
                             />
-                        </Box>
-                        <Box>
-                            <ButtonGroup
-                                variant="contained"
-                                color="slate-300"
-                                fullWidth
-                            >
-                                <Button onClick={clearSignatur}>
-                                    Bersihkan
-                                </Button>
-                                <Button onClick={saveSignature}>Simpan</Button>
-                            </ButtonGroup>
-                        </Box>
+                        )}
+                        <SigantureInputCard
+                            emptySignature={emptySignature}
+                            errors={errors}
+                            setSignatur={setSignatur}
+                            clearSignatur={clearSignatur}
+                            saveSignature={saveSignature}
+                        />
                     </Box>
                     <Box
                         flex={"100%"}

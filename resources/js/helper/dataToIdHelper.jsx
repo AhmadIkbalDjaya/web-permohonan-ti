@@ -17,3 +17,14 @@ export const convertRoleToID = (role) => {
     }
     return "-";
 };
+
+export const convertRequestTypeToID = (string) => {
+    if (string == "result") {
+        return "Hasil";
+    } else if (string == "comprehensive") {
+        return "Kompren";
+    } else if (string == "ppl") {
+        return "PPL";
+    }
+    return "Proposal";
+};

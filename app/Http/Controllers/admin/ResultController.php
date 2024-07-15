@@ -55,7 +55,7 @@ class ResultController extends Controller
 
     public function show(Result $result)
     {
-        $file_requirements = FileRequirement::where("request_type", "results")->get();
+        $file_requirements = FileRequirement::where("request_type", "result")->get();
         return Inertia::render("admin/result/Show", [
             "result" => new ResultDetailResource($result->load(["student", "schedule", "mentors", "testers", "files"])),
             "file_requirements" => $file_requirements,
@@ -67,7 +67,7 @@ class ResultController extends Controller
         $statuses = Status::select("id", "name")->get();
         $status_descriptions = StatusDescription::select("id", "status_id", "description")->get();
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
-        $file_requirements = FileRequirement::where("request_type", "results")->get();
+        $file_requirements = FileRequirement::where("request_type", "result")->get();
         return Inertia::render("admin/result/Create", [
             "lecturers" => $lecturers,
             "statuses" => $statuses,
@@ -106,17 +106,17 @@ class ResultController extends Controller
             "location" => "nullable|string",
         ];
 
-        $file_requirements = FileRequirement::where("request_type", "results")->get();
+        $file_requirements = FileRequirement::where("request_type", "result")->get();
         foreach ($file_requirements as $file_requirement) {
             $rules[$file_requirement->name] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
         }
         $validated = $request->validate($rules);
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("result/applicant_signs", "public");
         foreach ($file_requirements as $index => $file_requirement) {
-            if ($request->file($file_requirement->name)) {
-                $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("result/file", "public");
+            if ($request->file($file_requirement->slug)) {
+                $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("result/files", "public");
             } else {
-                unset($validated[$file_requirement->name]);
+                unset($validated[$file_requirement->slug]);
             }
         }
         DB::transaction(function () use ($validated, $file_requirements) {
@@ -151,7 +151,7 @@ class ResultController extends Controller
             ]);
             foreach ($file_requirements as $index => $file_requirement) {
                 File::create([
-                    "file" => $validated[$file_requirement->name],
+                    "file" => $validated[$file_requirement->slug],
                     "name" => $file_requirement->name,
                     "result_id" => $newResult->id,
                 ]);
@@ -171,7 +171,7 @@ class ResultController extends Controller
                 ]);
             }
         });
-        return to_route("admin.result.index");
+        return to_route("admin.result.index")->with("success", "Data berhasil ditambahkan");
     }
 
     public function edit(Result $result, Request $request)
@@ -180,7 +180,7 @@ class ResultController extends Controller
         $status_descriptions = StatusDescription::select("id", "status_id", "description")->get();
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
 
-        $file_requirements = FileRequirement::where("request_type", "results")->get();
+        $file_requirements = FileRequirement::where("request_type", "result")->get();
         return Inertia::render("admin/result/Edit", [
             "result" => new ResultDetailResource($result),
 
@@ -220,7 +220,7 @@ class ResultController extends Controller
             "end_time" => "nullable|date_format:H:i",
             "location" => "nullable|string",
         ];
-        $file_requirements = FileRequirement::where("request_type", "results")->get();
+        $file_requirements = FileRequirement::where("request_type", "result")->get();
         foreach ($file_requirements as $file_requirement) {
             $rules[$file_requirement->name] = "nullable|mimes:pdf";
         }
@@ -245,7 +245,7 @@ class ResultController extends Controller
         }
 
         foreach ($file_requirements as $file_requirement) {
-            if ($request->file($file_requirement->name)) {
+            if ($request->file($file_requirement->slug)) {
                 foreach ($result->files as $index => $file) {
                     if ($file->name == $file_requirement->name) {
                         if (Storage::exists($file->file)) {
@@ -253,9 +253,9 @@ class ResultController extends Controller
                         }
                     }
                 }
-                $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("result/file", "public");
+                $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("result/files", "public");
             } else {
-                unset($validated[$file_requirement->name]);
+                unset($validated[$file_requirement->slug]);
             }
         }
         DB::transaction(function () use ($result, $updateResult, $validated, $file_requirements) {
@@ -287,11 +287,11 @@ class ResultController extends Controller
             }
             // tambahkan logic simpan path file di db jika belum ada sebelumnya
             foreach ($file_requirements as $index => $file_requirement) {
-                if (array_key_exists($file_requirement->name, $validated)) {
+                if (array_key_exists($file_requirement->slug, $validated)) {
                     foreach ($result->files as $index => $file) {
                         if ($file->name == $file_requirement->name) {
                             $file->update([
-                                "file" => $validated[$file_requirement->name],
+                                "file" => $validated[$file_requirement->slug],
                             ]);
                         }
                         // wrong place
@@ -306,7 +306,7 @@ class ResultController extends Controller
                 }
             }
         });
-        return to_route("admin.result.show", ["result" => $result->id]);
+        return to_route("admin.result.show", ["result" => $result->id])->with("warning", "Data berhasil di ubah");
     }
 
     public function destroy(Result $result)

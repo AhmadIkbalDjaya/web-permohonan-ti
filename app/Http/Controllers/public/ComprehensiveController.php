@@ -18,7 +18,7 @@ class ComprehensiveController extends Controller
     public function index()
     {
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
-        $file_requirements = FileRequirement::where("request_type", "comprehensives")->get();
+        $file_requirements = FileRequirement::where("request_type", "comprehensive")->get();
         return Inertia::render("public/comprehensive/Index", [
             "file_requirements" => $file_requirements,
             "lecturers" => $lecturers,
@@ -37,17 +37,17 @@ class ComprehensiveController extends Controller
             "essay_title" => "required",
             "applicant_sign" => "required|image",
         ];
-        $file_requirements = FileRequirement::where("request_type", "comprehensives")->get();
+        $file_requirements = FileRequirement::where("request_type", "comprehensive")->get();
         foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->name] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
+            $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
         }
         $validated = $request->validate($rules);
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("result/applicant_signs", "public");
         foreach ($file_requirements as $index => $file_requirement) {
-            if ($request->file($file_requirement->name)) {
-                $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("result/files", "public");
+            if ($request->file($file_requirement->slug)) {
+                $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("comprehensive/files", "public");
             } else {
-                unset($validated[$file_requirement->name]);
+                unset($validated[$file_requirement->slug]);
             }
         }
         DB::transaction(function () use ($validated, $file_requirements) {
@@ -64,6 +64,13 @@ class ComprehensiveController extends Controller
                 "essay_title" => $validated["essay_title"],
                 "applicant_sign" => $validated["applicant_sign"],
             ]);
+            foreach ($file_requirements as $index => $file_requirement) {
+                File::create([
+                    "file" => $validated[$file_requirement->slug],
+                    "name" => $file_requirement->name,
+                    "comprehensive_id" => $newComprehensive->id,
+                ]);
+            }
             $testerSectors = ["JARKOM", "RPL", "Agama"];
             foreach ($testerSectors as $index => $sector) {
                 Tester::create([

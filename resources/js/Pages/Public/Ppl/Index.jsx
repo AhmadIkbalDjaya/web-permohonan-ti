@@ -10,6 +10,7 @@ import {
     Grid,
     MenuItem,
     Select,
+    FormHelperText,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
 import ReactSignatureCanvas from "react-signature-canvas";
@@ -20,8 +21,9 @@ import InputErrorMessage from "../../admin/components/elements/input/InputErrorM
 import PublicBaseLayout from "../base_layout/PublicBaseLayout";
 import AppBreadcrumbs from "../../admin/components/elements/AppBreadcrumbs";
 import AppLink from "../../admin/components/AppLink";
+import InputFileUpload from "../../admin/components/elements/input/InputFileUpload";
 
-export default function Ppl() {
+export default function Ppl({ file_requirements }) {
     const [signature, setSignatur] = useState();
     const [emptySignature, setEmptySignature] = useState(false);
 
@@ -60,6 +62,7 @@ export default function Ppl() {
         dobs: [""],
         semesters: [""],
         phones: [""],
+        files: {},
     });
 
     function handleChangeForm(e, index = null) {
@@ -79,6 +82,14 @@ export default function Ppl() {
                     [name]: updateArray,
                 };
             });
+        } else if (e.target.type == "file") {
+            setFormValues((values) => ({
+                ...values,
+                files: {
+                    ...values.files,
+                    [name]: e.target.files[0],
+                },
+            }));
         } else {
             if (name == "student_count") {
                 if (value > formValues.student_count) {
@@ -118,7 +129,30 @@ export default function Ppl() {
         }
     }
     function handleSubmitForm(e) {
-        router.post(route("ppl.store"), formValues);
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(formValues)) {
+            if (key == "files") {
+                for (const [key, file] of Object.entries(value)) {
+                    formData.append(key, file);
+                }
+            } else if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    formData.append(`${key}[${index}]`, item);
+                });
+            } else {
+                formData.append(key, value);
+            }
+        }
+        router.post(route("ppl.store"), formData, {
+            headers: {
+                "Content-Type": "multipart/form-formValues",
+            },
+        });
+        // router.post(route("ppl.store"), formValues, {
+        //     headers: {
+        //         "Content-Type": "multipart/form-formValues",
+        //     },
+        // });
     }
 
     return (
@@ -581,72 +615,189 @@ export default function Ppl() {
                                 xs: "100%",
                                 md: 5,
                             }}
-                            sx={{
-                                background: "white",
-                                border: ".5px solid",
-                                borderColor: "slate-300",
-                                borderRadius: "4px",
-                            }}
+                            display={"flex"}
+                            flexDirection={"column"}
+                            gap={2}
                         >
-                            <Box
-                                sx={{ p: "15px" }}
-                                borderBottom={"1px solid"}
-                                borderColor={"slate-300"}
-                            >
-                                <Box display={"flex"} height={"fit"}>
+                            {file_requirements.length > 0 && (
+                                <Box
+                                    sx={{
+                                        background: "white",
+                                        border: ".5px solid",
+                                        borderColor: "slate-300",
+                                        borderRadius: "4px",
+                                    }}
+                                >
                                     <Typography
                                         variant="body2"
                                         color="initial"
-                                        fontWeight={600}
+                                        sx={{ p: "15px", fontWeight: "600" }}
+                                        borderBottom={"1px solid"}
+                                        borderColor={"slate-300"}
                                     >
-                                        Tanda Tangan Pemohon
+                                        Berkas
                                     </Typography>
-                                    <Typography color="red">
-                                        &nbsp; *
-                                    </Typography>
+                                    <Grid
+                                        container
+                                        spacing={2}
+                                        padding={"15px"}
+                                    >
+                                        {file_requirements.map(
+                                            (file_requirement, index) => {
+                                                return (
+                                                    <Grid
+                                                        item
+                                                        xs={12}
+                                                        key={index}
+                                                    >
+                                                        <AppInputLabel
+                                                            label={
+                                                                file_requirement.name
+                                                            }
+                                                            required={
+                                                                file_requirement.is_required
+                                                            }
+                                                        />
+                                                        <InputFileUpload
+                                                            id="name"
+                                                            name={
+                                                                file_requirement.slug
+                                                            }
+                                                            type="file"
+                                                            accept={".pdf"}
+                                                            onChange={
+                                                                handleChangeForm
+                                                            }
+                                                        />
+                                                        {formValues.files[
+                                                            file_requirement
+                                                                .slug
+                                                        ] ? (
+                                                            <FormHelperText
+                                                                sx={{
+                                                                    display:
+                                                                        "flex",
+                                                                    justifyContent:
+                                                                        "space-between",
+                                                                }}
+                                                            >
+                                                                <Typography variant="">
+                                                                    File:{" "}
+                                                                    {formValues.files[
+                                                                        file_requirement
+                                                                            .slug
+                                                                    ].name.substring(
+                                                                        0,
+                                                                        20
+                                                                    )}
+                                                                </Typography>
+                                                                <Typography variant="">
+                                                                    {(
+                                                                        formValues
+                                                                            .files[
+                                                                            file_requirement
+                                                                                .slug
+                                                                        ].size /
+                                                                        1024
+                                                                    ).toFixed(
+                                                                        0
+                                                                    )}{" "}
+                                                                    KB
+                                                                </Typography>
+                                                            </FormHelperText>
+                                                        ) : (
+                                                            ""
+                                                        )}
+                                                        {errors[
+                                                            file_requirement
+                                                                .slug
+                                                        ] && (
+                                                            <InputErrorMessage
+                                                                px={"0px"}
+                                                            >
+                                                                {
+                                                                    errors[
+                                                                        file_requirement
+                                                                            .slug
+                                                                    ]
+                                                                }
+                                                            </InputErrorMessage>
+                                                        )}
+                                                    </Grid>
+                                                );
+                                            }
+                                        )}
+                                    </Grid>
                                 </Box>
-                                {errors.applicant_sign ? (
-                                    <InputErrorMessage px={0}>
-                                        {errors.applicant_sign}
-                                    </InputErrorMessage>
-                                ) : (
-                                    ""
-                                )}
-                                {emptySignature ? (
-                                    <InputErrorMessage px={0}>
-                                        Anda Belum Tanda Tangan
-                                    </InputErrorMessage>
-                                ) : (
-                                    ""
-                                )}
-                            </Box>
-                            <Box display={"flex"} justifyContent={"center"}>
-                                <ReactSignatureCanvas
-                                    ref={(ref) => {
-                                        setSignatur(ref);
-                                    }}
-                                    penColor="black"
-                                    backgroundColor="#F4F6F8"
-                                    canvasProps={{
-                                        width: 300,
-                                        height: 200,
-                                        className: "sigCanvas",
-                                    }}
-                                />
-                            </Box>
-                            <Box>
-                                <ButtonGroup
-                                    variant="contained"
-                                    color="slate-300"
-                                    fullWidth
+                            )}
+                            <Box
+                                sx={{
+                                    background: "white",
+                                    border: ".5px solid",
+                                    borderColor: "slate-300",
+                                    borderRadius: "4px",
+                                }}
+                            >
+                                <Box
+                                    sx={{ p: "15px" }}
+                                    borderBottom={"1px solid"}
+                                    borderColor={"slate-300"}
                                 >
-                                    <Button onClick={clearSignatur}>
-                                        Bersihkan
-                                    </Button>
-                                    <Button onClick={saveSignature}>
-                                        Simpan
-                                    </Button>
-                                </ButtonGroup>
+                                    <Box display={"flex"} height={"fit"}>
+                                        <Typography
+                                            variant="body2"
+                                            color="initial"
+                                            fontWeight={600}
+                                        >
+                                            Tanda Tangan Pemohon
+                                        </Typography>
+                                        <Typography color="red">
+                                            &nbsp; *
+                                        </Typography>
+                                    </Box>
+                                    {errors.applicant_sign ? (
+                                        <InputErrorMessage px={0}>
+                                            {errors.applicant_sign}
+                                        </InputErrorMessage>
+                                    ) : (
+                                        ""
+                                    )}
+                                    {emptySignature ? (
+                                        <InputErrorMessage px={0}>
+                                            Anda Belum Tanda Tangan
+                                        </InputErrorMessage>
+                                    ) : (
+                                        ""
+                                    )}
+                                </Box>
+                                <Box display={"flex"} justifyContent={"center"}>
+                                    <ReactSignatureCanvas
+                                        ref={(ref) => {
+                                            setSignatur(ref);
+                                        }}
+                                        penColor="black"
+                                        backgroundColor="#F4F6F8"
+                                        canvasProps={{
+                                            width: 300,
+                                            height: 200,
+                                            className: "sigCanvas",
+                                        }}
+                                    />
+                                </Box>
+                                <Box>
+                                    <ButtonGroup
+                                        variant="contained"
+                                        color="slate-300"
+                                        fullWidth
+                                    >
+                                        <Button onClick={clearSignatur}>
+                                            Bersihkan
+                                        </Button>
+                                        <Button onClick={saveSignature}>
+                                            Simpan
+                                        </Button>
+                                    </ButtonGroup>
+                                </Box>
                             </Box>
                         </Box>
                         <Box

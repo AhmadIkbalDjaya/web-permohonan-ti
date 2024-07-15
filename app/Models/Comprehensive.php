@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Comprehensive extends Model
 {
@@ -58,5 +59,9 @@ class Comprehensive extends Model
     public function secretary(): BelongsTo
     {
         return $this->belongsTo(Lecturer::class, "secretary_id");
+    }
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class);
     }
 }

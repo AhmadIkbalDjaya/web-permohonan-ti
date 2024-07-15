@@ -24,7 +24,7 @@ class AuthenticateController extends Controller
             $request->session()->regenerate();
             return to_route("admin.home");
         }
-        session()->flash("error", "Incorrect Username / Password");
+        session()->flash("error", "Username / Password Salah");
     }
 
     public function logout(Request $request)

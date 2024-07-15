@@ -539,105 +539,118 @@ export default function Hasil({ file_requirements, lecturers }) {
                             flexDirection={"column"}
                             gap={2}
                         >
-                            <Box
-                                sx={{
-                                    background: "white",
-                                    border: ".5px solid",
-                                    borderColor: "slate-300",
-                                    borderRadius: "4px",
-                                }}
-                            >
-                                <Typography
-                                    variant="body2"
-                                    color="initial"
-                                    sx={{ p: "15px", fontWeight: "600" }}
-                                    borderBottom={"1px solid"}
-                                    borderColor={"slate-300"}
+                            {file_requirements.length > 0 && (
+                                <Box
+                                    sx={{
+                                        background: "white",
+                                        border: ".5px solid",
+                                        borderColor: "slate-300",
+                                        borderRadius: "4px",
+                                    }}
                                 >
-                                    Berkas
-                                </Typography>
-                                <Grid container spacing={2} padding={"15px"}>
-                                    {file_requirements.map(
-                                        (file_requirement, index) => {
-                                            return (
-                                                <Grid item xs={12} key={index}>
-                                                    <AppInputLabel
-                                                        label={file_requirement.name.replaceAll(
-                                                            "_",
-                                                            " "
-                                                        )}
-                                                        required={
-                                                            file_requirement.is_required
-                                                        }
-                                                    />
-                                                    <InputFileUpload
-                                                        id="name"
-                                                        name={
-                                                            file_requirement.name
-                                                        }
-                                                        type="file"
-                                                        accept={".pdf"}
-                                                        onChange={
-                                                            handleChangeForm
-                                                        }
-                                                    />
-                                                    {formValues.files[
-                                                        file_requirement.name
-                                                    ] ? (
-                                                        <FormHelperText
-                                                            sx={{
-                                                                display: "flex",
-                                                                justifyContent:
-                                                                    "space-between",
-                                                            }}
-                                                        >
-                                                            <Typography variant="">
-                                                                File:{" "}
-                                                                {formValues.files[
-                                                                    file_requirement
-                                                                        .name
-                                                                ].name.substring(
-                                                                    0,
-                                                                    20
-                                                                )}
-                                                            </Typography>
-                                                            <Typography variant="">
-                                                                {(
-                                                                    formValues
-                                                                        .files[
+                                    <Typography
+                                        variant="body2"
+                                        color="initial"
+                                        sx={{ p: "15px", fontWeight: "600" }}
+                                        borderBottom={"1px solid"}
+                                        borderColor={"slate-300"}
+                                    >
+                                        Berkas
+                                    </Typography>
+                                    <Grid
+                                        container
+                                        spacing={2}
+                                        padding={"15px"}
+                                    >
+                                        {file_requirements.map(
+                                            (file_requirement, index) => {
+                                                return (
+                                                    <Grid
+                                                        item
+                                                        xs={12}
+                                                        key={index}
+                                                    >
+                                                        <AppInputLabel
+                                                            label={file_requirement.name.replaceAll(
+                                                                "_",
+                                                                " "
+                                                            )}
+                                                            required={
+                                                                file_requirement.is_required
+                                                            }
+                                                        />
+                                                        <InputFileUpload
+                                                            id="name"
+                                                            name={
+                                                                file_requirement.name
+                                                            }
+                                                            type="file"
+                                                            accept={".pdf"}
+                                                            onChange={
+                                                                handleChangeForm
+                                                            }
+                                                        />
+                                                        {formValues.files[
+                                                            file_requirement
+                                                                .name
+                                                        ] ? (
+                                                            <FormHelperText
+                                                                sx={{
+                                                                    display:
+                                                                        "flex",
+                                                                    justifyContent:
+                                                                        "space-between",
+                                                                }}
+                                                            >
+                                                                <Typography variant="">
+                                                                    File:{" "}
+                                                                    {formValues.files[
                                                                         file_requirement
                                                                             .name
-                                                                    ].size /
-                                                                    1024
-                                                                ).toFixed(
-                                                                    0
-                                                                )}{" "}
-                                                                KB
-                                                            </Typography>
-                                                        </FormHelperText>
-                                                    ) : (
-                                                        ""
-                                                    )}
-                                                    {errors[
-                                                        file_requirement.name
-                                                    ] && (
-                                                        <InputErrorMessage
-                                                            px={"0px"}
-                                                        >
-                                                            {
-                                                                errors[
-                                                                    file_requirement
-                                                                        .name
-                                                                ]
-                                                            }
-                                                        </InputErrorMessage>
-                                                    )}
-                                                </Grid>
-                                            );
-                                        }
-                                    )}
-                                </Grid>
-                            </Box>
+                                                                    ].name.substring(
+                                                                        0,
+                                                                        20
+                                                                    )}
+                                                                </Typography>
+                                                                <Typography variant="">
+                                                                    {(
+                                                                        formValues
+                                                                            .files[
+                                                                            file_requirement
+                                                                                .name
+                                                                        ].size /
+                                                                        1024
+                                                                    ).toFixed(
+                                                                        0
+                                                                    )}{" "}
+                                                                    KB
+                                                                </Typography>
+                                                            </FormHelperText>
+                                                        ) : (
+                                                            ""
+                                                        )}
+                                                        {errors[
+                                                            file_requirement
+                                                                .name
+                                                        ] && (
+                                                            <InputErrorMessage
+                                                                px={"0px"}
+                                                            >
+                                                                {
+                                                                    errors[
+                                                                        file_requirement
+                                                                            .name
+                                                                    ]
+                                                                }
+                                                            </InputErrorMessage>
+                                                        )}
+                                                    </Grid>
+                                                );
+                                            }
+                                        )}
+                                    </Grid>
+                                </Box>
+                            )}
                             <Box
                                 sx={{
                                     background: "white",

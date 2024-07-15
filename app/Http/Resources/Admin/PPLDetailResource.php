@@ -34,6 +34,7 @@ class PPLDetailResource extends JsonResource
             "location_address" => $this->location_address,
             "applicant_sign" => $this->applicant_sign ? url("storage/$this->applicant_sign") : "",
             "students" => StudentDetailResource::collection($this->students),
+            "files" => FileResource::collection($this->files),
             "created_at" => $this->created_at,
         ];
     }

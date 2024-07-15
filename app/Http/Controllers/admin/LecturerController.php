@@ -67,7 +67,7 @@ class LecturerController extends Controller
             unset($validated["signature"]);
         }
         $newLecturer = Lecturer::create($validated);
-        return to_route("admin.lecturer.index");
+        return to_route("admin.lecturer.index")->with("success", "Data berhasil ditambahkan");
     }
 
     /**
@@ -111,7 +111,7 @@ class LecturerController extends Controller
             unset($validated["signature"]);
         }
         $lecturer->update($validated);
-        return to_route("admin.lecturer.show", ["lecturer" => $lecturer->id]);
+        return to_route("admin.lecturer.show", ["lecturer" => $lecturer->id])->with("warning", "Data berhasil di ubah");
     }
 
     /**
@@ -123,6 +123,6 @@ class LecturerController extends Controller
             Storage::delete($lecturer->signature);
         }
         $lecturer->delete();
-        return to_route("admin.lecturer.index");
+        return to_route("admin.lecturer.index")->with("error", "Data berhasil dihapus");
     }
 }

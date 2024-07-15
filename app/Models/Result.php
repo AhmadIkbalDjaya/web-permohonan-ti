@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Result extends Model
 {
@@ -55,7 +56,7 @@ class Result extends Model
     {
         return $this->hasMany(Mentor::class);
     }
-    public function files()
+    public function files(): HasMany
     {
         return $this->hasMany(File::class);
     }

@@ -3,26 +3,15 @@ import React, { useRef, useState } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
-import {
-    Box,
-    Button,
-    Typography,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    TextField,
-    Select,
-    MenuItem,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
-import AppInputLabel from "../components/elements/input/AppInputLabel";
-import { IoMdClose } from "react-icons/io";
-import InputErrorMessage from "../components/elements/input/InputErrorMessage";
 import pickBy from "lodash.pickby";
 import ButtonCreateData from "../components/ButtonCreateData";
 import SearchFormTable from "../components/SearchFormTable";
 import FileDataTable from "../components/file_requirement/FileDataTable";
 import { EmptyData } from "../components/EmptyData";
+import { convertRequestTypeToID } from "../../../helper/dataToIdHelper";
+import FileRequirementFormModal from "../components/file_requirement/FileRequirementFormModal";
 
 export default function FileRequirement({
     file_requirements,
@@ -191,111 +180,20 @@ export default function FileRequirement({
                 handleDelete={handleDeleteData}
             />
             <BaseLayout>
-                <Dialog
-                    open={formValues.modal_open}
-                    onClose={handleCloseForm}
-                    fullWidth
-                    maxWidth="xs"
-                >
-                    <DialogTitle>
-                        <Box display={"flex"} justifyContent={"space-between"}>
-                            <Typography variant="" color="initial">
-                                Tambah Berkas
-                            </Typography>
-                            <IoMdClose
-                                style={{ cursor: "pointer" }}
-                                onClick={handleCloseForm}
-                            />
-                        </Box>
-                    </DialogTitle>
-                    <DialogContent>
-                        <AppInputLabel label="Nama Berkas" />
-                        <TextField
-                            id="name"
-                            name="name"
-                            type="string"
-                            value={formValues.name}
-                            onChange={handleChangeForm}
-                            placeholder="Masukkan Nama Berkas"
-                            fullWidth
-                            error={errors.name ? true : false}
-                            helperText={errors.name ?? ""}
-                        />
-                        <AppInputLabel label="Status" />
-                        <Select
-                            id="is_required"
-                            name="is_required"
-                            value={formValues.is_required}
-                            onChange={handleChangeForm}
-                            displayEmpty
-                            error={errors.is_required ? true : false}
-                            fullWidth
-                            sx={{ textTransform: "capitalize" }}
-                        >
-                            <MenuItem value="" disabled>
-                                <Typography
-                                    variant="body2"
-                                    color="#ababab"
-                                    fontWeight={"600"}
-                                    display={"flex"}
-                                >
-                                    Pilih Status
-                                </Typography>
-                            </MenuItem>
-                            <MenuItem
-                                value={1}
-                                sx={{
-                                    textTransform: "capitalize",
-                                }}
-                            >
-                                Wajib
-                            </MenuItem>
-                            <MenuItem
-                                value={0}
-                                sx={{
-                                    textTransform: "capitalize",
-                                }}
-                            >
-                                Opsinal
-                            </MenuItem>
-                        </Select>
-                        {errors.is_required && (
-                            <InputErrorMessage>
-                                {errors.is_required}
-                            </InputErrorMessage>
-                        )}
-                    </DialogContent>
-                    <Box
-                        display={"flex"}
-                        justifyContent={"space-between"}
-                        mx={2}
-                        mb={2}
-                    >
-                        <Button
-                            color="error"
-                            sx={{ textTransform: "none" }}
-                            variant="contained"
-                            onClick={handleCloseForm}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            sx={{ textTransform: "none" }}
-                            variant="contained"
-                            color="primary"
-                            onClick={handleSubmitForm}
-                        >
-                            Simpan
-                        </Button>
-                    </Box>
-                </Dialog>
+                <FileRequirementFormModal
+                    formValues={formValues}
+                    handleChangeForm={handleChangeForm}
+                    handleCloseForm={handleCloseForm}
+                    errors={errors}
+                    handleSubmitForm={handleSubmitForm}
+                />
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
-                    <AppLink href={route("admin.proposal.index")}>
-                        Proposal
+                    <AppLink href={route(`admin.${request_type}.index`)}>
+                        {convertRequestTypeToID(request_type)}
                     </AppLink>
                     <AppLink
-                        href={route("admin.proposal.file_requirement")}
+                        href={route(`admin.${request_type}.file_requirement`)}
                         color="black"
                     >
                         Berkas Pemohonan
@@ -309,7 +207,7 @@ export default function FileRequirement({
                     mb={5}
                 >
                     <Typography variant="h5" fontWeight={"600"}>
-                        Berkas Permohonan Proposal
+                        Berkas Permohonan {convertRequestTypeToID(request_type)}
                     </Typography>
                     <Typography
                         variant="caption"
@@ -325,7 +223,7 @@ export default function FileRequirement({
                 </Box>
                 <Box display={"flex"} justifyContent={"space-between"} my={1}>
                     <ButtonCreateData
-                        text={"Berkass"}
+                        text={"Berkas"}
                         handleClick={handleOpenForm}
                     />
                     <SearchFormTable

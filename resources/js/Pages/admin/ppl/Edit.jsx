@@ -21,13 +21,18 @@ import ReactSignatureCanvas from "react-signature-canvas";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
 import { MdModeEdit } from "react-icons/md";
+import ShowPDFModal from "../components/ShowPDFModal";
+import { DocumentsEditFormCard } from "../components/DocumentsEditFormCard";
+import { SigantureInputCard } from "../components/SigantureInputCard";
 
 export default function EditPpl({
     ppl,
+    file_requirements,
     lecturers,
     statuses,
     status_descriptions,
 }) {
+    console.log(ppl.files);
     const { errors } = usePage().props;
     const [formValues, setFormValues] = useState({
         status_id: ppl.status ? ppl.status.id : "",
@@ -53,6 +58,7 @@ export default function EditPpl({
         semesters: ppl.students.map((student) => student.semester),
         phones: ppl.students.map((student) => student.phone),
 
+        files: {},
         _method: "PUT",
     });
 
@@ -73,6 +79,14 @@ export default function EditPpl({
                     [name]: updateArray,
                 };
             });
+        } else if (e.target.type == "file") {
+            setFormValues((values) => ({
+                ...values,
+                files: {
+                    ...values.files,
+                    [name]: e.target.files[0],
+                },
+            }));
         } else {
             if (name == "student_count") {
                 if (value > formValues.student_count) {
@@ -112,7 +126,21 @@ export default function EditPpl({
         }
     }
     function handleSubmitForm(e) {
-        router.post(route("admin.ppl.update", { ppl: ppl.id }), formValues, {
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(formValues)) {
+            if (key == "files") {
+                for (const [key, file] of Object.entries(value)) {
+                    formData.append(key, file);
+                }
+            } else if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    formData.append(`${key}[${index}]`, item);
+                });
+            } else {
+                formData.append(key, value);
+            }
+        }
+        router.post(route("admin.ppl.update", { ppl: ppl.id }), formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -141,9 +169,36 @@ export default function EditPpl({
             });
         }
     };
+
+    const [showPDF, setShowPDF] = useState({
+        open: false,
+        name: "",
+        file: "",
+    });
+
+    const handleClickShowPDF = (name, file) => {
+        setShowPDF({
+            open: true,
+            name,
+            file,
+        });
+    };
+    const handleCloseShowPDF = () => {
+        setShowPDF({
+            open: false,
+            name: "",
+            file: "",
+        });
+    };
     return (
         <>
             <Head title="Edit PPL" />
+            <ShowPDFModal
+                handleClose={handleCloseShowPDF}
+                open={showPDF.open}
+                name={showPDF.name}
+                file={showPDF.file}
+            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -779,71 +834,26 @@ export default function EditPpl({
                             xs: "100%",
                             md: 5,
                         }}
-                        sx={{
-                            background: "white",
-                            border: ".5px solid",
-                            borderColor: "slate-300",
-                            borderRadius: "4px",
-                        }}
+                        display={"flex"}
+                        flexDirection={"column"}
+                        gap={2}
                     >
-                        <Box
-                            sx={{ p: "15px" }}
-                            borderBottom={"1px solid"}
-                            borderColor={"slate-300"}
-                        >
-                            <Box display={"flex"} height={"fit"}>
-                                <Typography
-                                    variant="body2"
-                                    color="initial"
-                                    fontWeight={600}
-                                >
-                                    Tanda Tangan Pemohon
-                                </Typography>
-                            </Box>
-                            <FormHelperText>
-                                Kosongkan jika tidak ingin mengganti
-                            </FormHelperText>
-                            {errors.applicant_sign ? (
-                                <InputErrorMessage px={0}>
-                                    {errors.applicant_sign}
-                                </InputErrorMessage>
-                            ) : (
-                                ""
-                            )}
-                            {emptySignature ? (
-                                <InputErrorMessage px={0}>
-                                    Anda Belum Tanda Tangan
-                                </InputErrorMessage>
-                            ) : (
-                                ""
-                            )}
-                        </Box>
-                        <Box display={"flex"} justifyContent={"center"}>
-                            <ReactSignatureCanvas
-                                ref={(ref) => {
-                                    setSignatur(ref);
-                                }}
-                                penColor="black"
-                                backgroundColor="#F4F6F8"
-                                canvasProps={{
-                                    width: 300,
-                                    height: 200,
-                                    className: "sigCanvas",
-                                }}
-                            />
-                        </Box>
-                        <Box>
-                            <ButtonGroup
-                                variant="contained"
-                                color="slate-300"
-                                fullWidth
-                            >
-                                <Button onClick={clearSignatur}>
-                                    Bersihkan
-                                </Button>
-                                <Button onClick={saveSignature}>Simpan</Button>
-                            </ButtonGroup>
-                        </Box>
+                        <DocumentsEditFormCard
+                            file_requirements={file_requirements}
+                            handleChangeForm={handleChangeForm}
+                            formValues={formValues}
+                            errors={errors}
+                            files={ppl.files}
+                            handleClickShowPDF={handleClickShowPDF}
+                        />
+                        <SigantureInputCard
+                            formType={"edit"}
+                            emptySignature={emptySignature}
+                            errors={errors}
+                            setSignatur={setSignatur}
+                            clearSignatur={clearSignatur}
+                            saveSignature={saveSignature}
+                        />
                     </Box>
                     <Box
                         flex={"100%"}

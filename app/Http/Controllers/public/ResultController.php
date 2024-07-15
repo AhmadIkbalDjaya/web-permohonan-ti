@@ -20,7 +20,7 @@ class ResultController extends Controller
     public function index()
     {
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
-        $file_requirements = FileRequirement::where("request_type", "results")->get();
+        $file_requirements = FileRequirement::where("request_type", "result")->get();
         return Inertia::render("public/result/Index", [
             "file_requirements" => $file_requirements,
             "lecturers" => $lecturers,
@@ -45,15 +45,15 @@ class ResultController extends Controller
         ];
         $file_requirements = FileRequirement::where("request_type", "results")->get();
         foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->name] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
+            $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
         }
         $validated = $request->validate($rules);
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("result/applicant_signs", "public");
         foreach ($file_requirements as $index => $file_requirement) {
-            if ($request->file($file_requirement->name)) {
-                $validated[$file_requirement->name] = $request->file($file_requirement->name)->storePublicly("result/files", "public");
+            if ($request->file($file_requirement->slug)) {
+                $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("result/files", "public");
             } else {
-                unset($validated[$file_requirement->name]);
+                unset($validated[$file_requirement->slug]);
             }
         }
         DB::transaction(function () use ($validated, $file_requirements) {
@@ -74,7 +74,7 @@ class ResultController extends Controller
             ]);
             foreach ($file_requirements as $index => $file_requirement) {
                 File::create([
-                    "file" => $validated[$file_requirement->name],
+                    "file" => $validated[$file_requirement->slug],
                     "name" => $file_requirement->name,
                     "result_id" => $newResult->id,
                 ]);

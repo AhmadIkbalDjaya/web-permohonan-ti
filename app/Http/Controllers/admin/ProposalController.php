@@ -148,6 +148,7 @@ class ProposalController extends Controller
                 "executor_id" => $validated["executor_id"],
             ]);
             foreach ($file_requirements as $index => $file_requirement) {
+                // tambahkan logic untuk cek dulu apakah file dengan nama itu di upload atau tidak
                 File::create([
                     "file" => $validated[$file_requirement->slug],
                     "name" => $file_requirement->name,
@@ -251,7 +252,7 @@ class ProposalController extends Controller
                         }
                     }
                 }
-                $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("proposal/file", "public");
+                $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("proposal/files", "public");
             } else {
                 unset($validated[$file_requirement->slug]);
             }
@@ -285,7 +286,7 @@ class ProposalController extends Controller
             }
             // tambahkan logic simpan path file di db jika belum ada sebelumnya
             foreach ($file_requirements as $index => $file_requirement) {
-                if (array_key_exists($file_requirement->name, $validated)) {
+                if (array_key_exists($file_requirement->slug, $validated)) {
                     foreach ($proposal->files as $index => $file) {
                         if ($file->name == $file_requirement->name) {
                             $file->update([
