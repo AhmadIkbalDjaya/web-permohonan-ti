@@ -16,7 +16,6 @@ export function CalendarSection({ calendar }) {
             type: schedule.type,
         };
     });
-    console.log(events);
     return (
         <Box
             sx={{
