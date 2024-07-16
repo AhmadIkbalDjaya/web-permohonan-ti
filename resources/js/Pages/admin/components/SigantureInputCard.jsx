@@ -1,14 +1,22 @@
-import { Box, Button, ButtonGroup, FormHelperText, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    ButtonGroup,
+    FormHelperText,
+    Typography,
+} from "@mui/material";
 import React from "react";
 import InputErrorMessage from "./elements/input/InputErrorMessage";
 import ReactSignatureCanvas from "react-signature-canvas";
 export function SigantureInputCard({
+    title = "Tanda Tangan Pemohon",
     formType = "create",
     emptySignature,
     setSignatur,
     clearSignatur,
     saveSignature,
     errors,
+    isRequired = true,
 }) {
     return (
         <Box
@@ -32,9 +40,12 @@ export function SigantureInputCard({
                         color="initial"
                         fontWeight={600}
                     >
-                        Tanda Tangan Pemohon
+                        {title}
                     </Typography>
-                    {formType == "edit" && (
+                    {formType == "create" && (
+                        <Typography color="red">&nbsp; *</Typography>
+                    )}
+                    {isRequired && (
                         <Typography color="red">&nbsp; *</Typography>
                     )}
                 </Box>

@@ -6,8 +6,6 @@ import AppLink from "../components/AppLink";
 import {
     Box,
     Button,
-    ButtonGroup,
-    FormHelperText,
     Grid,
     MenuItem,
     Select,
@@ -17,8 +15,8 @@ import {
 import { MdModeEdit } from "react-icons/md";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
 import AppInputLabel from "../components/elements/input/AppInputLabel";
-import ReactSignatureCanvas from "react-signature-canvas";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
+import { SigantureInputCard } from "../components/SigantureInputCard";
 
 export default function EditLecturer({ lecturer }) {
     const { errors } = usePage().props;
@@ -123,156 +121,165 @@ export default function EditLecturer({ lecturer }) {
                             xs: "100%",
                             md: 8,
                         }}
-                        sx={{
-                            background: "white",
-                            border: ".5px solid",
-                            borderColor: "slate-300",
-                            borderRadius: "4px",
-                        }}
                     >
-                        <Typography
-                            variant="body2"
-                            color="initial"
-                            sx={{ p: "15px", fontWeight: "600" }}
-                            borderBottom={"1px solid"}
-                            borderColor={"slate-300"}
+                        <Box
+                            sx={{
+                                background: "white",
+                                border: ".5px solid",
+                                borderColor: "slate-300",
+                                borderRadius: "4px",
+                            }}
                         >
-                            Data Staf
-                        </Typography>
-                        <Grid container spacing={2} padding={"15px"}>
-                            <Grid item xs={12} sm={6}>
-                                <AppInputLabel label="Nama Lengkap" required />
-                                <TextField
-                                    id="name"
-                                    name="name"
-                                    type="string"
-                                    value={formValues.name}
-                                    onChange={handleChangeForm}
-                                    placeholder="Masukkan Nama Staf"
-                                    fullWidth
-                                    error={errors.name ? true : false}
-                                    helperText={errors.name ?? ""}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <AppInputLabel label="NIP" />
-                                <TextField
-                                    id="nip"
-                                    name="nip"
-                                    type="string"
-                                    value={formValues.nip}
-                                    onChange={handleChangeForm}
-                                    placeholder="Masukkan Nama Staf"
-                                    fullWidth
-                                    error={errors.nip ? true : false}
-                                    helperText={errors.nip ?? ""}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <AppInputLabel label="Jenis Kelamin" required />
-                                <Select
-                                    id="gender"
-                                    name="gender"
-                                    value={formValues.gender}
-                                    onChange={handleChangeForm}
-                                    displayEmpty
-                                    error={errors.gender ? true : false}
-                                    fullWidth
-                                >
-                                    <MenuItem value="" disabled>
-                                        <Typography
-                                            variant="body2"
-                                            color="#ababab"
-                                            fontWeight={"600"}
-                                            display={"flex"}
+                            <Typography
+                                variant="body2"
+                                color="initial"
+                                sx={{ p: "15px", fontWeight: "600" }}
+                                borderBottom={"1px solid"}
+                                borderColor={"slate-300"}
+                            >
+                                Data Staf
+                            </Typography>
+                            <Grid container spacing={2} padding={"15px"}>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel
+                                        label="Nama Lengkap"
+                                        required
+                                    />
+                                    <TextField
+                                        id="name"
+                                        name="name"
+                                        type="string"
+                                        value={formValues.name}
+                                        onChange={handleChangeForm}
+                                        placeholder="Masukkan Nama Staf"
+                                        fullWidth
+                                        error={errors.name ? true : false}
+                                        helperText={errors.name ?? ""}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel label="NIP" />
+                                    <TextField
+                                        id="nip"
+                                        name="nip"
+                                        type="string"
+                                        value={formValues.nip}
+                                        onChange={handleChangeForm}
+                                        placeholder="Masukkan Nama Staf"
+                                        fullWidth
+                                        error={errors.nip ? true : false}
+                                        helperText={errors.nip ?? ""}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel
+                                        label="Jenis Kelamin"
+                                        required
+                                    />
+                                    <Select
+                                        id="gender"
+                                        name="gender"
+                                        value={formValues.gender}
+                                        onChange={handleChangeForm}
+                                        displayEmpty
+                                        error={errors.gender ? true : false}
+                                        fullWidth
+                                    >
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Pilih Jenis Kelamin
+                                            </Typography>
+                                        </MenuItem>
+                                        <MenuItem
+                                            value="male"
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
                                         >
-                                            Pilih Jenis Kelamin
-                                        </Typography>
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="male"
-                                        sx={{
-                                            textTransform: "capitalize",
-                                        }}
-                                    >
-                                        Laki-Laki
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="female"
-                                        sx={{
-                                            textTransform: "capitalize",
-                                        }}
-                                    >
-                                        Perempuan
-                                    </MenuItem>
-                                </Select>
-                                {errors.gender && (
-                                    <InputErrorMessage>
-                                        {errors.gender}
-                                    </InputErrorMessage>
-                                )}
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <AppInputLabel label="Role" required />
-                                <Select
-                                    id="role"
-                                    name="role"
-                                    value={formValues.role}
-                                    onChange={handleChangeForm}
-                                    displayEmpty
-                                    error={errors.role ? true : false}
-                                    fullWidth
-                                >
-                                    <MenuItem value="" disabled>
-                                        <Typography
-                                            variant="body2"
-                                            color="#ababab"
-                                            fontWeight={"600"}
-                                            display={"flex"}
+                                            Laki-Laki
+                                        </MenuItem>
+                                        <MenuItem
+                                            value="female"
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
                                         >
-                                            Pilih Peran
-                                        </Typography>
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="head"
-                                        sx={{
-                                            textTransform: "capitalize",
-                                        }}
+                                            Perempuan
+                                        </MenuItem>
+                                    </Select>
+                                    {errors.gender && (
+                                        <InputErrorMessage>
+                                            {errors.gender}
+                                        </InputErrorMessage>
+                                    )}
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <AppInputLabel label="Role" required />
+                                    <Select
+                                        id="role"
+                                        name="role"
+                                        value={formValues.role}
+                                        onChange={handleChangeForm}
+                                        displayEmpty
+                                        error={errors.role ? true : false}
+                                        fullWidth
                                     >
-                                        Ketua Jurusan
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="secretary"
-                                        sx={{
-                                            textTransform: "capitalize",
-                                        }}
-                                    >
-                                        Sekertaris Jurusan
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="lecturer"
-                                        sx={{
-                                            textTransform: "capitalize",
-                                        }}
-                                    >
-                                        Dosen
-                                    </MenuItem>
-                                    <MenuItem
-                                        value="staff"
-                                        sx={{
-                                            textTransform: "capitalize",
-                                        }}
-                                    >
-                                        Staf
-                                    </MenuItem>
-                                </Select>
-                                {errors.role && (
-                                    <InputErrorMessage>
-                                        {errors.role}
-                                    </InputErrorMessage>
-                                )}
+                                        <MenuItem value="" disabled>
+                                            <Typography
+                                                variant="body2"
+                                                color="#ababab"
+                                                fontWeight={"600"}
+                                                display={"flex"}
+                                            >
+                                                Pilih Peran
+                                            </Typography>
+                                        </MenuItem>
+                                        <MenuItem
+                                            value="head"
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            Ketua Jurusan
+                                        </MenuItem>
+                                        <MenuItem
+                                            value="secretary"
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            Sekertaris Jurusan
+                                        </MenuItem>
+                                        <MenuItem
+                                            value="lecturer"
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            Dosen
+                                        </MenuItem>
+                                        <MenuItem
+                                            value="staff"
+                                            sx={{
+                                                textTransform: "capitalize",
+                                            }}
+                                        >
+                                            Staf
+                                        </MenuItem>
+                                    </Select>
+                                    {errors.role && (
+                                        <InputErrorMessage>
+                                            {errors.role}
+                                        </InputErrorMessage>
+                                    )}
+                                </Grid>
                             </Grid>
-                        </Grid>
+                        </Box>
                     </Box>
                     <Box
                         flex={{
@@ -283,75 +290,16 @@ export default function EditLecturer({ lecturer }) {
                         flexDirection={"column"}
                         gap={2}
                     >
-                        <Box
-                            sx={{
-                                background: "white",
-                                border: ".5px solid",
-                                borderColor: "slate-300",
-                                borderRadius: "4px",
-                            }}
-                        >
-                            <Box
-                                sx={{ p: "15px" }}
-                                borderBottom={"1px solid"}
-                                borderColor={"slate-300"}
-                            >
-                                <Box display={"flex"} height={"fit"}>
-                                    <Typography
-                                        variant="body2"
-                                        color="initial"
-                                        fontWeight={600}
-                                    >
-                                        Tanda Tangan Pemohon
-                                    </Typography>
-                                </Box>
-                                <FormHelperText>
-                                    Kosongkan jika tidak ingin mengganti
-                                </FormHelperText>
-                                {errors.applicant_sign ? (
-                                    <InputErrorMessage px={0}>
-                                        {errors.applicant_sign}
-                                    </InputErrorMessage>
-                                ) : (
-                                    ""
-                                )}
-                                {emptySignature ? (
-                                    <InputErrorMessage px={0}>
-                                        Anda Belum Tanda Tangan
-                                    </InputErrorMessage>
-                                ) : (
-                                    ""
-                                )}
-                            </Box>
-                            <Box display={"flex"} justifyContent={"center"}>
-                                <ReactSignatureCanvas
-                                    ref={(ref) => {
-                                        setSignatur(ref);
-                                    }}
-                                    penColor="black"
-                                    backgroundColor="#F4F6F8"
-                                    canvasProps={{
-                                        width: 300,
-                                        height: 200,
-                                        className: "sigCanvas",
-                                    }}
-                                />
-                            </Box>
-                            <Box>
-                                <ButtonGroup
-                                    variant="contained"
-                                    color="slate-300"
-                                    fullWidth
-                                >
-                                    <Button onClick={clearSignatur}>
-                                        Bersihkan
-                                    </Button>
-                                    <Button onClick={saveSignature}>
-                                        Simpan
-                                    </Button>
-                                </ButtonGroup>
-                            </Box>
-                        </Box>
+                        <SigantureInputCard
+                            title="Tanda Tangan Staff"
+                            isRequired={false}
+                            formType="edit"
+                            emptySignature={emptySignature}
+                            errors={errors}
+                            setSignatur={setSignatur}
+                            clearSignatur={clearSignatur}
+                            saveSignature={saveSignature}
+                        />
                     </Box>
                     <Box
                         flex={"100%"}

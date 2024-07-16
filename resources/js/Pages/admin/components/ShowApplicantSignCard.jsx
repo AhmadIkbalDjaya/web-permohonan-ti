@@ -1,6 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
-export function ShowApplicantSignCard({ signSrc = "" }) {
+export function ShowApplicantSignCard({
+    signSrc = "",
+    title = "Tanda Tangan Pemohon",
+}) {
     return (
         <Box
             sx={{
@@ -20,7 +23,7 @@ export function ShowApplicantSignCard({ signSrc = "" }) {
                 borderBottom={"1px solid"}
                 borderColor={"slate-300"}
             >
-                Tanda Tangan Pemohon
+                {title}
             </Typography>
             <Box display={"flex"} justifyContent={"center"}>
                 <Box

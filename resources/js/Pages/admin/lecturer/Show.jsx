@@ -3,14 +3,11 @@ import React, { useState } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
-import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { MdDelete, MdModeEdit } from "react-icons/md";
-import { ShowRowData } from "../components/ShowRowData";
-import {
-    convertGenderToID,
-    convertRoleToID,
-} from "../../../helper/dataToIdHelper";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import ShowLecturerData from "../components/lecturer/show/ShowLecturerData";
+import { ShowApplicantSignCard } from "../components/ShowApplicantSignCard";
 
 export default function ShowLecturer({ lecturer }) {
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -107,45 +104,8 @@ export default function ShowLecturer({ lecturer }) {
                             xs: "100%",
                             md: 8,
                         }}
-                        sx={{
-                            background: "white",
-                            border: ".5px solid",
-                            borderColor: "slate-300",
-                            borderRadius: "4px",
-                        }}
                     >
-                        <Box
-                            sx={{ p: "15px" }}
-                            borderBottom={"1px solid"}
-                            borderColor={"slate-300"}
-                        >
-                            <Typography
-                                variant="body2"
-                                sx={{ fontWeight: "600" }}
-                            >
-                                Data Staf
-                            </Typography>
-                        </Box>
-                        <Grid container spacing={1} padding={"15px"}>
-                            <ShowRowData name={"Nama"} value={lecturer.name} />
-                            <ShowRowData name={"NIP"} value={lecturer.nip} />
-                            <ShowRowData
-                                name={"Jenis Kelamin"}
-                                value={
-                                    lecturer.gender
-                                        ? convertGenderToID(lecturer.gender)
-                                        : ""
-                                }
-                            />
-                            <ShowRowData
-                                name={"Role"}
-                                value={
-                                    lecturer.role
-                                        ? convertRoleToID(lecturer.role)
-                                        : ""
-                                }
-                            />
-                        </Grid>
+                        <ShowLecturerData lecturer={lecturer} />
                     </Box>
                     <Box
                         flex={{
@@ -156,45 +116,10 @@ export default function ShowLecturer({ lecturer }) {
                         flexDirection={"column"}
                         gap={2}
                     >
-                        <Box
-                            sx={{
-                                background: "white",
-                                border: ".5px solid",
-                                borderColor: "slate-300",
-                                borderRadius: "4px",
-                            }}
-                        >
-                            <Typography
-                                variant="body2"
-                                color="initial"
-                                sx={{ p: "15px", fontWeight: "600" }}
-                                borderBottom={"1px solid"}
-                                borderColor={"slate-300"}
-                            >
-                                Tanda Tangan
-                            </Typography>
-                            <Box display={"flex"} justifyContent={"center"}>
-                                {lecturer.signature ? (
-                                    <Box
-                                        component={"img"}
-                                        sx={{
-                                            height: "200px",
-                                            width: "300px",
-                                        }}
-                                        src={lecturer.signature}
-                                    />
-                                ) : (
-                                    <Box py={5}>
-                                        <Typography
-                                            variant="body2"
-                                            color="initial"
-                                        >
-                                            Tanda tangan belum ditambahkan
-                                        </Typography>
-                                    </Box>
-                                )}
-                            </Box>
-                        </Box>
+                        <ShowApplicantSignCard
+                            signSrc={lecturer.signature}
+                            title="Tanda Tangan"
+                        />
                         <Box
                             display={"flex"}
                             gap={1}

@@ -7,14 +7,14 @@ import { Head } from "@inertiajs/react";
 import { Box, Typography } from "@mui/material";
 
 const countDummy = {
-    proposal_count: 25,
-    new_proposal_count: 5,
-    result_count: 25,
-    new_result_count: 5,
-    comprehensive_count: 25,
-    new_comprehensive_count: 5,
-    ppl_count: 25,
-    new_ppl_count: 5,
+    proposal_count: 70,
+    new_proposal_count: 12,
+    result_count: 65,
+    new_result_count: 8,
+    comprehensive_count: 80,
+    new_comprehensive_count: 23,
+    ppl_count: 68,
+    new_ppl_count: 30,
 };
 const chartDummy = {
     data: [
