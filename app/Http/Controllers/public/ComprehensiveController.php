@@ -18,7 +18,7 @@ class ComprehensiveController extends Controller
     public function index()
     {
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
-        $file_requirements = FileRequirement::where("request_type", "comprehensive")->get();
+        $file_requirements = FileRequirement::select("name", "slug", "is_required")->where("request_type", "comprehensive")->get();
         return Inertia::render("public/comprehensive/Index", [
             "file_requirements" => $file_requirements,
             "lecturers" => $lecturers,
@@ -37,13 +37,13 @@ class ComprehensiveController extends Controller
             "essay_title" => "required",
             "applicant_sign" => "required|image",
         ];
-        $file_requirements = FileRequirement::where("request_type", "comprehensive")->get();
+        $file_requirements = FileRequirement::select("name", "slug", "is_required")->where("request_type", "comprehensive")->get();
         foreach ($file_requirements as $file_requirement) {
             $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
         }
         $validated = $request->validate($rules);
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("result/applicant_signs", "public");
-        foreach ($file_requirements as $index => $file_requirement) {
+        foreach ($file_requirements as $file_requirement) {
             if ($request->file($file_requirement->slug)) {
                 $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("comprehensive/files", "public");
             } else {
@@ -64,7 +64,7 @@ class ComprehensiveController extends Controller
                 "essay_title" => $validated["essay_title"],
                 "applicant_sign" => $validated["applicant_sign"],
             ]);
-            foreach ($file_requirements as $index => $file_requirement) {
+            foreach ($file_requirements as $file_requirement) {
                 File::create([
                     "file" => $validated[$file_requirement->slug],
                     "name" => $file_requirement->name,
@@ -79,7 +79,7 @@ class ComprehensiveController extends Controller
                     "comprehensive_id" => $newComprehensive->id,
                 ]);
             }
-            foreach ($file_requirements as $index => $file_requirement) {
+            foreach ($file_requirements as $file_requirement) {
                 File::create([
                     "file" => $validated[$file_requirement->name],
                     "name" => $file_requirement->name,

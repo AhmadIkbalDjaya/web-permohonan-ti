@@ -19,7 +19,6 @@ export default function EditPpl({
     statuses,
     status_descriptions,
 }) {
-    console.log(ppl.files);
     const { errors } = usePage().props;
     const [formValues, setFormValues] = useState({
         status_id: ppl.status ? ppl.status.id : "",

@@ -17,7 +17,7 @@ class PplController extends Controller
 {
     public function index()
     {
-        $file_requirements = FileRequirement::where("request_type", "ppl")->get();
+        $file_requirements = FileRequirement::select("name", "slug", "is_required")->where("request_type", "ppl")->get();
         return Inertia::render("public/ppl/Index", [
             "file_requirements" => $file_requirements,
         ]);
@@ -46,13 +46,13 @@ class PplController extends Controller
             "phones" => "required|array|size:" . $request->student_count,
             "phones.*" => "required|phone:ID",
         ];
-        $file_requirements = FileRequirement::where("request_type", "ppl")->get();
+        $file_requirements = FileRequirement::select("name", "slug", "is_required")->where("request_type", "ppl")->get();
         foreach ($file_requirements as $file_requirement) {
             $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
         }
         $validated = $request->validate($rules);
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("ppl", "public");
-        foreach ($file_requirements as $index => $file_requirement) {
+        foreach ($file_requirements as $file_requirement) {
             if ($request->file($file_requirement->slug)) {
                 $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("ppl/files", "public");
             } else {
@@ -67,7 +67,7 @@ class PplController extends Controller
                 "location_address" => $validated["location_address"],
                 "applicant_sign" => $validated["applicant_sign"],
             ]);
-            foreach ($file_requirements as $index => $file_requirement) {
+            foreach ($file_requirements as $file_requirement) {
                 File::create([
                     "file" => $validated[$file_requirement->slug],
                     "name" => $file_requirement->name,

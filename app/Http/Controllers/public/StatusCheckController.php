@@ -40,7 +40,7 @@ class StatusCheckController extends Controller
             default:
                 return throw ValidationException::withMessages(["code" => "code tidak valid"]);
         }
-        $result = $model::where("code", $validated["code"])
+        $result = $model::select("id", "code", "status_id")->where("code", $validated["code"])
             ->with([
                 "status" => fn($query) => $query->select("id", "name"),
                 "status_description" => fn($query) => $query->select("id", "description"),
