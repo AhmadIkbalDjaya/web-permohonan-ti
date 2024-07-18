@@ -1,6 +1,8 @@
+import { usePage } from "@inertiajs/react";
 import { Box, Grid, Typography } from "@mui/material";
 import React from "react";
-export function HeroSection({ headerRef, Model }) {
+export function HeroSection({ headerRef }) {
+    const { url } = usePage().props;
     return (
         <Grid
             container
@@ -70,20 +72,6 @@ export function HeroSection({ headerRef, Model }) {
                         siap berkontribusi bagi kemajuan ilmu pengetahuan dan
                         teknologi.
                     </Typography>
-                    {/* <Grid container justifyContent="flex-start">
-             <Button
-                 variant="contained"
-                 sx={{
-                     display: {
-                         sm: "none",
-                         md: "flex",
-                         lg: "flex",
-                     },
-                 }}
-             >
-                 Daftar Sekarang
-             </Button>
-          </Grid> */}
                 </Box>
             </Grid>
             <Grid
@@ -110,7 +98,7 @@ export function HeroSection({ headerRef, Model }) {
                     }}
                 >
                     <img
-                        src={Model}
+                        src={`${url}/images/hero.png`}
                         style={{
                             width: "100%",
                         }}

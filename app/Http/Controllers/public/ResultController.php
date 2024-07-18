@@ -43,7 +43,7 @@ class ResultController extends Controller
             "tester_ids" => "required|min:2",
             "tester_ids.*" => "required|string|exists:lecturers,id",
         ];
-        $file_requirements = FileRequirement::where("request_type", "results")->get();
+        $file_requirements = FileRequirement::where("request_type", "result")->get();
         foreach ($file_requirements as $file_requirement) {
             $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
         }

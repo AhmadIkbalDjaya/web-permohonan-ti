@@ -1,6 +1,5 @@
 import { HeroSection } from "../component/home/HeroSection";
 import { RegisSection } from "../component/home/RegisSection";
-import Model from "../assets/model.png";
 import "./style.css";
 import useIntersectionObserver from "./animasi";
 
@@ -49,7 +48,7 @@ function Home() {
         <>
             <Head title="TI-UINAM"></Head>
             <PublicBaseLayout>
-                <HeroSection headerRef={headerRef} Model={Model} />
+                <HeroSection headerRef={headerRef} />
                 <RegisSection headerRef={headerRef} cardRefs={cardRefs} />
             </PublicBaseLayout>
         </>

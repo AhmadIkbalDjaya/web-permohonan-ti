@@ -8,7 +8,6 @@ import {
     Box,
 } from "@mui/material";
 import React, { useState } from "react";
-import AppInputLabel from "../../../admin/components/elements/input/AppInputLabel";
 import PublicBaseLayout from "../../base_layout/PublicBaseLayout";
 import AppBreadcrumbs from "../../../admin/components/elements/AppBreadcrumbs";
 import AppLink from "../../../admin/components/AppLink";
@@ -69,10 +68,6 @@ export default function Index() {
                             justifyContent={"center"}
                         >
                             <Grid item xs={12} md={7}>
-                                {/* <AppInputLabel
-                                    label="Code Pendaftaran"
-                                    required={true}
-                                /> */}
                                 <TextField
                                     id="code"
                                     name="code"

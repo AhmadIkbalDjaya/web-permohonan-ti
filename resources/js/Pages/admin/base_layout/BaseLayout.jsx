@@ -1,11 +1,10 @@
 import { AppAppBar } from "./AppAppBar";
 import { AppDrawer } from "./AppDrawer";
-import { Box, CssBaseline, ThemeProvider, styled } from "@mui/material";
+import { Box, CssBaseline, styled } from "@mui/material";
 import React, { useContext } from "react";
 import MuiAppBar from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
 import { DrawerOpen } from "../../../context/DrawerOpen";
-import appTheme from "../../../theme/AppTheme";
 import ShowSnackbar from "../../components/ShowSnackbar";
 const drawerWidth = 240;
 
@@ -79,18 +78,16 @@ export default function BaseLayout(props) {
     const { children } = props;
     return (
         <>
-            <ThemeProvider theme={appTheme}>
-                <Box sx={{ display: "flex" }}>
-                    <CssBaseline />
-                    <AppAppBar setOpen={setOpen} open={open} />
-                    <AppDrawer open={open} />
-                    <Box component={"main"} sx={{ flexGrow: 1, p: 3 }}>
-                        <DrawerHeader />
-                        <ShowSnackbar />
-                        {children}
-                    </Box>
+            <Box sx={{ display: "flex" }}>
+                <CssBaseline />
+                <AppAppBar setOpen={setOpen} open={open} />
+                <AppDrawer open={open} />
+                <Box component={"main"} sx={{ flexGrow: 1, p: 3 }}>
+                    <DrawerHeader />
+                    <ShowSnackbar />
+                    {children}
                 </Box>
-            </ThemeProvider>
+            </Box>
         </>
     );
 }
