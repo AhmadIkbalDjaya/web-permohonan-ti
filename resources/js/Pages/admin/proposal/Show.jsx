@@ -31,7 +31,7 @@ export default function ShowProposal({ proposal, file_requirements }) {
     };
     const handleDeleteData = () => {
         router.delete(
-            route("admin.proposal.delete", {
+            route("admin.proposal.destroy", {
                 proposal: proposal.id,
             })
         );

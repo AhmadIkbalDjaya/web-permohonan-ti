@@ -29,6 +29,9 @@ export default function ProposalDataTable({
     handleChangePerpage,
     handleChangePage,
     handleOpenDelete,
+    selectedItems = [],
+    handleCheckBox = () => {},
+    handleCheckAllBox = () => {},
 }) {
     return (
         <>
@@ -43,7 +46,13 @@ export default function ProposalDataTable({
                     <TableHead>
                         <TableRow sx={{ backgroundColor: "gray-100" }}>
                             <TableCell padding="checkbox">
-                                <Checkbox sx={tableCheckboxStyle} />
+                                <Checkbox
+                                    sx={tableCheckboxStyle}
+                                    checked={
+                                        selectedItems.length == meta.total_item
+                                    }
+                                    onChange={handleCheckAllBox}
+                                />
                             </TableCell>
                             <TableCell sx={tableHeadStyle}>Nama</TableCell>
                             <TableCell sx={tableHeadStyle}>NIM</TableCell>
@@ -61,7 +70,14 @@ export default function ProposalDataTable({
                         {proposals.data.map((proposal, index) => (
                             <TableRow key={index}>
                                 <TableCell padding="checkbox">
-                                    <Checkbox sx={tableCheckboxStyle} />
+                                    <Checkbox
+                                        sx={tableCheckboxStyle}
+                                        value={proposal.id}
+                                        checked={selectedItems.includes(
+                                            proposal.id
+                                        )}
+                                        onChange={handleCheckBox}
+                                    />
                                 </TableCell>
                                 <TableCell
                                     sx={{

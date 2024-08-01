@@ -40,6 +40,7 @@ class ProposalController extends Controller
                 });
         }
         $proposals = $query->latest()->paginate($perpage, ["*"], 'page', $page);
+        $proposals_ids = Proposal::pluck("id");
         $meta = [
             "page" => $proposals->currentPage(),
             "perpage" => $proposals->perPage(),
@@ -50,6 +51,7 @@ class ProposalController extends Controller
         return Inertia::render("admin/proposal/Index", [
             "proposals" => $proposals,
             "meta" => $meta,
+            "proposals_ids" => $proposals_ids,
         ]);
     }
 
@@ -308,7 +310,7 @@ class ProposalController extends Controller
         return to_route("admin.proposal.show", ["proposal" => $proposal->id])->with("warning", "Data berhasil di ubah");
     }
 
-    public function destroy(Proposal $proposal)
+    public function destroy(Proposal $proposal, Request $request)
     {
         DB::transaction(function () use ($proposal) {
             $proposal->mentors()->delete();
@@ -325,6 +327,34 @@ class ProposalController extends Controller
             $proposal->delete();
             $proposal->student()->delete();
             $proposal->schedule()->delete();
+        });
+        return to_route("admin.proposal.index")->with("error", "Data berhasil dihapus");
+    }
+
+    public function destroys(Request $request)
+    {
+        $validated = $request->validate([
+            "ids" => "required|array|min:1",
+            "ids*" => "required|exists:proposals,id",
+        ]);
+        DB::transaction(function () use ($validated) {
+            foreach ($validated["ids"] as $id) {
+                $proposal = Proposal::find($id);
+                $proposal->mentors()->delete();
+                $proposal->testers()->delete();
+                foreach ($proposal->files as $index => $file) {
+                    if (Storage::exists($file->file)) {
+                        Storage::delete($file->file);
+                    }
+                }
+                if (Storage::exists($proposal->applicant_sign)) {
+                    Storage::delete($proposal->applicant_sign);
+                }
+                $proposal->files()->delete();
+                $proposal->delete();
+                $proposal->student()->delete();
+                $proposal->schedule()->delete();
+            }
         });
         return to_route("admin.proposal.index")->with("error", "Data berhasil dihapus");
     }

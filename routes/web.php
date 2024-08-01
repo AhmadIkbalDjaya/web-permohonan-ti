@@ -57,7 +57,8 @@ Route::prefix('admin')->group(function () {
                 Route::get('{proposal}', "show")->name('admin.proposal.show');
                 Route::get("{proposal}/edit", "edit")->name('admin.proposal.edit');
                 Route::put("{proposal}", "update")->name('admin.proposal.update');
-                Route::delete("{proposal}", "destroy")->name('admin.proposal.delete');
+                Route::delete('destroys', "destroys")->name("admin.proposal.destroys");
+                Route::delete("{proposal}", "destroy")->name('admin.proposal.destroy');
             });
         });
         Route::prefix("hasil")->group(function () {

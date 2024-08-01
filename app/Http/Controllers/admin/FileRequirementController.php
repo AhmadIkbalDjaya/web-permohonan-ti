@@ -25,16 +25,12 @@ class FileRequirementController extends Controller
     }
     public function index(Request $request)
     {
-        // dd($request->getPathInfo());
         $page = $request->input("page", 1);
         $perpage = $request->input("perpage", 10);
         $search = $request->input("search", "");
-        // dd(explode("/", $request->getPathInfo()));
         $type = $this->getTypeFromPath(explode("/", $request->getPathInfo())[2]);
-        // dd($type);
 
-        $query = FileRequirement::where("request_type", $type)
-            ->select("id", "name", "is_required");
+        $query = FileRequirement::select("id", "name", "is_required")->where("request_type", $type);
         if ($search) {
             $query->where("name", "LIKE", "%$search%");
         }

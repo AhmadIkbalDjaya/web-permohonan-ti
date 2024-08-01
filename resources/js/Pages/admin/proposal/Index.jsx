@@ -5,15 +5,16 @@ import { Head, router } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
 import Typography from "@mui/material/Typography";
-import { Box, Button } from "@mui/material";
+import { Box, Button, IconButton } from "@mui/material";
 import { FaFileAlt } from "react-icons/fa";
 import pickBy from "lodash.pickby";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ProposalDataTable from "../components/proposal/index/ProposalDataTable";
 import SearchFormTable from "../components/SearchFormTable";
 import ButtonCreateData from "../components/ButtonCreateData";
+import { MdDelete, MdMoreVert } from "react-icons/md";
 
-export default function Proposal({ proposals, meta }) {
+export default function Proposal({ proposals, meta, proposals_ids }) {
     const [loading, setloading] = useState(false);
     const perpage = useRef(meta.perpage);
     const search = useRef(meta.search ?? "");
@@ -72,7 +73,7 @@ export default function Proposal({ proposals, meta }) {
     };
     const handleDeleteData = () => {
         router.delete(
-            route("admin.proposal.delete", {
+            route("admin.proposal.destroy", {
                 proposal: confirmDelete.id,
             })
         );
@@ -80,6 +81,43 @@ export default function Proposal({ proposals, meta }) {
             open: false,
             id: "",
         });
+    };
+
+    const [selectedItems, setSelectedItems] = useState([]);
+    const handleCheckAllBox = (e) => {
+        const isSelected = e.target.checked;
+        if (isSelected) {
+            setSelectedItems([...proposals_ids]);
+        } else {
+            setSelectedItems([]);
+        }
+    };
+    const handleCheckBox = (e) => {
+        const isSelected = e.target.checked;
+        const value = parseInt(e.target.value);
+        if (isSelected) {
+            setSelectedItems([...selectedItems, value]);
+        } else {
+            setSelectedItems((prevData) => {
+                return prevData.filter((id) => id != value);
+            });
+        }
+    };
+    const [openConfirmDeletes, setOpenConfirmDeletes] = useState(false);
+    const handleOpenConfirmDeletes = () => {
+        setOpenConfirmDeletes(true);
+    };
+    const handleCloseConfirmDeletes = () => {
+        setOpenConfirmDeletes(false);
+    };
+    const handleMultiDelete = () => {
+        router.delete(route("admin.proposal.destroys"), {
+            data: {
+                ids: selectedItems,
+            },
+        });
+        setSelectedItems([]);
+        handleCloseConfirmDeletes(false);
     };
     return (
         <>
@@ -135,10 +173,20 @@ export default function Proposal({ proposals, meta }) {
                             router.get(route("admin.proposal.create"));
                         }}
                     />
-                    <SearchFormTable
-                        value={meta.search}
-                        handleChangeSearch={handleChangeSearch}
-                    />
+                    <Box display={"flex"}>
+                        {selectedItems.length > 0 && (
+                            <IconButton
+                                onClick={handleOpenConfirmDeletes}
+                                sx={{ py: "0" }}
+                            >
+                                <MdDelete size={20} />
+                            </IconButton>
+                        )}
+                        <SearchFormTable
+                            value={meta.search}
+                            handleChangeSearch={handleChangeSearch}
+                        />
+                    </Box>
                 </Box>
                 {meta.total_item > 0 ? (
                     <ProposalDataTable
@@ -147,6 +195,9 @@ export default function Proposal({ proposals, meta }) {
                         handleChangePage={handleChangePage}
                         handleChangePerpage={handleChangePerpage}
                         handleOpenDelete={handleOpenDelete}
+                        selectedItems={selectedItems}
+                        handleCheckBox={handleCheckBox}
+                        handleCheckAllBox={handleCheckAllBox}
                     />
                 ) : (
                     <EmptyData />
@@ -156,6 +207,11 @@ export default function Proposal({ proposals, meta }) {
                 open={confirmDelete.open}
                 handleClose={handleCloseDelete}
                 handleDelete={handleDeleteData}
+            />
+            <ConfirmDeleteModal
+                open={openConfirmDeletes}
+                handleClose={handleCloseConfirmDeletes}
+                handleDelete={handleMultiDelete}
             />
         </>
     );

@@ -20,7 +20,7 @@ class LecturerController extends Controller
         $perpage = $request->input("perpage", 10);
         $search = $request->input("search", "");
 
-        $query = Lecturer::query();
+        $query = Lecturer::select("id", "name", "gender", "nip", "role");
 
         if ($search) {
             $query->where("name", "LIKE", "%$search%")
@@ -56,7 +56,7 @@ class LecturerController extends Controller
     {
         $validated = $request->validate([
             "name" => "required",
-            "gender" => "required|in:male,famale",
+            "gender" => "required|in:male,female",
             "nip" => "nullable",
             "role" => "required|in:head,secretary,lecturer,staff",
             "signature" => "required_if:role,head,secretary|image",
@@ -66,7 +66,7 @@ class LecturerController extends Controller
         } else {
             unset($validated["signature"]);
         }
-        $newLecturer = Lecturer::create($validated);
+        Lecturer::create($validated);
         return to_route("admin.lecturer.index")->with("success", "Data berhasil ditambahkan");
     }
 

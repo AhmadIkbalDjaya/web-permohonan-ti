@@ -4,7 +4,6 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CalendarScheduleResource;
-use App\Models\Proposal;
 use App\Models\Schedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -41,7 +40,6 @@ class AdminController extends Controller
                 ],
             ],
         ];
-        // dd(Schedule::first()->proposal);
         $schedules = Schedule::whereNotNull("date")->whereNotNull("start_time")->get();
         $calendar = [
             "schedules" => CalendarScheduleResource::collection($schedules),
@@ -59,7 +57,7 @@ class AdminController extends Controller
         $count = DB::table($table_name)->count();
         $new_count = DB::table($table_name)->where("status_id", 1)->count();
         $count = [
-            "$name" . "_count" => $count,
+            $name . "_count" => $count,
             "new_" . $name . "_count" => $new_count,
         ];
         return $count;
