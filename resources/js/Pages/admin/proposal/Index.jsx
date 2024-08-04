@@ -1,39 +1,39 @@
 import { EmptyData } from "../components/EmptyData";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BaseLayout from "../base_layout/BaseLayout";
 import { Head, router } from "@inertiajs/react";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
 import Typography from "@mui/material/Typography";
-import { Box, Button, IconButton } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { FaFileAlt } from "react-icons/fa";
 import pickBy from "lodash.pickby";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ProposalDataTable from "../components/proposal/index/ProposalDataTable";
 import SearchFormTable from "../components/SearchFormTable";
 import ButtonCreateData from "../components/ButtonCreateData";
-import { MdDelete, MdMoreVert } from "react-icons/md";
+import ButtonDeletesData from "../components/ButtonDeletesData";
 
 export default function Proposal({ proposals, meta, proposals_ids }) {
     const [loading, setloading] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState({
+        open: false,
+        id: "",
+    });
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [openConfirmDeletes, setOpenConfirmDeletes] = useState(false);
+
     const perpage = useRef(meta.perpage);
     const search = useRef(meta.search ?? "");
     const page = useRef(meta.page);
-    const handleChangePerpage = (e) => {
-        perpage.current = e.target.value;
-        getData();
-    };
-    const handleChangeSearch = (e) => {
-        search.current = e.target.value;
-        if (meta.search == "" && search.current != "") {
-            page.current = 1;
+
+    useEffect(() => {
+        if (page.current > meta.total_page) {
+            page.current = meta.total_page;
+            getData();
         }
-        getData();
-    };
-    const handleChangePage = (e, value) => {
-        page.current = value;
-        getData();
-    };
+    }, [meta.total_page]);
+
     const getData = () => {
         setloading(true);
         router.get(
@@ -50,21 +50,31 @@ export default function Proposal({ proposals, meta, proposals_ids }) {
             }
         );
     };
-    if (page.current > meta.total_page) {
-        page.current = meta.total_page;
-        getData();
-    }
 
-    const [confirmDelete, setConfirmDelete] = useState({
-        open: false,
-        id: "",
-    });
-    const handleOpenDelete = (id) => {
+    const handleChangePerpage = (e) => {
+        perpage.current = e.target.value;
+        getData();
+    };
+
+    const handleChangeSearch = (e) => {
+        search.current = e.target.value;
+        if (meta.search == "" && search.current != "") {
+            page.current = 1;
+        }
+        getData();
+    };
+
+    const handleChangePage = (e, value) => {
+        page.current = value;
+        getData();
+    };
+
+    const handleOpenDelete = (id) =>
         setConfirmDelete({
             open: true,
             id,
         });
-    };
+
     const handleCloseDelete = () => {
         setConfirmDelete({
             open: false,
@@ -77,39 +87,23 @@ export default function Proposal({ proposals, meta, proposals_ids }) {
                 proposal: confirmDelete.id,
             })
         );
-        setConfirmDelete({
-            open: false,
-            id: "",
-        });
+        handleCloseDelete();
     };
 
-    const [selectedItems, setSelectedItems] = useState([]);
-    const handleCheckAllBox = (e) => {
-        const isSelected = e.target.checked;
-        if (isSelected) {
-            setSelectedItems([...proposals_ids]);
-        } else {
-            setSelectedItems([]);
-        }
-    };
+    const handleCheckAllBox = (e) =>
+        setSelectedItems(e.target.checked ? [...proposals_ids] : []);
     const handleCheckBox = (e) => {
         const isSelected = e.target.checked;
         const value = parseInt(e.target.value);
-        if (isSelected) {
-            setSelectedItems([...selectedItems, value]);
-        } else {
-            setSelectedItems((prevData) => {
-                return prevData.filter((id) => id != value);
-            });
-        }
+        setSelectedItems((prev) =>
+            isSelected
+                ? [...selectedItems, value]
+                : prev.filter((id) => id != value)
+        );
     };
-    const [openConfirmDeletes, setOpenConfirmDeletes] = useState(false);
-    const handleOpenConfirmDeletes = () => {
-        setOpenConfirmDeletes(true);
-    };
-    const handleCloseConfirmDeletes = () => {
-        setOpenConfirmDeletes(false);
-    };
+    const handleOpenConfirmDeletes = () => setOpenConfirmDeletes(true);
+    const handleCloseConfirmDeletes = () => setOpenConfirmDeletes(false);
+
     const handleMultiDelete = () => {
         router.delete(route("admin.proposal.destroys"), {
             data: {
@@ -169,18 +163,18 @@ export default function Proposal({ proposals, meta, proposals_ids }) {
                 <Box display={"flex"} justifyContent={"space-between"} my={1}>
                     <ButtonCreateData
                         text={"Permohonan"}
-                        handleClick={() => {
-                            router.get(route("admin.proposal.create"));
-                        }}
+                        handleClick={() =>
+                            router.get(route("admin.proposal.create"))
+                        }
                     />
                     <Box display={"flex"}>
                         {selectedItems.length > 0 && (
-                            <IconButton
-                                onClick={handleOpenConfirmDeletes}
-                                sx={{ py: "0" }}
-                            >
-                                <MdDelete size={20} />
-                            </IconButton>
+                            <ButtonDeletesData
+                                handleOpenConfirmDeletes={
+                                    handleOpenConfirmDeletes
+                                }
+                                selectedItems={selectedItems}
+                            />
                         )}
                         <SearchFormTable
                             value={meta.search}
@@ -198,6 +192,7 @@ export default function Proposal({ proposals, meta, proposals_ids }) {
                         selectedItems={selectedItems}
                         handleCheckBox={handleCheckBox}
                         handleCheckAllBox={handleCheckAllBox}
+                        total_items_count={proposals_ids.length}
                     />
                 ) : (
                     <EmptyData />

@@ -32,6 +32,7 @@ export default function ProposalDataTable({
     selectedItems = [],
     handleCheckBox = () => {},
     handleCheckAllBox = () => {},
+    total_items_count,
 }) {
     return (
         <>
@@ -49,7 +50,8 @@ export default function ProposalDataTable({
                                 <Checkbox
                                     sx={tableCheckboxStyle}
                                     checked={
-                                        selectedItems.length == meta.total_item
+                                        selectedItems.length ==
+                                        total_items_count
                                     }
                                     onChange={handleCheckAllBox}
                                 />
