@@ -10,7 +10,7 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ResultDataTable from "../components/result/index/ResultDataTable";
 import SearchFormTable from "../components/SearchFormTable";
 import ButtonCreateData from "../components/ButtonCreateData";
-import { EmptyData } from "../components/EmptyData";
+import EmptyData from "../components/EmptyData";
 
 export default function Result({ results, meta }) {
     const [loading, setloading] = useState(false);

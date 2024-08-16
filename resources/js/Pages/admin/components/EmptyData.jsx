@@ -1,7 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import { Box, Typography } from "@mui/material";
 import React from "react";
-export function EmptyData() {
+export default function EmptyData() {
     const { url } = usePage().props;
     return (
         <Box

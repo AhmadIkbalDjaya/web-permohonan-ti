@@ -9,7 +9,7 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ButtonCreateData from "../components/ButtonCreateData";
 import SearchFormTable from "../components/SearchFormTable";
 import LecturerDataTable from "../components/lecturer/index/LecturerDataTable";
-import { EmptyData } from "../components/EmptyData";
+import EmptyData from "../components/EmptyData";
 
 export default function Lecturer({ meta, lecturers }) {
     const [loading, setloading] = useState(false);

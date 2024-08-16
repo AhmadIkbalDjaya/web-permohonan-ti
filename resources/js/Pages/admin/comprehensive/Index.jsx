@@ -10,7 +10,7 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ButtonCreateData from "../components/ButtonCreateData";
 import SearchFormTable from "../components/SearchFormTable";
 import ComprehensiveDataTable from "../components/comprehensive/index/ComprehensiveDataTable";
-import { EmptyData } from "../components/EmptyData";
+import EmptyData from "../components/EmptyData";
 
 export default function Comprehensive({ comprehensives, meta }) {
     const [loading, setloading] = useState(false);

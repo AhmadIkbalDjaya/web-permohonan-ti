@@ -10,7 +10,7 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ButtonCreateData from "../components/ButtonCreateData";
 import SearchFormTable from "../components/SearchFormTable";
 import PplDataTable from "../components/ppl/index/PplDataTable";
-import { EmptyData } from "../components/EmptyData";
+import EmptyData from "../components/EmptyData";
 
 export default function Ppl({ ppls, meta }) {
     const [loading, setloading] = useState(false);

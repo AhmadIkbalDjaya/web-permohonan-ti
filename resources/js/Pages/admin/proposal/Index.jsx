@@ -1,18 +1,19 @@
-import { EmptyData } from "../components/EmptyData";
 import React, { useEffect, useRef, useState } from "react";
-import BaseLayout from "../base_layout/BaseLayout";
 import { Head, router } from "@inertiajs/react";
-import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
-import AppLink from "../components/AppLink";
 import Typography from "@mui/material/Typography";
 import { Box, Button } from "@mui/material";
 import { FaFileAlt } from "react-icons/fa";
 import pickBy from "lodash.pickby";
+
+import BaseLayout from "../base_layout/BaseLayout";
+import EmptyData from "../components/EmptyData";
+import AppLink from "../components/AppLink";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
-import ProposalDataTable from "../components/proposal/index/ProposalDataTable";
 import SearchFormTable from "../components/SearchFormTable";
 import ButtonCreateData from "../components/ButtonCreateData";
 import ButtonDeletesData from "../components/ButtonDeletesData";
+import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
+import ProposalDataTable from "../components/proposal/index/ProposalDataTable";
 
 export default function Proposal({ proposals, meta, proposals_ids }) {
     const [loading, setloading] = useState(false);

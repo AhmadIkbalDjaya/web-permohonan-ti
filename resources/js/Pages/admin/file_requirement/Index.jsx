@@ -9,7 +9,7 @@ import pickBy from "lodash.pickby";
 import ButtonCreateData from "../components/ButtonCreateData";
 import SearchFormTable from "../components/SearchFormTable";
 import FileDataTable from "../components/file_requirement/FileDataTable";
-import { EmptyData } from "../components/EmptyData";
+import EmptyData from "../components/EmptyData";
 import { convertRequestTypeToID } from "../../../helper/dataToIdHelper";
 import FileRequirementFormModal from "../components/file_requirement/FileRequirementFormModal";
 
