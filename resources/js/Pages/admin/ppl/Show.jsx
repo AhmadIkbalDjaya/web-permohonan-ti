@@ -1,13 +1,9 @@
-import React, { useRef, useState } from "react";
-import BaseLayout from "../base_layout/BaseLayout";
-import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
-import AppLink from "../components/AppLink";
-import { Head, router } from "@inertiajs/react";
+import React from "react";
+import { Head } from "@inertiajs/react";
 import {
     Box,
     Button,
     FormControlLabel,
-    Grid,
     Stack,
     Switch,
     Typography,
@@ -15,71 +11,35 @@ import {
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa";
 import ReactToPrint from "react-to-print";
-import { idFormatDate } from "../../../helper/dateTimeHelper";
-import { ShowRowData } from "../components/ShowRowData";
-import StatusBox from "../components/StatusBox";
+
+import BaseLayout from "../base_layout/BaseLayout";
+import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
+import AppLink from "../components/AppLink";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import CetakPengantarPPL from "../cetak/cetakPengantarPPL";
 import { ShowApplicantDocumentsCard } from "../components/ShowApplicantDocumentsCard";
 import ShowPDFModal from "../components/ShowPDFModal";
 import { ShowApplicantSignCard } from "../components/ShowApplicantSignCard";
 import ShowPplData from "../components/ppl/show/ShowPplData";
+import useShowPpl from "./use_ppl/useShowPpl";
 
 export default function ShowPPL({ ppl, file_requirements }) {
-    const [confirmDelete, setConfirmDelete] = useState(false);
-    const handleOpenDelete = (id) => {
-        setConfirmDelete(true);
-    };
-    const handleCloseDelete = () => {
-        setConfirmDelete(false);
-    };
-    const handleDeleteData = () => {
-        router.delete(
-            route("admin.ppl.delete", {
-                ppl: ppl.id,
-            })
-        );
-        setConfirmDelete(false);
-    };
-
-    const componentRefIntro = useRef();
-    const componentRefMentor = useRef();
-    const [hodSignature, setHodSignature] = useState(false);
-
-    const [showPDF, setShowPDF] = useState({
-        open: false,
-        name: "",
-        file: "",
-    });
-
-    const handleClickShowPDF = (name, file) => {
-        setShowPDF({
-            open: true,
-            name,
-            file,
-        });
-    };
-    const handleCloseShowPDF = () => {
-        setShowPDF({
-            open: false,
-            name: "",
-            file: "",
-        });
-    };
+    const {
+        confirmDelete,
+        handleOpenDelete,
+        handleCloseDelete,
+        handleDeleteData,
+        componentRefIntro,
+        componentRefMentor,
+        hodSignature,
+        setHodSignature,
+        showPDF,
+        handleClickShowPDF,
+        handleCloseShowPDF,
+    } = useShowPpl({ ppl });
     return (
         <>
             <Head title="Detail Permohonan" />
-            <ConfirmDeleteModal
-                open={confirmDelete}
-                handleClose={handleCloseDelete}
-                handleDelete={handleDeleteData}
-            />
-            <ShowPDFModal
-                handleClose={handleCloseShowPDF}
-                open={showPDF.open}
-                name={showPDF.name}
-                file={showPDF.file}
-            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -269,6 +229,17 @@ export default function ShowPPL({ ppl, file_requirements }) {
                     </Box>
                 </Box>
             </BaseLayout>
+            <ConfirmDeleteModal
+                open={confirmDelete}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
+            <ShowPDFModal
+                handleClose={handleCloseShowPDF}
+                open={showPDF.open}
+                name={showPDF.name}
+                file={showPDF.file}
+            />
         </>
     );
 }

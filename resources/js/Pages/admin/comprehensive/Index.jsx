@@ -1,92 +1,30 @@
-import React, { useRef, useState } from "react";
-import BaseLayout from "../base_layout/BaseLayout";
+import React from "react";
 import { Head, router } from "@inertiajs/react";
-import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
-import AppLink from "../components/AppLink";
 import { Box, Button, Typography } from "@mui/material";
 import { FaFileAlt } from "react-icons/fa";
-import pickBy from "lodash.pickby";
+import BaseLayout from "../base_layout/BaseLayout";
+import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
+import AppLink from "../components/AppLink";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ButtonCreateData from "../components/ButtonCreateData";
 import SearchFormTable from "../components/SearchFormTable";
 import ComprehensiveDataTable from "../components/comprehensive/index/ComprehensiveDataTable";
 import EmptyData from "../components/EmptyData";
+import useIndexComprehensive from "./use_comprehensive/useIndexComprehensive";
 
 export default function Comprehensive({ comprehensives, meta }) {
-    const [loading, setloading] = useState(false);
-    const perpage = useRef(meta.perpage);
-    const search = useRef(meta.search ?? "");
-    const page = useRef(meta.page);
-    const handleChangePerpage = (e) => {
-        perpage.current = e.target.value;
-        getData();
-    };
-    const handleChangeSearch = (e) => {
-        search.current = e.target.value;
-        if (meta.search == "" && search.current != "") {
-            page.current = 1;
-        }
-        getData();
-    };
-    const handleChangePage = (e, value) => {
-        page.current = value;
-        getData();
-    };
-    const getData = () => {
-        setloading(true);
-        router.get(
-            route(route().current()),
-            pickBy({
-                perpage: perpage.current != 10 ? perpage.current : undefined,
-                search: search.current,
-                page: page.current != 1 ? page.current : undefined,
-            }),
-            {
-                preserveScroll: true,
-                preserveState: true,
-                onFinish: () => setloading(false),
-            }
-        );
-    };
-    if (page.current > meta.total_page) {
-        page.current = meta.total_page;
-        getData();
-    }
-    const [confirmDelete, setConfirmDelete] = useState({
-        open: false,
-        id: "",
-    });
-    const handleOpenDelete = (id) => {
-        setConfirmDelete({
-            open: true,
-            id,
-        });
-    };
-    const handleCloseDelete = () => {
-        setConfirmDelete({
-            open: false,
-            id: "",
-        });
-    };
-    const handleDeleteData = () => {
-        router.delete(
-            route("admin.comprehensive.delete", {
-                comprehensive: confirmDelete.id,
-            })
-        );
-        setConfirmDelete({
-            open: false,
-            id: "",
-        });
-    };
+    const {
+        handleChangePage,
+        handleChangePerpage,
+        handleChangeSearch,
+        confirmDelete,
+        handleOpenDelete,
+        handleCloseDelete,
+        handleDeleteData,
+    } = useIndexComprehensive({ meta });
     return (
         <>
             <Head title="Comprehensive" />
-            <ConfirmDeleteModal
-                open={confirmDelete.open}
-                handleClose={handleCloseDelete}
-                handleDelete={handleDeleteData}
-            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -160,7 +98,11 @@ export default function Comprehensive({ comprehensives, meta }) {
                     <EmptyData />
                 )}
             </BaseLayout>
-            ;
+            <ConfirmDeleteModal
+                open={confirmDelete.open}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
         </>
     );
 }

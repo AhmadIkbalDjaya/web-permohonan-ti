@@ -1,93 +1,31 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import { Head, router } from "@inertiajs/react";
+import { Box, Typography } from "@mui/material";
+
 import BaseLayout from "../base_layout/BaseLayout";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
-import { Box, Typography } from "@mui/material";
-import pickBy from "lodash.pickby";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ButtonCreateData from "../components/ButtonCreateData";
 import SearchFormTable from "../components/SearchFormTable";
 import LecturerDataTable from "../components/lecturer/index/LecturerDataTable";
 import EmptyData from "../components/EmptyData";
+import useIndexLecturer from "./use_lecturer/useIndexLecturer";
 
 export default function Lecturer({ meta, lecturers }) {
-    const [loading, setloading] = useState(false);
-    const perpage = useRef(meta.perpage);
-    const search = useRef(meta.search ?? "");
-    const page = useRef(meta.page);
-    const handleChangePerpage = (e) => {
-        perpage.current = e.target.value;
-        getData();
-    };
-    const handleChangeSearch = (e) => {
-        search.current = e.target.value;
-        if (meta.search == "" && search.current != "") {
-            page.current = 1;
-        }
-        getData();
-    };
-    const handleChangePage = (e, value) => {
-        page.current = value;
-        getData();
-    };
-    const getData = () => {
-        setloading(true);
-        router.get(
-            route(route().current()),
-            pickBy({
-                perpage: perpage.current != 10 ? perpage.current : undefined,
-                search: search.current,
-                page: page.current != 1 ? page.current : undefined,
-            }),
-            {
-                preserveScroll: true,
-                preserveState: true,
-                onFinish: () => setloading(false),
-            }
-        );
-    };
-    if (page.current > meta.total_page) {
-        page.current = meta.total_page;
-        getData();
-    }
-
-    const [confirmDelete, setConfirmDelete] = useState({
-        open: false,
-        id: "",
-    });
-    const handleOpenDelete = (id) => {
-        setConfirmDelete({
-            open: true,
-            id,
-        });
-    };
-    const handleCloseDelete = () => {
-        setConfirmDelete({
-            open: false,
-            id: "",
-        });
-    };
-    const handleDeleteData = () => {
-        router.delete(
-            route("admin.lecturer.destroy", {
-                lecturer: confirmDelete.id,
-            })
-        );
-        setConfirmDelete({
-            open: false,
-            id: "",
-        });
-    };
+    const {
+        handleChangePage,
+        handleChangePerpage,
+        handleChangeSearch,
+        confirmDelete,
+        handleOpenDelete,
+        handleCloseDelete,
+        handleDeleteData,
+    } = useIndexLecturer({ meta });
     return (
         <>
             <Head title="Dosen & Staff" />
             <BaseLayout>
-                <ConfirmDeleteModal
-                    open={confirmDelete.open}
-                    handleClose={handleCloseDelete}
-                    handleDelete={handleDeleteData}
-                />
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
                     <AppLink href={route("admin.lecturer.index")} color="black">
@@ -134,6 +72,11 @@ export default function Lecturer({ meta, lecturers }) {
                     <EmptyData />
                 )}
             </BaseLayout>
+            <ConfirmDeleteModal
+                open={confirmDelete.open}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
         </>
     );
 }

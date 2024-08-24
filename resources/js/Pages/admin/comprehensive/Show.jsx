@@ -1,73 +1,43 @@
-import React, { useRef, useState } from "react";
-import BaseLayout from "../base_layout/BaseLayout";
-import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
-import AppLink from "../components/AppLink";
-import { Head, router } from "@inertiajs/react";
+import React from "react";
+import { Head } from "@inertiajs/react";
 import {
     Box,
     Button,
     FormControlLabel,
-    Grid,
     Stack,
     Switch,
     Typography,
 } from "@mui/material";
+import ReactToPrint from "react-to-print";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa";
-import ReactToPrint from "react-to-print";
-import StatusBox from "../components/StatusBox";
-import { idFormatDate } from "../../../helper/dateTimeHelper";
-import { ShowRowData } from "../components/ShowRowData";
+import BaseLayout from "../base_layout/BaseLayout";
+import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
+import AppLink from "../components/AppLink";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import CetakKompren from "../cetak/cetakKompren";
 import { ShowApplicantDocumentsCard } from "../components/ShowApplicantDocumentsCard";
 import ShowPDFModal from "../components/ShowPDFModal";
 import { ShowApplicantSignCard } from "../components/ShowApplicantSignCard";
 import ShowComprehensiveData from "../components/comprehensive/show/ShowComprehensiveData";
+import useShowComprehensive from "./use_comprehensive/useShowComprehensive";
 
 export default function ShowComprehensive({
     comprehensive,
     file_requirements,
 }) {
-    const [confirmDelete, setConfirmDelete] = useState(false);
-    const handleOpenDelete = (id) => {
-        setConfirmDelete(true);
-    };
-    const handleCloseDelete = () => {
-        setConfirmDelete(false);
-    };
-    const handleDeleteData = () => {
-        router.delete(
-            route("admin.comprehensive.delete", {
-                comprehensive: comprehensive.id,
-            })
-        );
-        setConfirmDelete(false);
-    };
-
-    const componentRef = useRef();
-    const [hodSignature, setHodSignature] = useState(false);
-
-    const [showPDF, setShowPDF] = useState({
-        open: false,
-        name: "",
-        file: "",
-    });
-
-    const handleClickShowPDF = (name, file) => {
-        setShowPDF({
-            open: true,
-            name,
-            file,
-        });
-    };
-    const handleCloseShowPDF = () => {
-        setShowPDF({
-            open: false,
-            name: "",
-            file: "",
-        });
-    };
+    const {
+        confirmDelete,
+        handleOpenDelete,
+        handleCloseDelete,
+        handleDeleteData,
+        componentRef,
+        hodSignature,
+        setHodSignature,
+        showPDF,
+        handleClickShowPDF,
+        handleCloseShowPDF,
+    } = useShowComprehensive({ comprehensive });
     return (
         <>
             <Head title="Detail Permohonan" />

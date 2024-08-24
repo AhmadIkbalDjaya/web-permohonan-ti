@@ -1,8 +1,6 @@
-import React, { useRef, useState } from "react";
-import BaseLayout from "../base_layout/BaseLayout";
-import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
-import AppLink from "../components/AppLink";
-import { Head, router } from "@inertiajs/react";
+import React from "react";
+import { Head } from "@inertiajs/react";
+import ReactToPrint from "react-to-print";
 import {
     Box,
     Button,
@@ -13,68 +11,33 @@ import {
 } from "@mui/material";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa";
-import ReactToPrint from "react-to-print";
+import BaseLayout from "../base_layout/BaseLayout";
+import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
+import AppLink from "../components/AppLink";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ShowPDFModal from "../components/ShowPDFModal";
 import CetakSemhas from "../cetak/cetakSemhas";
 import { ShowApplicantDocumentsCard } from "../components/ShowApplicantDocumentsCard";
 import { ShowApplicantSignCard } from "../components/ShowApplicantSignCard";
 import ShowResultData from "../components/result/show/ShowResultData";
+import useShowResult from "./use_result/useShowResult";
 
 export default function ShowResult({ result, file_requirements }) {
-    const [confirmDelete, setConfirmDelete] = useState(false);
-    const handleOpenDelete = (id) => {
-        setConfirmDelete(true);
-    };
-    const handleCloseDelete = () => {
-        setConfirmDelete(false);
-    };
-    const handleDeleteData = () => {
-        router.delete(
-            route("admin.result.delete", {
-                result: result.id,
-            })
-        );
-        setConfirmDelete(false);
-    };
-
-    const componentRef = useRef();
-    const [hodSignature, setHodSignature] = useState(false);
-
-    const [showPDF, setShowPDF] = useState({
-        open: false,
-        name: "",
-        file: "",
-    });
-
-    const handleClickShowPDF = (name, file) => {
-        setShowPDF({
-            open: true,
-            name,
-            file,
-        });
-    };
-    const handleCloseShowPDF = () => {
-        setShowPDF({
-            open: false,
-            name: "",
-            file: "",
-        });
-    };
+    const {
+        confirmDelete,
+        handleOpenDelete,
+        handleCloseDelete,
+        handleDeleteData,
+        componentRef,
+        hodSignature,
+        setHodSignature,
+        showPDF,
+        handleClickShowPDF,
+        handleCloseShowPDF,
+    } = useShowResult({ result });
     return (
         <>
             <Head title="Detail Permohonan" />
-            <ShowPDFModal
-                handleClose={handleCloseShowPDF}
-                open={showPDF.open}
-                name={showPDF.name}
-                file={showPDF.file}
-            />
-            <ConfirmDeleteModal
-                open={confirmDelete}
-                handleClose={handleCloseDelete}
-                handleDelete={handleDeleteData}
-            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -241,6 +204,17 @@ export default function ShowResult({ result, file_requirements }) {
                     </Box>
                 </Box>
             </BaseLayout>
+            <ShowPDFModal
+                handleClose={handleCloseShowPDF}
+                open={showPDF.open}
+                name={showPDF.name}
+                file={showPDF.file}
+            />
+            <ConfirmDeleteModal
+                open={confirmDelete}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
         </>
     );
 }

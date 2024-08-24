@@ -1,58 +1,26 @@
-import { Head, router, usePage } from "@inertiajs/react";
-import React, { useState } from "react";
+import React from "react";
+import { Head } from "@inertiajs/react";
+import { Box, Button, Typography } from "@mui/material";
+import { FaPlus } from "react-icons/fa";
+
 import BaseLayout from "../base_layout/BaseLayout";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
-import { Box, Button, Typography } from "@mui/material";
-import { FaPlus } from "react-icons/fa";
-import dataURLtoBlob from "blueimp-canvas-to-blob";
 import { SigantureInputCard } from "../components/SigantureInputCard";
 import LecturerForm from "../components/lecturer/LecturerForm";
+import useCreateLecturer from "./use_lecturer/useCreateLecturer";
 
 export default function CreateLecturer() {
-    const { errors } = usePage().props;
-
-    const [signature, setSignatur] = useState();
-    const [emptySignature, setEmptySignature] = useState(false);
-    const clearSignatur = () => {
-        signature.clear();
-    };
-    const saveSignature = () => {
-        if (signature.isEmpty()) {
-            setEmptySignature(true);
-        } else {
-            setEmptySignature(false);
-            const result = signature
-                .getTrimmedCanvas()
-                .toDataURL("applicant_sign");
-            const image = dataURLtoBlob(result);
-            setFormValues((values) => {
-                return {
-                    ...values,
-                    signature: image,
-                };
-            });
-        }
-    };
-
-    const [formValues, setFormValues] = useState({
-        name: "",
-        nip: "",
-        gender: "",
-        role: "",
-    });
-    const handleChangeForm = (e, index = null) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        setFormValues((values) => ({
-            ...values,
-            [name]: value,
-        }));
-    };
-    const handleSubmitForm = (e) => {
-        router.post(route("admin.lecturer.store"), formValues);
-    };
-
+    const {
+        errors,
+        formValues,
+        handleChangeForm,
+        handleSubmitForm,
+        setSignatur,
+        emptySignature,
+        clearSignatur,
+        saveSignature,
+    } = useCreateLecturer();
     return (
         <>
             <Head title="Tambah Staff" />

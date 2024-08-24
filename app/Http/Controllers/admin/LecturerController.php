@@ -97,7 +97,7 @@ class LecturerController extends Controller
     {
         $validated = $request->validate([
             "name" => "required",
-            "gender" => "required|in:male,famale",
+            "gender" => "required|in:male,female",
             "nip" => "nullable",
             "role" => "required|in:head,secretary,lecturer,staff",
             "signature" => "required_if:role,head,secretary|image",

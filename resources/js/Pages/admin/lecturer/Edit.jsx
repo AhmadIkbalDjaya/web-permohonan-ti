@@ -1,8 +1,5 @@
-import { Head, router, usePage } from "@inertiajs/react";
-import React, { useState } from "react";
-import BaseLayout from "../base_layout/BaseLayout";
-import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
-import AppLink from "../components/AppLink";
+import React from "react";
+import { Head } from "@inertiajs/react";
 import {
     Box,
     Button,
@@ -13,57 +10,26 @@ import {
     Typography,
 } from "@mui/material";
 import { MdModeEdit } from "react-icons/md";
-import dataURLtoBlob from "blueimp-canvas-to-blob";
+
+import BaseLayout from "../base_layout/BaseLayout";
+import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
+import AppLink from "../components/AppLink";
 import AppInputLabel from "../components/elements/input/AppInputLabel";
 import InputErrorMessage from "../components/elements/input/InputErrorMessage";
 import { SigantureInputCard } from "../components/SigantureInputCard";
+import useEditLecturer from "./use_lecturer/useEditLecturer";
 
 export default function EditLecturer({ lecturer }) {
-    const { errors } = usePage().props;
-
-    const [signature, setSignatur] = useState();
-    const [emptySignature, setEmptySignature] = useState(false);
-    const clearSignatur = () => {
-        signature.clear();
-    };
-    const saveSignature = () => {
-        if (signature.isEmpty()) {
-            setEmptySignature(true);
-        } else {
-            setEmptySignature(false);
-            const result = signature
-                .getTrimmedCanvas()
-                .toDataURL("applicant_sign");
-            const image = dataURLtoBlob(result);
-            setFormValues((values) => {
-                return {
-                    ...values,
-                    signature: image,
-                };
-            });
-        }
-    };
-
-    const [formValues, setFormValues] = useState({
-        name: lecturer.name,
-        nip: lecturer.nip || "",
-        gender: lecturer.gender || "",
-        role: lecturer.role || "",
-    });
-    const handleChangeForm = (e, index = null) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        setFormValues((values) => ({
-            ...values,
-            [name]: value,
-        }));
-    };
-    const handleSubmitForm = (e) => {
-        router.post(route("admin.lecturer.update", { lecturer: lecturer.id }), {
-            ...formValues,
-            _method: "put",
-        });
-    };
+    const {
+        errors,
+        formValues,
+        handleChangeForm,
+        handleSubmitForm,
+        setSignatur,
+        emptySignature,
+        clearSignatur,
+        saveSignature,
+    } = useEditLecturer({ lecturer });
     return (
         <>
             <Head title="Edit Staf" />

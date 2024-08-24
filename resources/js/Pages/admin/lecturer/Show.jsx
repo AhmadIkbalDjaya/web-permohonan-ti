@@ -1,30 +1,23 @@
-import { Head, router } from "@inertiajs/react";
-import React, { useState } from "react";
+import React from "react";
+import { Head } from "@inertiajs/react";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { MdDelete, MdModeEdit } from "react-icons/md";
+
 import BaseLayout from "../base_layout/BaseLayout";
 import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import AppLink from "../components/AppLink";
-import { Box, Button, Stack, Typography } from "@mui/material";
-import { MdDelete, MdModeEdit } from "react-icons/md";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import ShowLecturerData from "../components/lecturer/show/ShowLecturerData";
 import { ShowApplicantSignCard } from "../components/ShowApplicantSignCard";
+import useShowLecturer from "./use_lecturer/useShowLecturer";
 
 export default function ShowLecturer({ lecturer }) {
-    const [confirmDelete, setConfirmDelete] = useState(false);
-    const handleOpenDelete = (id) => {
-        setConfirmDelete(true);
-    };
-    const handleCloseDelete = () => {
-        setConfirmDelete(false);
-    };
-    const handleDeleteData = () => {
-        router.delete(
-            route("admin.lecturer.destroy", {
-                lecturer: lecturer.id,
-            })
-        );
-        setConfirmDelete(false);
-    };
+    const {
+        confirmDelete,
+        handleOpenDelete,
+        handleCloseDelete,
+        handleDeleteData,
+    } = useShowLecturer({ lecturer });
     return (
         <>
             <Head title="Detail Staf" />
