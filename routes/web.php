@@ -48,56 +48,29 @@ Route::prefix('admin')->group(function () {
     });
     Route::middleware(['auth'])->group(function () {
         Route::get("", [AdminController::class, "dashboard"])->name('admin.home');
-        Route::prefix("proposal")->group(function () {
-            Route::get('file_requirement', [FileRequirementController::class, "index"])->name('admin.proposal.file_requirement');
-            Route::controller(AdminProposalController::class)->group(function () {
-                Route::get("", "index")->name('admin.proposal.index');
-                Route::get("create", "create")->name('admin.proposal.create');
-                Route::post("", 'store')->name('admin.proposal.store');
-                Route::get('{proposal}', "show")->name('admin.proposal.show');
-                Route::get("{proposal}/edit", "edit")->name('admin.proposal.edit');
-                Route::put("{proposal}", "update")->name('admin.proposal.update');
-                Route::delete('destroys', "destroys")->name("admin.proposal.destroys");
-                Route::delete("{proposal}", "destroy")->name('admin.proposal.destroy');
-            });
+
+        Route::prefix("proposal")->name("admin.proposal.")->group(function () {
+            Route::get('file_requirement', [FileRequirementController::class, "index"])->name('file_requirement');
+            Route::delete('destroys', [AdminProposalController::class, "destroys"])->name("destroys");
+            Route::resource('', AdminProposalController::class)->parameters(["" => "proposal"]);
         });
-        Route::prefix("hasil")->group(function () {
-            Route::get('file_requirement', [FileRequirementController::class, "index"])->name('admin.result.file_requirement');
-            Route::controller(AdminResultController::class)->group(function () {
-                Route::get("", "index")->name('admin.result.index');
-                Route::get("create", "create")->name('admin.result.create');
-                Route::post("", 'store')->name('admin.result.store');
-                Route::get('{result}', "show")->name('admin.result.show');
-                Route::get("{result}/edit", "edit")->name('admin.result.edit');
-                Route::put("{result}", "update")->name('admin.result.update');
-                Route::delete("{result}", "destroy")->name('admin.result.delete');
-            });
+
+        Route::prefix("hasil")->name("admin.result.")->group(function () {
+            Route::get('file_requirement', [FileRequirementController::class, "index"])->name('file_requirement');
+            Route::resource('', AdminResultController::class)->parameters(["" => "result"]);
         });
-        Route::prefix("kompren")->controller(AdminComprehensiveController::class)->group(function () {
-            Route::get('file_requirement', [FileRequirementController::class, "index"])->name('admin.comprehensive.file_requirement');
-            Route::get("", "index")->name('admin.comprehensive.index');
-            Route::get("create", "create")->name('admin.comprehensive.create');
-            Route::post("", 'store')->name('admin.comprehensive.store');
-            Route::get('{comprehensive}', "show")->name('admin.comprehensive.show');
-            Route::get("{comprehensive}/edit", "edit")->name('admin.comprehensive.edit');
-            Route::put("{comprehensive}", "update")->name('admin.comprehensive.update');
-            Route::delete("{comprehensive}", "destroy")->name('admin.comprehensive.delete');
+
+        Route::prefix("kompren")->name("admin.comprehensive.")->controller(AdminComprehensiveController::class)->group(function () {
+            Route::get('file_requirement', [FileRequirementController::class, "index"])->name('file_requirement');
+            Route::resource('', AdminComprehensiveController::class)->parameters(["" => "comprehensive"]);
         });
-        Route::prefix("ppl")->controller(AdminPplController::class)->group(function () {
-            Route::get('file_requirement', [FileRequirementController::class, "index"])->name('admin.ppl.file_requirement');
-            Route::get("", "index")->name('admin.ppl.index');
-            Route::get("create", "create")->name('admin.ppl.create');
-            Route::post("", 'store')->name('admin.ppl.store');
-            Route::get('{ppl}', "show")->name('admin.ppl.show');
-            Route::get("{ppl}/edit", "edit")->name('admin.ppl.edit');
-            Route::put("{ppl}", "update")->name('admin.ppl.update');
-            Route::delete("{ppl}", "destroy")->name('admin.ppl.delete');
+
+        Route::prefix("ppl")->name("admin.ppl.")->controller(AdminPplController::class)->group(function () {
+            Route::get('file_requirement', [FileRequirementController::class, "index"])->name('file_requirement');
+            Route::resource('', AdminPplController::class)->parameters(["" => "ppl"]);
         });
-        Route::controller(FileRequirementController::class)->group(function () {
-            Route::post('file-requirement', "store")->name('admin.file-requirement.store');
-            Route::put('file-requirement/{file_requirement}', "update")->name('admin.file-requirement.update');
-            Route::delete('file-requirement/{file_requirement}', "destroy")->name('admin.file-requirement.delete');
-        });
+
+        Route::resource('file-requirement', FileRequirementController::class)->only(["store", "update", "destroy"])->names("admin.file-requirement");
         Route::resource('lecturer', LecturerController::class)->names("admin.lecturer");
     });
 });

@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { router, usePage } from "@inertiajs/react";
 import pickBy from "lodash.pickby";
 
-export default function useFileRequirement({ meta }) {
+export default function useFileRequirement({ meta, request_type }) {
     const [loading, setloading] = useState(false);
     const { errors } = usePage().props;
     // pagination & search
@@ -150,7 +150,7 @@ export default function useFileRequirement({ meta }) {
     };
     const handleDeleteData = () => {
         router.delete(
-            route("admin.file-requirement.delete", {
+            route("admin.file-requirement.destroy", {
                 file_requirement: confirmDelete.id,
             })
         );

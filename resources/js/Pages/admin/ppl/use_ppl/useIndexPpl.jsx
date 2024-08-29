@@ -65,7 +65,7 @@ export default function useIndexPpl({ meta }) {
     };
     const handleDeleteData = () => {
         router.delete(
-            route("admin.ppl.delete", {
+            route("admin.ppl.destroy", {
                 ppl: confirmDelete.id,
             })
         );

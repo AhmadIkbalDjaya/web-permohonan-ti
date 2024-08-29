@@ -12,7 +12,7 @@ export default function useShowComprehensive({ comprehensive }) {
     };
     const handleDeleteData = () => {
         router.delete(
-            route("admin.comprehensive.delete", {
+            route("admin.comprehensive.destroy", {
                 comprehensive: comprehensive.id,
             })
         );

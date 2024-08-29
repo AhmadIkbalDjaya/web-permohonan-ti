@@ -12,7 +12,7 @@ export default function useShowPpl({ ppl }) {
     };
     const handleDeleteData = () => {
         router.delete(
-            route("admin.ppl.delete", {
+            route("admin.ppl.destroy", {
                 ppl: ppl.id,
             })
         );

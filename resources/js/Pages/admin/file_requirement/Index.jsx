@@ -33,7 +33,7 @@ export default function FileRequirement({
         handleOpenDelete,
         handleCloseDelete,
         handleDeleteData,
-    } = useFileRequirement({ meta });
+    } = useFileRequirement({ meta, request_type });
     return (
         <>
             <Head title="Berkas Pemohonan" />

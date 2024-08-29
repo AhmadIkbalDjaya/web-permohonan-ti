@@ -12,7 +12,7 @@ export default function useShowResult({ result }) {
     };
     const handleDeleteData = () => {
         router.delete(
-            route("admin.result.delete", {
+            route("admin.result.destroy", {
                 result: result.id,
             })
         );

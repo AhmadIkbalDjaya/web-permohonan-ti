@@ -64,7 +64,7 @@ export default function useIndexComprehensive({ meta }) {
     };
     const handleDeleteData = () => {
         router.delete(
-            route("admin.comprehensive.delete", {
+            route("admin.comprehensive.destroy", {
                 comprehensive: confirmDelete.id,
             })
         );

@@ -66,7 +66,7 @@ export default function useIndexResult({ meta }) {
     };
     const handleDeleteData = () => {
         router.delete(
-            route("admin.result.delete", {
+            route("admin.result.destroy", {
                 result: confirmDelete.id,
             })
         );
@@ -75,7 +75,7 @@ export default function useIndexResult({ meta }) {
             id: "",
         });
     };
-    
+
     return {
         handleChangePage,
         handleChangePerpage,
