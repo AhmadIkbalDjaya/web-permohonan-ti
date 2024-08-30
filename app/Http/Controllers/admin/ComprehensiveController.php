@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PaginateSearchRequest;
 use App\Http\Resources\Admin\ComprehensiveDetailResource;
+use App\Http\Resources\MetaPaginateSearch;
 use App\Models\Comprehensive;
 use App\Models\File;
 use App\Models\FileRequirement;
@@ -19,36 +21,26 @@ use Inertia\Inertia;
 
 class ComprehensiveController extends Controller
 {
-    public function index(Request $request)
+    public function index(PaginateSearchRequest $request)
     {
-        $page = $request->input("page", 1);
-        $perpage = $request->input("perpage", 10);
-        $search = $request->input("search", "");
+        $validated = $request->validated();
+        $perpage = $validated["perpage"] ?? 10;
+        $search = $validated["search"] ?? "";
 
-        $query = Comprehensive::select("id", "essay_title", "created_at", "student_id", "status_id")
+        $comprehensives = Comprehensive::select("id", "essay_title", "created_at", "student_id", "status_id")
             ->with([
                 "student" => fn($query) => $query->select("id", "name", "nim"),
                 "status" => fn($query) => $query->select("id", "name"),
-            ]);
-        if ($search) {
-            $query->where('essay_title', "LIKE", "%$search%")
-                ->orWhereHas("student", function ($query) use ($search) {
-                    $query->where("name", "LIKE", "%$search%")
-                        ->orWhere("nim", "LIKE", "%$search%");
-                });
-        }
-        $comprehensives = $query->latest()->paginate($perpage, ["*"], 'page', $page);
-        $meta = [
-            "page" => $comprehensives->currentPage(),
-            "perpage" => $comprehensives->perPage(),
-            "total_page" => $comprehensives->lastPage(),
-            "total_item" => $comprehensives->total(),
-            "search" => $search,
-        ];
-
+            ])->when($search, function ($query, $search) {
+                $query->where('essay_title', "LIKE", "%$search%")
+                    ->orWhereHas("student", function ($query) use ($search) {
+                        $query->where("name", "LIKE", "%$search%")
+                            ->orWhere("nim", "LIKE", "%$search%");
+                    });
+            })->latest()->paginate($perpage);
         return Inertia::render("admin/comprehensive/Index", [
             "comprehensives" => $comprehensives,
-            "meta" => $meta,
+            "meta" => new MetaPaginateSearch($comprehensives),
         ]);
     }
 

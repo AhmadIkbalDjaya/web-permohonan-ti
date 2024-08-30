@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PaginateSearchRequest;
 use App\Http\Resources\Admin\PPLDetailResource;
+use App\Http\Resources\MetaPaginateSearch;
 use App\Models\File;
 use App\Models\FileRequirement;
 use App\Models\Lecturer;
@@ -19,35 +21,26 @@ use Inertia\Inertia;
 
 class PplController extends Controller
 {
-    public function index(Request $request)
+    public function index(PaginateSearchRequest $request)
     {
-        $page = $request->input("page", 1);
-        $perpage = $request->input("perpage", 10);
-        $search = $request->input("search", "");
+        $validated = $request->validated();
+        $perpage = $validated["perpage"] ?? 10;
+        $search = $validated["search"] ?? "";
 
-        $query = PPL::select("id", "location", "created_at", "status_id")
+        $ppls = PPL::select("id", "location", "created_at", "status_id")
             ->with([
                 "students" => fn($query) => $query->select("students.id", "students.name", "students.nim"),
                 "status" => fn($query) => $query->select("id", "name"),
-            ]);
-        if ($search) {
-            $query->where('location', "LIKE", "%$search%")
-                ->orWhereHas("students", function ($query) use ($search) {
-                    $query->where("name", "LIKE", "%$search%")
-                        ->orWhere("nim", "LIKE", "%$search%");
-                });
-        }
-        $ppls = $query->latest()->paginate($perpage, ["*"], 'page', $page);
-        $meta = [
-            "page" => $ppls->currentPage(),
-            "perpage" => $ppls->perPage(),
-            "total_page" => $ppls->lastPage(),
-            "total_item" => $ppls->total(),
-            "search" => $search,
-        ];
+            ])->when($search, function ($query, $search) {
+                $query->where('location', "LIKE", "%$search%")
+                    ->orWhereHas("students", function ($query) use ($search) {
+                        $query->where("name", "LIKE", "%$search%")
+                            ->orWhere("nim", "LIKE", "%$search%");
+                    });
+            })->latest()->paginate($perpage);
         return Inertia::render("admin/ppl/Index", [
             "ppls" => $ppls,
-            "meta" => $meta,
+            "meta" => new MetaPaginateSearch($ppls),
         ]);
     }
 

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PaginateSearchRequest;
 use App\Http\Resources\Admin\ProposalDetailResource;
+use App\Http\Resources\MetaPaginateSearch;
 use App\Models\FileRequirement;
 use App\Models\Lecturer;
 use App\Models\Mentor;
@@ -21,36 +23,31 @@ use Inertia\Inertia;
 
 class ProposalController extends Controller
 {
-    public function index(Request $request)
+    public function index(PaginateSearchRequest $request)
     {
-        $page = $request->input("page", 1);
-        $perpage = $request->input("perpage", 10);
-        $search = $request->input("search", "");
+        $validated = $request->validated();
+        $perpage = $validated["perpage"] ?? 10;
+        $search = $validated["search"] ?? "";
 
-        $query = Proposal::select("id", "essay_title", "created_at", "student_id", "status_id")
+        $proposals = Proposal::select("id", "essay_title", "created_at", "student_id", "status_id")
             ->with([
                 "student" => fn($query) => $query->select("id", "name", "nim"),
                 "status" => fn($query) => $query->select("id", "name")
-            ]);
-        if ($search) {
-            $query->where('essay_title', "LIKE", "%$search%")
-                ->orWhereHas("student", function ($query) use ($search) {
-                    $query->where("name", "LIKE", "%$search%")
-                        ->orWhere("nim", "LIKE", "%$search%");
-                });
-        }
-        $proposals = $query->latest()->paginate($perpage, ["*"], 'page', $page);
+            ])
+            ->when(
+                $search,
+                function ($query, $search) {
+                    $query->where('essay_title', "LIKE", "%$search%")
+                        ->orWhereHas("student", function ($query) use ($search) {
+                            $query->where("name", "LIKE", "%$search%")
+                                ->orWhere("nim", "LIKE", "%$search%");
+                        });
+                }
+            )->latest()->paginate($perpage);
         $proposals_ids = Proposal::pluck("id");
-        $meta = [
-            "page" => $proposals->currentPage(),
-            "perpage" => $proposals->perPage(),
-            "total_page" => $proposals->lastPage(),
-            "total_item" => $proposals->total(),
-            "search" => $search,
-        ];
         return Inertia::render("admin/proposal/Index", [
             "proposals" => $proposals,
-            "meta" => $meta,
+            "meta" => new MetaPaginateSearch($proposals, $search),
             "proposals_ids" => $proposals_ids,
         ]);
     }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PaginateSearchRequest;
 use App\Http\Resources\Admin\LecturerResource;
+use App\Http\Resources\MetaPaginateSearch;
 use App\Models\Lecturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,30 +16,21 @@ class LecturerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(PaginateSearchRequest $request)
     {
-        $page = $request->input("page", 1);
-        $perpage = $request->input("perpage", 10);
-        $search = $request->input("search", "");
+        $validated = $request->validated();
+        $perpage = $validated["perpage"] ?? 10;
+        $search = $validated["search"] ?? "";
 
-        $query = Lecturer::select("id", "name", "gender", "nip", "role");
-
-        if ($search) {
+        $lecturers = Lecturer::select("id", "name", "gender", "nip", "role")->when($search, function ($query, $search) {
             $query->where("name", "LIKE", "%$search%")
                 ->orWhere("nip", "LIKE", "%$search%")
                 ->orWhere("role", "LIKE", "%$search%");
-        }
-        $lecturers = $query->latest()->paginate($perpage, ["*"], "page", "$page");
-        $meta = [
-            "page" => $lecturers->currentPage(),
-            "perpage" => $lecturers->perPage(),
-            "total_page" => $lecturers->lastPage(),
-            "total_item" => $lecturers->total(),
-            "search" => $search,
-        ];
+        })->latest()->paginate($perpage);
+
         return Inertia::render("admin/lecturer/Index", [
             "lecturers" => LecturerResource::collection($lecturers),
-            "meta" => $meta,
+            "meta" => new MetaPaginateSearch($lecturers),
         ]);
     }
 

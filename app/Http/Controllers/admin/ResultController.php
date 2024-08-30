@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PaginateSearchRequest;
 use App\Http\Resources\Admin\ResultDetailResource;
+use App\Http\Resources\MetaPaginateSearch;
 use App\Models\FileRequirement;
 use App\Models\Lecturer;
 use App\Models\Mentor;
@@ -21,35 +23,27 @@ use Inertia\Inertia;
 
 class ResultController extends Controller
 {
-    public function index(Request $request)
+    public function index(PaginateSearchRequest $request)
     {
-        $page = $request->input("page", 1);
-        $perpage = $request->input("perpage", 10);
-        $search = $request->input("search", "");
+        $validated = $request->validated();
+        $perpage = $validated["perpage"] ?? 10;
+        $search = $validated["search"] ?? "";
 
-        $query = Result::select("id", "essay_title", "created_at", "student_id", "status_id")
+        $results = Result::select("id", "essay_title", "created_at", "student_id", "status_id")
             ->with([
                 "student" => fn($query) => $query->select("id", "name", "nim"),
                 "status" => fn($query) => $query->select("id", "name"),
-            ]);
-        if ($search) {
-            $query->where('essay_title', "LIKE", "%$search%")
-                ->orWhereHas("student", function ($query) use ($search) {
-                    $query->where("name", "LIKE", "%$search%")
-                        ->orWhere("nim", "LIKE", "%$search%");
-                });
-        }
-        $results = $query->latest()->paginate($perpage, ["*"], 'page', $page);
-        $meta = [
-            "page" => $results->currentPage(),
-            "perpage" => $results->perPage(),
-            "total_page" => $results->lastPage(),
-            "total_item" => $results->total(),
-            "search" => $search,
-        ];
+            ])
+            ->when($search, function ($query, $search) {
+                $query->where('essay_title', "LIKE", "%$search%")
+                    ->orWhereHas("student", function ($query) use ($search) {
+                        $query->where("name", "LIKE", "%$search%")
+                            ->orWhere("nim", "LIKE", "%$search%");
+                    });
+            })->latest()->paginate($perpage);
         return Inertia::render("admin/result/Index", [
             "results" => $results,
-            "meta" => $meta,
+            "meta" => new MetaPaginateSearch($results, $search),
         ]);
     }
 
