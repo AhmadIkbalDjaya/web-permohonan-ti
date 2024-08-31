@@ -15,7 +15,7 @@ import AppBreadcrumbs from "../components/elements/AppBreadcrumbs";
 import ProposalDataTable from "../components/proposal/index/ProposalDataTable";
 import useIndexProposal from "./use_proposal/useIndexProposal";
 
-export default function Proposal({ proposals, meta, proposals_ids }) {
+export default function Proposal({ proposals, meta, proposal_ids }) {
     const {
         loading,
         selectedItems,
@@ -34,7 +34,7 @@ export default function Proposal({ proposals, meta, proposals_ids }) {
         handleCheckAllBox,
     } = useIndexProposal({
         meta,
-        proposals_ids,
+        proposal_ids,
     });
     return (
         <>
@@ -96,7 +96,7 @@ export default function Proposal({ proposals, meta, proposals_ids }) {
                                 handleOpenConfirmDeletes={
                                     handleOpenConfirmDeletes
                                 }
-                                selectedItems={selectedItems}
+                                selectedItemsCount={selectedItems.length}
                             />
                         )}
                         <SearchFormTable
@@ -115,7 +115,7 @@ export default function Proposal({ proposals, meta, proposals_ids }) {
                         selectedItems={selectedItems}
                         handleCheckBox={handleCheckBox}
                         handleCheckAllBox={handleCheckAllBox}
-                        total_items_count={proposals_ids.length}
+                        total_items_count={proposal_ids.length}
                     />
                 ) : (
                     <EmptyData />

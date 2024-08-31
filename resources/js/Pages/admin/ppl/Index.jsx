@@ -12,8 +12,9 @@ import SearchFormTable from "../components/SearchFormTable";
 import PplDataTable from "../components/ppl/index/PplDataTable";
 import EmptyData from "../components/EmptyData";
 import useIndexPpl from "./use_ppl/useIndexPpl";
+import ButtonDeletesData from "../components/ButtonDeletesData";
 
-export default function Ppl({ ppls, meta }) {
+export default function Ppl({ ppls, meta, ppl_ids }) {
     const {
         handleChangePage,
         handleChangePerpage,
@@ -22,15 +23,16 @@ export default function Ppl({ ppls, meta }) {
         handleOpenDelete,
         handleCloseDelete,
         handleDeleteData,
-    } = useIndexPpl({ meta });
+        selectedItems,
+        handleCheckBox,
+        handleCheckAllBox,
+        openConfirmDeletes,
+        handleClickConfirmDeletes,
+        handleMultiDelete,
+    } = useIndexPpl({ meta, ppl_ids });
     return (
         <>
             <Head title="Permohonan PPL" />
-            <ConfirmDeleteModal
-                open={confirmDelete.open}
-                handleClose={handleCloseDelete}
-                handleDelete={handleDeleteData}
-            />
             <BaseLayout>
                 <AppBreadcrumbs>
                     <AppLink href={route("admin.home")}>Home</AppLink>
@@ -82,10 +84,20 @@ export default function Ppl({ ppls, meta }) {
                             router.get(route("admin.ppl.create"));
                         }}
                     />
-                    <SearchFormTable
-                        value={meta.search}
-                        handleChangeSearch={handleChangeSearch}
-                    />
+                    <Box display={"flex"}>
+                        {selectedItems.length > 0 && (
+                            <ButtonDeletesData
+                                handleOpenConfirmDeletes={
+                                    handleClickConfirmDeletes
+                                }
+                                selectedItemsCount={selectedItems.length}
+                            />
+                        )}
+                        <SearchFormTable
+                            value={meta.search}
+                            handleChangeSearch={handleChangeSearch}
+                        />
+                    </Box>
                 </Box>
                 {meta.total_item > 0 ? (
                     <PplDataTable
@@ -94,12 +106,25 @@ export default function Ppl({ ppls, meta }) {
                         handleChangePage={handleChangePage}
                         handleChangePerpage={handleChangePerpage}
                         handleOpenDelete={handleOpenDelete}
+                        selectedItems={selectedItems}
+                        handleCheckBox={handleCheckBox}
+                        handleCheckAllBox={handleCheckAllBox}
+                        total_items_count={ppl_ids.length}
                     />
                 ) : (
                     <EmptyData />
                 )}
             </BaseLayout>
-            ;
+            <ConfirmDeleteModal
+                open={confirmDelete.open}
+                handleClose={handleCloseDelete}
+                handleDelete={handleDeleteData}
+            />
+            <ConfirmDeleteModal
+                open={openConfirmDeletes}
+                handleClose={handleClickConfirmDeletes}
+                handleDelete={handleMultiDelete}
+            />
         </>
     );
 }

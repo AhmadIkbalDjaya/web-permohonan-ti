@@ -11,8 +11,9 @@ import SearchFormTable from "../components/SearchFormTable";
 import LecturerDataTable from "../components/lecturer/index/LecturerDataTable";
 import EmptyData from "../components/EmptyData";
 import useIndexLecturer from "./use_lecturer/useIndexLecturer";
+import ButtonDeletesData from "../components/ButtonDeletesData";
 
-export default function Lecturer({ meta, lecturers }) {
+export default function Lecturer({ meta, lecturers, lecturer_ids }) {
     const {
         handleChangePage,
         handleChangePerpage,
@@ -21,7 +22,13 @@ export default function Lecturer({ meta, lecturers }) {
         handleOpenDelete,
         handleCloseDelete,
         handleDeleteData,
-    } = useIndexLecturer({ meta });
+        selectedItems,
+        handleCheckBox,
+        handleCheckAllBox,
+        openConfirmDeletes,
+        handleClickConfirmDeletes,
+        handleMultiDelete,
+    } = useIndexLecturer({ meta, lecturer_ids });
     return (
         <>
             <Head title="Dosen & Staff" />
@@ -55,10 +62,20 @@ export default function Lecturer({ meta, lecturers }) {
                             router.get(route("admin.lecturer.create"));
                         }}
                     />
-                    <SearchFormTable
-                        value={meta.search}
-                        handleChangeSearch={handleChangeSearch}
-                    />
+                    <Box display={"flex"}>
+                        {selectedItems.length > 0 && (
+                            <ButtonDeletesData
+                                handleOpenConfirmDeletes={
+                                    handleClickConfirmDeletes
+                                }
+                                selectedItemsCount={selectedItems.length}
+                            />
+                        )}
+                        <SearchFormTable
+                            value={meta.search}
+                            handleChangeSearch={handleChangeSearch}
+                        />
+                    </Box>
                 </Box>
                 {meta.total_item > 0 ? (
                     <LecturerDataTable
@@ -67,6 +84,10 @@ export default function Lecturer({ meta, lecturers }) {
                         handleChangePage={handleChangePage}
                         handleChangePerpage={handleChangePerpage}
                         handleOpenDelete={handleOpenDelete}
+                        selectedItems={selectedItems}
+                        handleCheckBox={handleCheckBox}
+                        handleCheckAllBox={handleCheckAllBox}
+                        total_items_count={lecturer_ids.length}
                     />
                 ) : (
                     <EmptyData />
@@ -76,6 +97,11 @@ export default function Lecturer({ meta, lecturers }) {
                 open={confirmDelete.open}
                 handleClose={handleCloseDelete}
                 handleDelete={handleDeleteData}
+            />
+            <ConfirmDeleteModal
+                open={openConfirmDeletes}
+                handleClose={handleClickConfirmDeletes}
+                handleDelete={handleMultiDelete}
             />
         </>
     );

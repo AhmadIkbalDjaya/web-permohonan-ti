@@ -11,8 +11,13 @@ import SearchFormTable from "../components/SearchFormTable";
 import ComprehensiveDataTable from "../components/comprehensive/index/ComprehensiveDataTable";
 import EmptyData from "../components/EmptyData";
 import useIndexComprehensive from "./use_comprehensive/useIndexComprehensive";
+import ButtonDeletesData from "../components/ButtonDeletesData";
 
-export default function Comprehensive({ comprehensives, meta }) {
+export default function Comprehensive({
+    comprehensives,
+    meta,
+    comprehensive_ids,
+}) {
     const {
         handleChangePage,
         handleChangePerpage,
@@ -21,7 +26,13 @@ export default function Comprehensive({ comprehensives, meta }) {
         handleOpenDelete,
         handleCloseDelete,
         handleDeleteData,
-    } = useIndexComprehensive({ meta });
+        selectedItems,
+        handleCheckBox,
+        handleCheckAllBox,
+        openConfirmDeletes,
+        handleClickConfirmDeletes,
+        handleMultiDelete,
+    } = useIndexComprehensive({ meta, comprehensive_ids });
     return (
         <>
             <Head title="Comprehensive" />
@@ -81,10 +92,20 @@ export default function Comprehensive({ comprehensives, meta }) {
                             router.get(route("admin.comprehensive.create"));
                         }}
                     />
-                    <SearchFormTable
-                        value={meta.search}
-                        handleChangeSearch={handleChangeSearch}
-                    />
+                    <Box display={"flex"}>
+                        {selectedItems.length > 0 && (
+                            <ButtonDeletesData
+                                handleOpenConfirmDeletes={
+                                    handleClickConfirmDeletes
+                                }
+                                selectedItemsCount={selectedItems.length}
+                            />
+                        )}
+                        <SearchFormTable
+                            value={meta.search}
+                            handleChangeSearch={handleChangeSearch}
+                        />
+                    </Box>
                 </Box>
                 {meta.total_item > 0 ? (
                     <ComprehensiveDataTable
@@ -93,6 +114,10 @@ export default function Comprehensive({ comprehensives, meta }) {
                         handleChangePage={handleChangePage}
                         handleChangePerpage={handleChangePerpage}
                         handleOpenDelete={handleOpenDelete}
+                        selectedItems={selectedItems}
+                        handleCheckBox={handleCheckBox}
+                        handleCheckAllBox={handleCheckAllBox}
+                        total_items_count={comprehensive_ids.length}
                     />
                 ) : (
                     <EmptyData />
@@ -102,6 +127,11 @@ export default function Comprehensive({ comprehensives, meta }) {
                 open={confirmDelete.open}
                 handleClose={handleCloseDelete}
                 handleDelete={handleDeleteData}
+            />
+            <ConfirmDeleteModal
+                open={openConfirmDeletes}
+                handleClose={handleClickConfirmDeletes}
+                handleDelete={handleMultiDelete}
             />
         </>
     );

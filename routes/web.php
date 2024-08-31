@@ -1,19 +1,23 @@
 <?php
 
-use App\Http\Controllers\Admin\AuthenticateController;
-use App\Http\Controllers\admin\FileRequirementController;
-use App\Http\Controllers\admin\LecturerController;
-use App\Http\Controllers\public\ComprehensiveController;
-use App\Http\Controllers\public\HomeController;
-use App\Http\Controllers\public\PplController;
-use App\Http\Controllers\public\ProposalController;
-use App\Http\Controllers\public\ResultController;
-use App\Http\Controllers\admin\AdminController;
-use App\Http\Controllers\admin\ProposalController as AdminProposalController;
-use App\Http\Controllers\admin\ResultController as AdminResultController;
-use App\Http\Controllers\admin\ComprehensiveController as AdminComprehensiveController;
-use App\Http\Controllers\admin\PplController as AdminPplController;
-use App\Http\Controllers\public\StatusCheckController;
+use App\Http\Controllers\admin\{
+    AdminController,
+    AuthenticateController,
+    FileRequirementController,
+    LecturerController,
+    ProposalController as AdminProposalController,
+    ResultController as AdminResultController,
+    ComprehensiveController as AdminComprehensiveController,
+    PplController as AdminPplController,
+};
+use App\Http\Controllers\public\{
+    ComprehensiveController,
+    HomeController,
+    PplController,
+    ProposalController,
+    ResultController,
+    StatusCheckController,
+};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -57,20 +61,25 @@ Route::prefix('admin')->group(function () {
 
         Route::prefix("hasil")->name("admin.result.")->group(function () {
             Route::get('file_requirement', [FileRequirementController::class, "index"])->name('file_requirement');
+            Route::delete('destroys', [AdminResultController::class, "destroys"])->name("destroys");
             Route::resource('', AdminResultController::class)->parameters(["" => "result"]);
         });
 
         Route::prefix("kompren")->name("admin.comprehensive.")->controller(AdminComprehensiveController::class)->group(function () {
             Route::get('file_requirement', [FileRequirementController::class, "index"])->name('file_requirement');
+            Route::delete('destroys', [AdminComprehensiveController::class, "destroys"])->name("destroys");
             Route::resource('', AdminComprehensiveController::class)->parameters(["" => "comprehensive"]);
         });
 
         Route::prefix("ppl")->name("admin.ppl.")->controller(AdminPplController::class)->group(function () {
             Route::get('file_requirement', [FileRequirementController::class, "index"])->name('file_requirement');
+            Route::delete('destroys', [AdminPplController::class, "destroys"])->name("destroys");
             Route::resource('', AdminPplController::class)->parameters(["" => "ppl"]);
         });
 
+        Route::delete('file-requirement/destroys', [FileRequirementController::class, "destroys"])->name("admin.file-requirement.destroys");
         Route::resource('file-requirement', FileRequirementController::class)->only(["store", "update", "destroy"])->names("admin.file-requirement");
+        Route::delete('lecturer/destroys', [LecturerController::class, "destroys"])->name("admin.lecturer.destroys");
         Route::resource('lecturer', LecturerController::class)->names("admin.lecturer");
     });
 });

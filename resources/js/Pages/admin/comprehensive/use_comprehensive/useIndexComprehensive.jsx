@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 import pickBy from "lodash.pickby";
+import { router } from "@inertiajs/react";
 
-export default function useIndexComprehensive({ meta }) {
+export default function useIndexComprehensive({ meta, comprehensive_ids }) {
     const [loading, setloading] = useState(false);
     // pagination & search
     const perpage = useRef(meta.perpage);
@@ -73,6 +74,37 @@ export default function useIndexComprehensive({ meta }) {
             id: "",
         });
     };
+
+    // select item
+    const [selectedItems, setSelectedItems] = useState([]);
+    const handleCheckBox = (e) => {
+        const isSelected = e.target.checked;
+        const value = parseInt(e.target.value);
+        setSelectedItems((prev) =>
+            isSelected
+                ? [...selectedItems, value]
+                : prev.filter((id) => id != value)
+        );
+    };
+    const handleCheckAllBox = (e) =>
+        setSelectedItems(e.target.checked ? [...comprehensive_ids] : []);
+
+    // delete selected item
+    const [openConfirmDeletes, setOpenConfirmDeletes] = useState(false);
+    const handleClickConfirmDeletes = () =>
+        setOpenConfirmDeletes(!openConfirmDeletes);
+    const handleMultiDelete = () => {
+        router.delete(route("admin.comprehensive.destroys"), {
+            data: {
+                ids: selectedItems,
+            },
+            onSuccess: () => {
+                setSelectedItems([]);
+                handleClickConfirmDeletes();
+            },
+        });
+    };
+
     return {
         handleChangePage,
         handleChangePerpage,
@@ -81,5 +113,11 @@ export default function useIndexComprehensive({ meta }) {
         handleOpenDelete,
         handleCloseDelete,
         handleDeleteData,
+        selectedItems,
+        handleCheckBox,
+        handleCheckAllBox,
+        openConfirmDeletes,
+        handleClickConfirmDeletes,
+        handleMultiDelete,
     };
 }

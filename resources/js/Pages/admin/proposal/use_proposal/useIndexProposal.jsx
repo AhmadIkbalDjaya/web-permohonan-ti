@@ -2,7 +2,7 @@ import { router } from "@inertiajs/react";
 import pickBy from "lodash.pickby";
 import { useEffect, useRef, useState } from "react";
 
-export default function useIndexProposal({ meta, proposals_ids }) {
+export default function useIndexProposal({ meta, proposal_ids }) {
     const [loading, setloading] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState({
         open: false,
@@ -80,7 +80,7 @@ export default function useIndexProposal({ meta, proposals_ids }) {
     };
 
     const handleCheckAllBox = (e) =>
-        setSelectedItems(e.target.checked ? [...proposals_ids] : []);
+        setSelectedItems(e.target.checked ? [...proposal_ids] : []);
     const handleCheckBox = (e) => {
         const isSelected = e.target.checked;
         const value = parseInt(e.target.value);

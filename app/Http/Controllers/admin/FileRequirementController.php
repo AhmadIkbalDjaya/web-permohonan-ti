@@ -7,6 +7,7 @@ use App\Http\Requests\PaginateSearchRequest;
 use App\Http\Resources\MetaPaginateSearch;
 use App\Models\FileRequirement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class FileRequirementController extends Controller
@@ -35,10 +36,12 @@ class FileRequirementController extends Controller
         $file_requirements = FileRequirement::select("id", "name", "is_required")->where("request_type", $type)->when($search, function ($query, $search) {
             $query->where("name", "LIKE", "%$search%");
         })->latest()->paginate($perpage);
+        $file_requirement_ids = FileRequirement::where("request_type", $type)->pluck("id");
         return Inertia::render("admin/file_requirement/Index", [
             "file_requirements" => $file_requirements,
-            "meta" => new MetaPaginateSearch($file_requirements),
+            "meta" => new MetaPaginateSearch($file_requirements, $search),
             "request_type" => $type,
+            "file_requirement_ids" => $file_requirement_ids,
         ]);
     }
 
@@ -64,10 +67,26 @@ class FileRequirementController extends Controller
         return to_route("admin." . $validated["request_type"] . ".file_requirement")->with("warning", "Data berhasil di ubah");
     }
 
-    public function destroy(FileRequirement $fileRequirement, Request $request)
+    public function destroy(FileRequirement $fileRequirement)
     {
         $type = $fileRequirement->request_type;
         $fileRequirement->delete();
+        return to_route("admin.$type.file_requirement")->with("error", "Data berhasil dihapus");
+    }
+
+    public function destroys(Request $request)
+    {
+        $type = $request["request_type"];
+        $validated = $request->validate([
+            "ids" => "required|array|min:1",
+            "ids*" => "required|exists:file_requirements,id",
+        ]);
+        DB::transaction(function () use ($validated) {
+            foreach ($validated["ids"] as $id) {
+                $fileRequirement = FileRequirement::find($id);
+                $fileRequirement->delete();
+            }
+        });
         return to_route("admin.$type.file_requirement")->with("error", "Data berhasil dihapus");
     }
 }

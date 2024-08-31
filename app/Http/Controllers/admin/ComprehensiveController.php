@@ -38,9 +38,11 @@ class ComprehensiveController extends Controller
                             ->orWhere("nim", "LIKE", "%$search%");
                     });
             })->latest()->paginate($perpage);
+        $comprehensives_ids = Comprehensive::pluck("id");
         return Inertia::render("admin/comprehensive/Index", [
             "comprehensives" => $comprehensives,
-            "meta" => new MetaPaginateSearch($comprehensives),
+            "meta" => new MetaPaginateSearch($comprehensives, $search),
+            "comprehensive_ids" => $comprehensives_ids,
         ]);
     }
 
@@ -261,19 +263,39 @@ class ComprehensiveController extends Controller
     public function destroy(Comprehensive $comprehensive)
     {
         DB::transaction(function () use ($comprehensive) {
-            $comprehensive->testers()->delete();
-            foreach ($comprehensive->files as $index => $file) {
-                if (Storage::exists($file->file)) {
-                    Storage::delete($file->file);
-                }
-            }
-            if (Storage::exists($comprehensive->applicant_sign)) {
-                Storage::delete($comprehensive->applicant_sign);
-            }
-            $comprehensive->files()->delete();
-            $comprehensive->delete();
-            $comprehensive->student()->delete();
+            $this->deleteComprehensive($comprehensive);
         });
         return to_route("admin.comprehensive.index")->with("error", "Data berhasil dihapus");
+    }
+
+    public function destroys(Request $request)
+    {
+        $validated = $request->validate([
+            "ids" => "required|array|min:1",
+            "ids*" => "required|exists:comprehensives,id",
+        ]);
+        DB::transaction(function () use ($validated) {
+            foreach ($validated["ids"] as $id) {
+                $result = Comprehensive::find($id);
+                $this->deleteComprehensive($result);
+            }
+        });
+        return to_route("admin.comprehensive.index")->with("error", "Data berhasil dihapus");
+    }
+
+    public function deleteComprehensive(Comprehensive $comprehensive)
+    {
+        $comprehensive->testers()->delete();
+        foreach ($comprehensive->files as $index => $file) {
+            if (Storage::exists($file->file)) {
+                Storage::delete($file->file);
+            }
+        }
+        if (Storage::exists($comprehensive->applicant_sign)) {
+            Storage::delete($comprehensive->applicant_sign);
+        }
+        $comprehensive->files()->delete();
+        $comprehensive->delete();
+        $comprehensive->student()->delete();
     }
 }

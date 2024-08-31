@@ -1,4 +1,3 @@
-import { Perpage } from "../Perpage";
 import React from "react";
 import {
     Box,
@@ -14,6 +13,7 @@ import {
 } from "@mui/material";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { Perpage } from "../Perpage";
 import {
     tableCellStyle,
     tableCheckboxStyle,
@@ -27,6 +27,10 @@ export default function FileDataTable({
     handleChangePage,
     handleOpenDelete,
     handleOpenForm,
+    selectedItems = [],
+    handleCheckBox = () => {},
+    handleCheckAllBox = () => {},
+    total_items_count,
 }) {
     return (
         <>
@@ -42,12 +46,12 @@ export default function FileDataTable({
                         <TableRow sx={{ backgroundColor: "gray-100" }}>
                             <TableCell padding="checkbox">
                                 <Checkbox
-                                    sx={{
-                                        color: "zinc-200",
-                                        "&.Mui-checked": {
-                                            color: "primary2",
-                                        },
-                                    }}
+                                    sx={tableCheckboxStyle}
+                                    checked={
+                                        selectedItems.length ==
+                                        total_items_count
+                                    }
+                                    onChange={handleCheckAllBox}
                                 ></Checkbox>
                             </TableCell>
                             <TableCell sx={tableHeadStyle}>Nama</TableCell>
@@ -59,7 +63,14 @@ export default function FileDataTable({
                         {file_requirements.data.map((file, index) => (
                             <TableRow key={index}>
                                 <TableCell padding="checkbox">
-                                    <Checkbox sx={tableCheckboxStyle} />
+                                    <Checkbox
+                                        sx={tableCheckboxStyle}
+                                        value={file.id}
+                                        checked={selectedItems.includes(
+                                            file.id
+                                        )}
+                                        onChange={handleCheckBox}
+                                    />
                                 </TableCell>
                                 <TableCell
                                     sx={{

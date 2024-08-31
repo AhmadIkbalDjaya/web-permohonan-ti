@@ -31,6 +31,10 @@ export default function LecturerDataTable({
     handleChangePerpage,
     handleChangePage,
     handleOpenDelete,
+    selectedItems = [],
+    handleCheckBox = () => {},
+    handleCheckAllBox = () => {},
+    total_items_count,
 }) {
     return (
         <>
@@ -45,7 +49,14 @@ export default function LecturerDataTable({
                     <TableHead>
                         <TableRow sx={{ backgroundColor: "gray-100" }}>
                             <TableCell padding="checkbox">
-                                <Checkbox sx={tableCheckboxStyle} />
+                                <Checkbox
+                                    sx={tableCheckboxStyle}
+                                    checked={
+                                        selectedItems.length ==
+                                        total_items_count
+                                    }
+                                    onChange={handleCheckAllBox}
+                                ></Checkbox>
                             </TableCell>
                             <TableCell sx={tableHeadStyle}>Nama</TableCell>
                             <TableCell sx={tableHeadStyle}>Peran</TableCell>
@@ -60,7 +71,14 @@ export default function LecturerDataTable({
                         {lecturers.data.map((lecturer, index) => (
                             <TableRow key={index}>
                                 <TableCell padding="checkbox">
-                                    <Checkbox sx={tableCheckboxStyle} />
+                                    <Checkbox
+                                        sx={tableCheckboxStyle}
+                                        value={lecturer.id}
+                                        checked={selectedItems.includes(
+                                            lecturer.id
+                                        )}
+                                        onChange={handleCheckBox}
+                                    />
                                 </TableCell>
                                 <TableCell
                                     sx={{

@@ -13,11 +13,13 @@ import EmptyData from "../components/EmptyData";
 import { convertRequestTypeToID } from "../../../helper/dataToIdHelper";
 import FileRequirementFormModal from "../components/file_requirement/FileRequirementFormModal";
 import useFileRequirement from "./useFileRequirement";
+import ButtonDeletesData from "../components/ButtonDeletesData";
 
 export default function FileRequirement({
     file_requirements,
     meta,
     request_type,
+    file_requirement_ids,
 }) {
     const {
         errors,
@@ -33,7 +35,13 @@ export default function FileRequirement({
         handleOpenDelete,
         handleCloseDelete,
         handleDeleteData,
-    } = useFileRequirement({ meta, request_type });
+        selectedItems,
+        handleCheckBox,
+        handleCheckAllBox,
+        openConfirmDeletes,
+        handleClickConfirmDeletes,
+        handleMultiDelete,
+    } = useFileRequirement({ meta, request_type, file_requirement_ids });
     return (
         <>
             <Head title="Berkas Pemohonan" />
@@ -77,10 +85,20 @@ export default function FileRequirement({
                         text={"Berkas"}
                         handleClick={handleOpenForm}
                     />
-                    <SearchFormTable
-                        value={meta.search}
-                        handleChangeSearch={handleChangeSearch}
-                    />
+                    <Box display={"flex"}>
+                        {selectedItems.length > 0 && (
+                            <ButtonDeletesData
+                                handleOpenConfirmDeletes={
+                                    handleClickConfirmDeletes
+                                }
+                                selectedItemsCount={selectedItems.length}
+                            />
+                        )}
+                        <SearchFormTable
+                            value={meta.search}
+                            handleChangeSearch={handleChangeSearch}
+                        />
+                    </Box>
                 </Box>
                 {meta.total_item > 0 ? (
                     <FileDataTable
@@ -90,6 +108,10 @@ export default function FileRequirement({
                         handleChangePerpage={handleChangePerpage}
                         handleOpenDelete={handleOpenDelete}
                         handleOpenForm={handleOpenForm}
+                        selectedItems={selectedItems}
+                        handleCheckBox={handleCheckBox}
+                        handleCheckAllBox={handleCheckAllBox}
+                        total_items_count={file_requirement_ids.length}
                     />
                 ) : (
                     <EmptyData />
@@ -106,6 +128,11 @@ export default function FileRequirement({
                 open={confirmDelete.open}
                 handleClose={handleCloseDelete}
                 handleDelete={handleDeleteData}
+            />
+            <ConfirmDeleteModal
+                open={openConfirmDeletes}
+                handleClose={handleClickConfirmDeletes}
+                handleDelete={handleMultiDelete}
             />
         </>
     );

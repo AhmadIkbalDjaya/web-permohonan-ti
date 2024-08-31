@@ -2,7 +2,11 @@ import { useRef, useState } from "react";
 import { router, usePage } from "@inertiajs/react";
 import pickBy from "lodash.pickby";
 
-export default function useFileRequirement({ meta, request_type }) {
+export default function useFileRequirement({
+    meta,
+    request_type,
+    file_requirement_ids,
+}) {
     const [loading, setloading] = useState(false);
     const { errors } = usePage().props;
     // pagination & search
@@ -160,6 +164,37 @@ export default function useFileRequirement({ meta, request_type }) {
         });
     };
 
+    // select item
+    const [selectedItems, setSelectedItems] = useState([]);
+    const handleCheckBox = (e) => {
+        const isSelected = e.target.checked;
+        const value = parseInt(e.target.value);
+        setSelectedItems((prev) =>
+            isSelected
+                ? [...selectedItems, value]
+                : prev.filter((id) => id != value)
+        );
+    };
+    const handleCheckAllBox = (e) =>
+        setSelectedItems(e.target.checked ? [...file_requirement_ids] : []);
+
+    // delete selected item
+    const [openConfirmDeletes, setOpenConfirmDeletes] = useState(false);
+    const handleClickConfirmDeletes = () =>
+        setOpenConfirmDeletes(!openConfirmDeletes);
+    const handleMultiDelete = () => {
+        router.delete(route("admin.file-requirement.destroys"), {
+            data: {
+                ids: selectedItems,
+                request_type: request_type,
+            },
+            onSuccess: () => {
+                setSelectedItems([]);
+                handleClickConfirmDeletes();
+            },
+        });
+    };
+
     return {
         errors,
         handleChangePage,
@@ -174,5 +209,11 @@ export default function useFileRequirement({ meta, request_type }) {
         handleOpenDelete,
         handleCloseDelete,
         handleDeleteData,
+        selectedItems,
+        handleCheckBox,
+        handleCheckAllBox,
+        openConfirmDeletes,
+        handleClickConfirmDeletes,
+        handleMultiDelete,
     };
 }

@@ -1,30 +1,26 @@
+import React from "react";
 import {
     Box,
     Checkbox,
-    FormControl,
-    MenuItem,
     Pagination,
-    Select,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
-    Typography,
 } from "@mui/material";
-import React from "react";
+import { HiOutlineEye } from "react-icons/hi2";
+import { TbEdit } from "react-icons/tb";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { idFormatDate } from "../../../../../helper/dateTimeHelper";
 import {
     tableCellStyle,
     tableCheckboxStyle,
     tableHeadStyle,
 } from "../../styles/tableStyles";
 import AppLink from "../../AppLink";
-import { idFormatDate } from "../../../../../helper/dateTimeHelper";
 import StatusBox from "../../StatusBox";
-import { HiOutlineEye } from "react-icons/hi2";
-import { TbEdit } from "react-icons/tb";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { Perpage } from "../../Perpage";
 
 export default function ResultDataTable({
@@ -33,6 +29,10 @@ export default function ResultDataTable({
     handleChangePerpage,
     handleChangePage,
     handleOpenDelete,
+    selectedItems = [],
+    handleCheckBox = () => {},
+    handleCheckAllBox = () => {},
+    total_items_count,
 }) {
     return (
         <>
@@ -48,12 +48,12 @@ export default function ResultDataTable({
                         <TableRow sx={{ backgroundColor: "gray-100" }}>
                             <TableCell padding="checkbox">
                                 <Checkbox
-                                    sx={{
-                                        color: "zinc-200",
-                                        "&.Mui-checked": {
-                                            color: "primary2",
-                                        },
-                                    }}
+                                    sx={tableCheckboxStyle}
+                                    checked={
+                                        selectedItems.length ==
+                                        total_items_count
+                                    }
+                                    onChange={handleCheckAllBox}
                                 ></Checkbox>
                             </TableCell>
                             <TableCell sx={tableHeadStyle}>Nama</TableCell>
@@ -72,7 +72,14 @@ export default function ResultDataTable({
                         {results.data.map((result, index) => (
                             <TableRow key={index}>
                                 <TableCell padding="checkbox">
-                                    <Checkbox sx={tableCheckboxStyle} />
+                                    <Checkbox
+                                        sx={tableCheckboxStyle}
+                                        value={result.id}
+                                        checked={selectedItems.includes(
+                                            result.id
+                                        )}
+                                        onChange={handleCheckBox}
+                                    />
                                 </TableCell>
                                 <TableCell
                                     sx={{

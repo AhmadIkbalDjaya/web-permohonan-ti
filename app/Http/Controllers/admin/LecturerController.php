@@ -8,6 +8,7 @@ use App\Http\Resources\Admin\LecturerResource;
 use App\Http\Resources\MetaPaginateSearch;
 use App\Models\Lecturer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -27,10 +28,11 @@ class LecturerController extends Controller
                 ->orWhere("nip", "LIKE", "%$search%")
                 ->orWhere("role", "LIKE", "%$search%");
         })->latest()->paginate($perpage);
-
+        $lecturer_ids = Lecturer::pluck("id");
         return Inertia::render("admin/lecturer/Index", [
             "lecturers" => LecturerResource::collection($lecturers),
-            "meta" => new MetaPaginateSearch($lecturers),
+            "meta" => new MetaPaginateSearch($lecturers, $search),
+            "lecturer_ids" => $lecturer_ids,
         ]);
     }
 
@@ -112,10 +114,30 @@ class LecturerController extends Controller
      */
     public function destroy(Lecturer $lecturer)
     {
+        $this->deleteLecturer($lecturer);
+        return to_route("admin.lecturer.index")->with("error", "Data berhasil dihapus");
+    }
+
+    public function destroys(Request $request)
+    {
+        $validated = $request->validate([
+            "ids" => "required|array|min:1",
+            "ids*" => "required|exists:lecturers,id",
+        ]);
+        DB::transaction(function () use ($validated) {
+            foreach ($validated["ids"] as $id) {
+                $lecturer = Lecturer::find($id);
+                $this->deleteLecturer($lecturer);
+            }
+        });
+        return to_route("admin.lecturer.index")->with("error", "Data berhasil dihapus");
+    }
+
+    public function deleteLecturer(Lecturer $lecturer)
+    {
         if ($lecturer->signature && Storage::exists($lecturer->signature)) {
             Storage::delete($lecturer->signature);
         }
         $lecturer->delete();
-        return to_route("admin.lecturer.index")->with("error", "Data berhasil dihapus");
     }
 }

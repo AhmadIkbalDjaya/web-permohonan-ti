@@ -11,8 +11,9 @@ import SearchFormTable from "../components/SearchFormTable";
 import ButtonCreateData from "../components/ButtonCreateData";
 import EmptyData from "../components/EmptyData";
 import useIndexResult from "./use_result/useIndexResult";
+import ButtonDeletesData from "../components/ButtonDeletesData";
 
-export default function Result({ results, meta }) {
+export default function Result({ results, meta, result_ids }) {
     const {
         handleChangePage,
         handleChangePerpage,
@@ -21,7 +22,13 @@ export default function Result({ results, meta }) {
         handleOpenDelete,
         handleCloseDelete,
         handleDeleteData,
-    } = useIndexResult({ meta });
+        selectedItems,
+        handleCheckBox,
+        handleCheckAllBox,
+        openConfirmDeletes,
+        handleClickConfirmDeletes,
+        handleMultiDelete,
+    } = useIndexResult({ meta, result_ids });
     return (
         <>
             <Head title="Result" />
@@ -76,10 +83,20 @@ export default function Result({ results, meta }) {
                             router.get(route("admin.result.create"));
                         }}
                     />
-                    <SearchFormTable
-                        value={meta.search}
-                        handleChangeSearch={handleChangeSearch}
-                    />
+                    <Box display={"flex"}>
+                        {selectedItems.length > 0 && (
+                            <ButtonDeletesData
+                                handleOpenConfirmDeletes={
+                                    handleClickConfirmDeletes
+                                }
+                                selectedItemsCount={selectedItems.length}
+                            />
+                        )}
+                        <SearchFormTable
+                            value={meta.search}
+                            handleChangeSearch={handleChangeSearch}
+                        />
+                    </Box>
                 </Box>
                 {meta.total_item > 0 ? (
                     <ResultDataTable
@@ -88,6 +105,10 @@ export default function Result({ results, meta }) {
                         handleChangePage={handleChangePage}
                         handleChangePerpage={handleChangePerpage}
                         handleOpenDelete={handleOpenDelete}
+                        selectedItems={selectedItems}
+                        handleCheckBox={handleCheckBox}
+                        handleCheckAllBox={handleCheckAllBox}
+                        total_items_count={result_ids.length}
                     />
                 ) : (
                     <EmptyData />
@@ -97,6 +118,11 @@ export default function Result({ results, meta }) {
                 open={confirmDelete.open}
                 handleClose={handleCloseDelete}
                 handleDelete={handleDeleteData}
+            />
+            <ConfirmDeleteModal
+                open={openConfirmDeletes}
+                handleClose={handleClickConfirmDeletes}
+                handleDelete={handleMultiDelete}
             />
         </>
     );

@@ -1,7 +1,4 @@
-import { Perpage } from "../../Perpage";
 import React from "react";
-import AppLink from "../../AppLink";
-import StatusBox from "../../StatusBox";
 import {
     Box,
     Checkbox,
@@ -16,12 +13,15 @@ import {
 import { HiOutlineEye } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { idFormatDate } from "../../../../../helper/dateTimeHelper";
+import { Perpage } from "../../Perpage";
+import AppLink from "../../AppLink";
+import StatusBox from "../../StatusBox";
 import {
     tableCellStyle,
     tableCheckboxStyle,
     tableHeadStyle,
 } from "../../styles/tableStyles";
+import { idFormatDate } from "../../../../../helper/dateTimeHelper";
 
 export default function PplDataTable({
     ppls,
@@ -29,6 +29,10 @@ export default function PplDataTable({
     handleChangePerpage,
     handleChangePage,
     handleOpenDelete,
+    selectedItems = [],
+    handleCheckBox = () => {},
+    handleCheckAllBox = () => {},
+    total_items_count,
 }) {
     return (
         <>
@@ -43,7 +47,14 @@ export default function PplDataTable({
                     <TableHead>
                         <TableRow sx={{ backgroundColor: "gray-100" }}>
                             <TableCell padding="checkbox">
-                                <Checkbox sx={tableCheckboxStyle} />
+                                <Checkbox
+                                    sx={tableCheckboxStyle}
+                                    checked={
+                                        selectedItems.length ==
+                                        total_items_count
+                                    }
+                                    onChange={handleCheckAllBox}
+                                ></Checkbox>
                             </TableCell>
                             <TableCell sx={tableHeadStyle}>Nama</TableCell>
                             <TableCell sx={tableHeadStyle}>NIM</TableCell>
@@ -59,7 +70,12 @@ export default function PplDataTable({
                         {ppls.data.map((ppl, index) => (
                             <TableRow key={index}>
                                 <TableCell padding="checkbox">
-                                    <Checkbox sx={tableCheckboxStyle} />
+                                    <Checkbox
+                                        sx={tableCheckboxStyle}
+                                        value={ppl.id}
+                                        checked={selectedItems.includes(ppl.id)}
+                                        onChange={handleCheckBox}
+                                    />
                                 </TableCell>
                                 <TableCell
                                     sx={{

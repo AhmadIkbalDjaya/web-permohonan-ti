@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { router } from "@inertiajs/react";
 import pickBy from "lodash.pickby";
 
-export default function useIndexResult({ meta }) {
+export default function useIndexResult({ meta, result_ids }) {
     const [loading, setloading] = useState(false);
     // pagination
     const perpage = useRef(meta.perpage);
@@ -76,6 +76,36 @@ export default function useIndexResult({ meta }) {
         });
     };
 
+    // select item
+    const [selectedItems, setSelectedItems] = useState([]);
+    const handleCheckBox = (e) => {
+        const isSelected = e.target.checked;
+        const value = parseInt(e.target.value);
+        setSelectedItems((prev) =>
+            isSelected
+                ? [...selectedItems, value]
+                : prev.filter((id) => id != value)
+        );
+    };
+    const handleCheckAllBox = (e) =>
+        setSelectedItems(e.target.checked ? [...result_ids] : []);
+
+    // delete selected item
+    const [openConfirmDeletes, setOpenConfirmDeletes] = useState(false);
+    const handleClickConfirmDeletes = () =>
+        setOpenConfirmDeletes(!openConfirmDeletes);
+    const handleMultiDelete = () => {
+        router.delete(route("admin.result.destroys"), {
+            data: {
+                ids: selectedItems,
+            },
+            onSuccess: () => {
+                setSelectedItems([]);
+                handleClickConfirmDeletes();
+            },
+        });
+    };
+    
     return {
         handleChangePage,
         handleChangePerpage,
@@ -84,5 +114,11 @@ export default function useIndexResult({ meta }) {
         handleOpenDelete,
         handleCloseDelete,
         handleDeleteData,
+        selectedItems,
+        handleCheckBox,
+        handleCheckAllBox,
+        openConfirmDeletes,
+        handleClickConfirmDeletes,
+        handleMultiDelete,
     };
 }

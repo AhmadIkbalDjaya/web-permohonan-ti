@@ -41,9 +41,11 @@ class ResultController extends Controller
                             ->orWhere("nim", "LIKE", "%$search%");
                     });
             })->latest()->paginate($perpage);
+        $result_ids = Result::pluck("id");
         return Inertia::render("admin/result/Index", [
             "results" => $results,
             "meta" => new MetaPaginateSearch($results, $search),
+            "result_ids" => $result_ids,
         ]);
     }
 
@@ -306,21 +308,41 @@ class ResultController extends Controller
     public function destroy(Result $result)
     {
         DB::transaction(function () use ($result) {
-            $result->mentors()->delete();
-            $result->testers()->delete();
-            foreach ($result->files as $index => $file) {
-                if (Storage::exists($file->file)) {
-                    Storage::delete($file->file);
-                }
-            }
-            if (Storage::exists($result->applicant_sign)) {
-                Storage::delete($result->applicant_sign);
-            }
-            $result->files()->delete();
-            $result->delete();
-            $result->student()->delete();
-            $result->schedule()->delete();
+            $this->deleteResult($result);
         });
         return to_route("admin.result.index")->with("success", "Data berhasil dihapus");
+    }
+
+    public function destroys(Request $request)
+    {
+        $validated = $request->validate([
+            "ids" => "required|array|min:1",
+            "ids*" => "required|exists:results,id",
+        ]);
+        DB::transaction(function () use ($validated) {
+            foreach ($validated["ids"] as $id) {
+                $result = Result::find($id);
+                $this->deleteResult($result);
+            }
+        });
+        return to_route("admin.result.index")->with("error", "Data berhasil dihapus");
+    }
+
+    public function deleteResult(Result $result)
+    {
+        $result->mentors()->delete();
+        $result->testers()->delete();
+        foreach ($result->files as $index => $file) {
+            if (Storage::exists($file->file)) {
+                Storage::delete($file->file);
+            }
+        }
+        if (Storage::exists($result->applicant_sign)) {
+            Storage::delete($result->applicant_sign);
+        }
+        $result->files()->delete();
+        $result->delete();
+        $result->student()->delete();
+        $result->schedule()->delete();
     }
 }

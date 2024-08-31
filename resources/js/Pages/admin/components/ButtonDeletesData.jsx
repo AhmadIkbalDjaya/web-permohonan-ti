@@ -4,7 +4,7 @@ import { MdDelete } from "react-icons/md";
 
 export default function ButtonDeletesData({
     handleOpenConfirmDeletes = () => {},
-    selectedItems = 0,
+    selectedItemsCount = 0,
 }) {
     return (
         <Button
@@ -25,7 +25,7 @@ export default function ButtonDeletesData({
             }}
             onClick={handleOpenConfirmDeletes}
         >
-            Hapus {selectedItems.length}
+            Hapus {selectedItemsCount}
         </Button>
     );
 }

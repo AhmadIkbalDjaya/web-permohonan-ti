@@ -38,9 +38,11 @@ class PplController extends Controller
                             ->orWhere("nim", "LIKE", "%$search%");
                     });
             })->latest()->paginate($perpage);
+        $ppl_ids = Ppl::pluck("id");
         return Inertia::render("admin/ppl/Index", [
             "ppls" => $ppls,
-            "meta" => new MetaPaginateSearch($ppls),
+            "meta" => new MetaPaginateSearch($ppls, $search),
+            "ppl_ids" => $ppl_ids,
         ]);
     }
 
@@ -283,19 +285,39 @@ class PplController extends Controller
     public function destroy(PPL $ppl)
     {
         DB::transaction(function () use ($ppl) {
-            $ppl->mentor()->delete();
-            $ppl->students()->delete();
-            foreach ($ppl->files as $index => $file) {
-                if (Storage::exists($file->file)) {
-                    Storage::delete($file->file);
-                }
-            }
-            if (Storage::exists($ppl->applicant_sign)) {
-                Storage::delete($ppl->applicant_sign);
-            }
-            $ppl->files()->delete();
-            $ppl->delete();
+            $this->deletePpl($ppl);
         });
         return to_route("admin.ppl.index")->with("error", "Data berhasil dihapus");
+    }
+
+    public function destroys(Request $request)
+    {
+        $validated = $request->validate([
+            "ids" => "required|array|min:1",
+            "ids*" => "required|exists:ppls,id",
+        ]);
+        DB::transaction(function () use ($validated) {
+            foreach ($validated["ids"] as $id) {
+                $ppl = PPL::find($id);
+                $this->deletePpl($ppl);
+            }
+        });
+        return to_route("admin.ppl.index")->with("error", "Data berhasil dihapus");
+    }
+
+    public function deletePpl(PPL $ppl)
+    {
+        $ppl->mentor()->delete();
+        $ppl->students()->delete();
+        foreach ($ppl->files as $index => $file) {
+            if (Storage::exists($file->file)) {
+                Storage::delete($file->file);
+            }
+        }
+        if (Storage::exists($ppl->applicant_sign)) {
+            Storage::delete($ppl->applicant_sign);
+        }
+        $ppl->files()->delete();
+        $ppl->delete();
     }
 }
