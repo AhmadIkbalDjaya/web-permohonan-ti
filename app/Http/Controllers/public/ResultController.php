@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\public;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\public\ResultStoreRequest;
 use App\Models\FileRequirement;
 use App\Models\Lecturer;
 use App\Models\Mentor;
@@ -27,27 +28,10 @@ class ResultController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(ResultStoreRequest $request)
     {
-        $rules = [
-            "name" => "required",
-            "nim" => "required|numeric",
-            "pob" => "required",
-            "dob" => "required|date",
-            "semester" => "required|integer|min:0",
-            "phone" => "required|phone:ID",
-            "essay_title" => "required",
-            "applicant_sign" => "required|image",
-            "mentor_ids" => "array|min:2",
-            "mentor_ids.*" => "required|string|exists:lecturers,id",
-            "tester_ids" => "required|min:2",
-            "tester_ids.*" => "required|string|exists:lecturers,id",
-        ];
         $file_requirements = FileRequirement::select("name", "slug", "is_required")->where("request_type", "result")->get();
-        foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
-        }
-        $validated = $request->validate($rules);
+        $validated = $request->validated();
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("result/applicant_signs", "public");
         foreach ($file_requirements as $file_requirement) {
             if ($request->file($file_requirement->slug)) {

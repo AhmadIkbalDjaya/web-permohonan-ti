@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\admin\lecturer\LecturerStoreRequest;
 use App\Http\Requests\PaginateSearchRequest;
 use App\Http\Resources\Admin\LecturerResource;
 use App\Http\Resources\MetaPaginateSearch;
@@ -47,15 +48,9 @@ class LecturerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(LecturerStoreRequest $request)
     {
-        $validated = $request->validate([
-            "name" => "required",
-            "gender" => "required|in:male,female",
-            "nip" => "nullable",
-            "role" => "required|in:head,secretary,lecturer,staff",
-            "signature" => "required_if:role,head,secretary|image",
-        ]);
+        $validated = $request->validated();
         if ($request->file("signature")) {
             $validated["signature"] = $request->file("signature")->storePublicly("lecturer/signatures", "public");
         } else {
@@ -88,15 +83,9 @@ class LecturerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Lecturer $lecturer)
+    public function update(LecturerStoreRequest $request, Lecturer $lecturer)
     {
-        $validated = $request->validate([
-            "name" => "required",
-            "gender" => "required|in:male,female",
-            "nip" => "nullable",
-            "role" => "required|in:head,secretary,lecturer,staff",
-            "signature" => "required_if:role,head,secretary|image",
-        ]);
+        $validated = $request->validated();
         if ($request->file("signature")) {
             $validated["signature"] = $request->file("signature")->storePublicly("lecturer/signatures", "public");
             if (Storage::exists($lecturer->signature)) {

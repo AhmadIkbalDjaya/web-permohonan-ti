@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\admin\proposal\ProposalStoreRequest;
+use App\Http\Requests\admin\proposal\ProposalUpdateRequest;
 use App\Http\Requests\PaginateSearchRequest;
 use App\Http\Resources\Admin\ProposalDetailResource;
 use App\Http\Resources\MetaPaginateSearch;
@@ -48,7 +50,7 @@ class ProposalController extends Controller
         return Inertia::render("admin/proposal/Index", [
             "proposals" => $proposals,
             "meta" => new MetaPaginateSearch($proposals, $search),
-        "proposal_ids" => $proposal_ids,
+            "proposal_ids" => $proposal_ids,
         ]);
     }
 
@@ -74,42 +76,12 @@ class ProposalController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(ProposalStoreRequest $request)
     {
-        $rules = [
-            "status_id" => "nullable|exists:statuses,id",
-            "status_description_id" => "nullable|exists:status_descriptions,id",
-            "letter_number" => "nullable",
-            "letter_date" => "nullable|date",
-            "chairman_id" => "nullable|exists:lecturers,id",
-            "secretary_id" => "nullable|exists:lecturers,id",
-            "executor_id" => "nullable|exists:lecturers,id",
-
-            "name" => "required",
-            "nim" => "required|numeric",
-            "pob" => "required",
-            "dob" => "required|date",
-            "semester" => "required|integer|min:0",
-            "phone" => "required|phone:ID",
-            "essay_title" => "required",
-            "applicant_sign" => "required|image",
-            "mentor_ids" => "array|min:2",
-            "mentor_ids.*" => "required|string|exists:lecturers,id",
-            "tester_ids" => "nullable|array",
-            "tester_ids.*" => "nullable|string|exists:lecturers,id",
-            "date" => "nullable|date",
-            "time_zone" => "required|in:wib,wita,wit",
-            "start_time" => "nullable|date_format:H:i",
-            "end_time" => "nullable|date_format:H:i",
-            "location" => "nullable|string",
-        ];
+        $validated = $request->validated();
         $file_requirements = FileRequirement::where("request_type", "proposal")->get();
-        foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
-        }
-        $validated = $request->validate($rules);
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("proposal/applicant_signs", "public");
-        foreach ($file_requirements as $index => $file_requirement) {
+        foreach ($file_requirements as $file_requirement) {
             if ($request->file($file_requirement->slug)) {
                 $validated[$file_requirement->slug] = $request->file($file_requirement->slug)->storePublicly("proposal/files", "public");
             } else {
@@ -189,42 +161,10 @@ class ProposalController extends Controller
         ]);
     }
 
-    public function update(Proposal $proposal, Request $request)
+    public function update(Proposal $proposal, ProposalUpdateRequest $request)
     {
-        $rules = [
-            "status_id" => "nullable|exists:statuses,id",
-            "status_description_id" => "nullable|exists:status_descriptions,id",
-            "letter_number" => "nullable",
-            "letter_date" => "nullable|date",
-            "chairman_id" => "nullable|exists:lecturers,id",
-            "secretary_id" => "nullable|exists:lecturers,id",
-            "executor_id" => "nullable|exists:lecturers,id",
-
-            "name" => "required",
-            "nim" => "required|numeric",
-            "pob" => "required",
-            "dob" => "required|date",
-            "semester" => "required|integer|min:0",
-            "phone" => "required|phone:ID",
-            "essay_title" => "required",
-            "applicant_sign" => "nullable|image",
-            "mentor_ids" => "array|min:2",
-            "mentor_ids.*" => "required|string|exists:lecturers,id",
-            "tester_ids" => "nullable|array",
-            "tester_ids.*" => "nullable|string|exists:lecturers,id",
-            "date" => "nullable|date",
-            "time_zone" => "required|in:wib,wita,wit",
-            "start_time" => "nullable|date_format:H:i",
-            "end_time" => "nullable|date_format:H:i",
-            "location" => "nullable|string",
-        ];
+        $validated = $request->validated();
         $file_requirements = FileRequirement::where("request_type", "proposal")->get();
-        foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->slug] = "nullable|mimes:pdf";
-        }
-
-        $validated = $request->validate($rules);
-
         $updateProposal = [
             "essay_title" => $validated["essay_title"],
             "status_id" => $validated["status_id"],

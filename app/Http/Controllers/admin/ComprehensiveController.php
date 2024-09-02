@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\admin\comprehensive\ComprehensiveStoreRequest;
+use App\Http\Requests\admin\comprehensive\ComprehensiveUpdateRequest;
 use App\Http\Requests\PaginateSearchRequest;
 use App\Http\Resources\Admin\ComprehensiveDetailResource;
 use App\Http\Resources\MetaPaginateSearch;
@@ -69,32 +71,10 @@ class ComprehensiveController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(ComprehensiveStoreRequest $request)
     {
-        $rules = [
-            "status_id" => "nullable|exists:statuses,id",
-            "status_description_id" => "nullable|exists:status_descriptions,id",
-            "letter_number" => "nullable",
-            "letter_date" => "nullable|date",
-            "chairman_id" => "nullable|exists:lecturers,id",
-            "secretary_id" => "nullable|exists:lecturers,id",
-
-            "name" => "required",
-            "nim" => "required|numeric",
-            "pob" => "required",
-            "dob" => "required|date",
-            "semester" => "required|integer|min:0",
-            "phone" => "required|phone:ID",
-            "essay_title" => "required",
-            "applicant_sign" => "required|image",
-            "tester_ids" => "nullable|array",
-            "tester_ids.*" => "nullable|string|exists:lecturers,id",
-        ];
         $file_requirements = FileRequirement::where("request_type", "comprehensive")->get();
-        foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
-        }
-        $validated = $request->validate($rules);
+        $validated = $request->validated();
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("comprehensive/applicant_signs", "public");
         foreach ($file_requirements as $index => $file_requirement) {
             if ($request->file($file_requirement->slug)) {
@@ -160,34 +140,13 @@ class ComprehensiveController extends Controller
         ]);
     }
 
-    public function update(Comprehensive $comprehensive, Request $request)
+    public function update(Comprehensive $comprehensive, ComprehensiveUpdateRequest $request)
     {
-        $rules = [
-            "status_id" => "nullable|exists:statuses,id",
-            "status_description_id" => "nullable|exists:status_descriptions,id",
-            "letter_number" => "nullable",
-            "letter_date" => "nullable|date",
-            "chairman_id" => "nullable|exists:lecturers,id",
-            "secretary_id" => "nullable|exists:lecturers,id",
-
-            "name" => "required",
-            "nim" => "required|numeric",
-            "pob" => "required",
-            "dob" => "required|date",
-            "semester" => "required|integer|min:0",
-            "phone" => "required|phone:ID",
-            "essay_title" => "required",
-            "applicant_sign" => "nullable|image",
-            "tester_ids" => "nullable|array",
-            "tester_ids.*" => "nullable|string|exists:lecturers,id",
-        ];
         $file_requirements = FileRequirement::where("request_type", "comprehensive")->get();
         foreach ($file_requirements as $file_requirement) {
             $rules[$file_requirement->slug] = "nullable|mimes:pdf";
         }
-
-        $validated = $request->validate($rules);
-
+        $validated = $request->validated();
         $updateComprehensive = [
             "essay_title" => $validated["essay_title"],
             "status_id" => $validated["status_id"],
@@ -286,7 +245,7 @@ class ComprehensiveController extends Controller
     public function deleteComprehensive(Comprehensive $comprehensive)
     {
         $comprehensive->testers()->delete();
-        foreach ($comprehensive->files as $index => $file) {
+        foreach ($comprehensive->files as $file) {
             if (Storage::exists($file->file)) {
                 Storage::delete($file->file);
             }

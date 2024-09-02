@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\admin\FileRequirementStoreRequest;
 use App\Http\Requests\PaginateSearchRequest;
 use App\Http\Resources\MetaPaginateSearch;
 use App\Models\FileRequirement;
@@ -45,24 +46,16 @@ class FileRequirementController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(FileRequirementStoreRequest $request)
     {
-        $validated = $request->validate([
-            "name" => "required",
-            "is_required" => "required|boolean",
-            "request_type" => "required|in:proposal,result,comprehensive,ppl"
-        ]);
+        $validated = $request->validated();
         FileRequirement::create($validated);
         return to_route("admin." . $validated["request_type"] . ".file_requirement")->with("success", "Data berhasil ditambahkan");
     }
 
-    public function update(FileRequirement $fileRequirement, Request $request)
+    public function update(FileRequirement $fileRequirement, FileRequirementStoreRequest $request)
     {
-        $validated = $request->validate([
-            "name" => "required",
-            "is_required" => "required|boolean",
-            "request_type" => "required|in:proposal,result,comprehensive,ppl"
-        ]);
+        $validated = $request->validated();
         $fileRequirement->update($validated);
         return to_route("admin." . $validated["request_type"] . ".file_requirement")->with("warning", "Data berhasil di ubah");
     }

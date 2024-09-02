@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\admin\result\ResultStoreRequest;
+use App\Http\Requests\admin\result\ResultUpdateRequest;
 use App\Http\Requests\PaginateSearchRequest;
 use App\Http\Resources\Admin\ResultDetailResource;
 use App\Http\Resources\MetaPaginateSearch;
@@ -72,41 +74,11 @@ class ResultController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(ResultStoreRequest $request)
     {
-        $rules = [
-            "status_id" => "nullable|exists:statuses,id",
-            "status_description_id" => "nullable|exists:status_descriptions,id",
-            "letter_number" => "nullable",
-            "letter_date" => "nullable|date",
-            "chairman_id" => "nullable|exists:lecturers,id",
-            "secretary_id" => "nullable|exists:lecturers,id",
-            "executor_id" => "nullable|exists:lecturers,id",
-
-            "name" => "required",
-            "nim" => "required|numeric",
-            "pob" => "required",
-            "dob" => "required|date",
-            "semester" => "required|integer|min:0",
-            "phone" => "required|phone:ID",
-            "essay_title" => "required",
-            "applicant_sign" => "required|image",
-            "mentor_ids" => "array|min:2",
-            "mentor_ids.*" => "required|string|exists:lecturers,id",
-            "tester_ids" => "nullable|array",
-            "tester_ids.*" => "nullable|string|exists:lecturers,id",
-            "date" => "nullable|date",
-            "time_zone" => "required|in:wib,wita,wit",
-            "start_time" => "nullable|date_format:H:i",
-            "end_time" => "nullable|date_format:H:i",
-            "location" => "nullable|string",
-        ];
 
         $file_requirements = FileRequirement::where("request_type", "result")->get();
-        foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->name] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
-        }
-        $validated = $request->validate($rules);
+        $validated = $request->validated();
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("result/applicant_signs", "public");
         foreach ($file_requirements as $index => $file_requirement) {
             if ($request->file($file_requirement->slug)) {
@@ -187,42 +159,10 @@ class ResultController extends Controller
         ]);
     }
 
-    public function update(Result $result, Request $request)
+    public function update(Result $result, ResultUpdateRequest $request)
     {
-        $rules = [
-            "status_id" => "nullable|exists:statuses,id",
-            "status_description_id" => "nullable|exists:status_descriptions,id",
-            "letter_number" => "nullable",
-            "letter_date" => "nullable|date",
-            "chairman_id" => "nullable|exists:lecturers,id",
-            "secretary_id" => "nullable|exists:lecturers,id",
-            "executor_id" => "nullable|exists:lecturers,id",
-
-            "name" => "required",
-            "nim" => "required|numeric",
-            "pob" => "required",
-            "dob" => "required|date",
-            "semester" => "required|integer|min:0",
-            "phone" => "required|phone:ID",
-            "essay_title" => "required",
-            "applicant_sign" => "nullable|image",
-            "mentor_ids" => "array|min:2",
-            "mentor_ids.*" => "required|string|exists:lecturers,id",
-            "tester_ids" => "nullable|array",
-            "tester_ids.*" => "nullable|string|exists:lecturers,id",
-            "date" => "nullable|date",
-            "time_zone" => "required|in:wib,wita,wit",
-            "start_time" => "nullable|date_format:H:i",
-            "end_time" => "nullable|date_format:H:i",
-            "location" => "nullable|string",
-        ];
         $file_requirements = FileRequirement::where("request_type", "result")->get();
-        foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->name] = "nullable|mimes:pdf";
-        }
-
-        $validated = $request->validate($rules);
-
+        $validated = $request->validated();
         $updateResult = [
             "essay_title" => $validated["essay_title"],
             "status_id" => $validated["status_id"],

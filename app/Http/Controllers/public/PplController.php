@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\public;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\public\PplStoreRequest;
 use App\Models\File;
 use App\Models\FileRequirement;
 use App\Models\Lecturer;
@@ -23,34 +24,10 @@ class PplController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(PplStoreRequest $request)
     {
-        $rules = [
-            "start_date" => "required|date",
-            "end_date" => "required|date",
-            "location" => "required",
-            "location_address" => "required",
-            "applicant_sign" => "required|image",
-            "student_count" => "required|numeric|min:1",
-
-            "names" => "required|array|size:" . $request->student_count,
-            "names.*" => "required|string",
-            "nims" => "required|array|size:" . $request->student_count,
-            "nims.*" => "required|numeric",
-            "pobs" => "required|array|size:" . $request->student_count,
-            "pobs.*" => "required|string",
-            "dobs" => "required|array|size:" . $request->student_count,
-            "dobs.*" => "required|date",
-            "semesters" => "required|array|size:" . $request->student_count,
-            "semesters.*" => "required|integer|min:0",
-            "phones" => "required|array|size:" . $request->student_count,
-            "phones.*" => "required|phone:ID",
-        ];
         $file_requirements = FileRequirement::select("name", "slug", "is_required")->where("request_type", "ppl")->get();
-        foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
-        }
-        $validated = $request->validate($rules);
+        $validated = $request->validated();
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("ppl", "public");
         foreach ($file_requirements as $file_requirement) {
             if ($request->file($file_requirement->slug)) {

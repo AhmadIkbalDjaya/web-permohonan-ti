@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\admin\ppl\PplStoreRequest;
 use App\Http\Requests\PaginateSearchRequest;
 use App\Http\Resources\Admin\PPLDetailResource;
 use App\Http\Resources\MetaPaginateSearch;
@@ -69,42 +70,10 @@ class PplController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(PplStoreRequest $request)
     {
-        $rules = [
-            "status_id" => "nullable|exists:statuses,id",
-            "status_description_id" => "nullable|exists:status_descriptions,id",
-            "letter_number_mentor" => "nullable",
-            "letter_number_introduction" => "nullable",
-            "letter_date" => "nullable|date",
-            "addressed_to" => "nullable|string",
-            "mentor_id" => "nullable|exists:lecturers,id",
-
-            "start_date" => "required|date",
-            "end_date" => "required|date",
-            "location" => "required",
-            "location_address" => "required",
-            "applicant_sign" => "required|image",
-            "student_count" => "required|numeric|min:1",
-
-            "names" => "required|array|min:" . $request->student_count,
-            "names.*" => "required|string",
-            "nims" => "required|array|min:" . $request->student_count,
-            "nims.*" => "required|numeric",
-            "pobs" => "required|array|min:" . $request->student_count,
-            "pobs.*" => "required|string",
-            "dobs" => "required|array|min:" . $request->student_count,
-            "dobs.*" => "required|date",
-            "semesters" => "required|array|min:" . $request->student_count,
-            "semesters.*" => "required|integer|min:0",
-            "phones" => "required|array|min:" . $request->student_count,
-            "phones.*" => "required|phone:ID",
-        ];
         $file_requirements = FileRequirement::where("request_type", "ppl")->get();
-        foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->slug] = ($file_requirement->is_required ? "required" : "nullable") . "|mimes:pdf";
-        }
-        $validated = $request->validate($rules);
+        $validated = $request->validated();
         $validated["applicant_sign"] = $request->file("applicant_sign")->storePublicly("ppl/applicant_signs", "public");
         foreach ($file_requirements as $index => $file_requirement) {
             if ($request->file($file_requirement->slug)) {
@@ -160,7 +129,6 @@ class PplController extends Controller
         $status_descriptions = StatusDescription::select("id", "status_id", "description")->get();
         $lecturers = Lecturer::select("id", "name")->orderBy("name")->get();
         $file_requirements = FileRequirement::where("request_type", "ppl")->get();
-        // dd($ppl->files);
         return Inertia::render("admin/ppl/Edit", [
             "ppl" => new PPLDetailResource($ppl),
 
@@ -173,40 +141,8 @@ class PplController extends Controller
 
     public function update(PPL $ppl, Request $request)
     {
-        $rules = [
-            "status_id" => "nullable|exists:statuses,id",
-            "status_description_id" => "nullable|exists:status_descriptions,id",
-            "letter_number_mentor" => "nullable",
-            "letter_number_introduction" => "nullable",
-            "letter_date" => "nullable|date",
-            "addressed_to" => "nullable|string",
-            "mentor_id" => "nullable|exists:lecturers,id",
-
-            "start_date" => "required",
-            "end_date" => "required",
-            "location" => "required",
-            "location_address" => "required",
-            "applicant_sign" => "nullable|image",
-            "student_count" => "numeric|min:1",
-
-            "names" => "required|array|min:" . $request->student_count,
-            "names.*" => "required|string",
-            "nims" => "required|array|min:" . $request->student_count,
-            "nims.*" => "required|numeric",
-            "pobs" => "required|array|min:" . $request->student_count,
-            "pobs.*" => "required|string",
-            "dobs" => "required|array|min:" . $request->student_count,
-            "dobs.*" => "required|date",
-            "semesters" => "required|array|min:" . $request->student_count,
-            "semesters.*" => "required|integer|min:0",
-            "phones" => "required|array|min:" . $request->student_count,
-            "phones.*" => "required|phone:ID",
-        ];
         $file_requirements = FileRequirement::where("request_type", "ppl")->get();
-        foreach ($file_requirements as $file_requirement) {
-            $rules[$file_requirement->slug] = "nullable|mimes:pdf";
-        }
-        $validated = $request->validate($rules);
+        $validated = $request->validated();
 
         $updatePpl = [
             "status_id" => $validated["status_id"],
